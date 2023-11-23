@@ -1,0 +1,44 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.organizeImports": true
+  },
+  "eslint.workingDirectories": ["/client"],
+  "eslint.format.enable": true,
+  "python.languageServer": "Default",
+  "python.autoComplete.extraPaths": ["venv", "/backend"],
+  "python.analysis.extraPaths": ["backend"],
+  "python.analysis.autoSearchPaths": true,
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.completeFunctionParens": true,
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.useLibraryCodeForTypes": true,
+  "python.analysis.ignore": ["**/site-packages/**/*.py", "**/migrations/*.py"],
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    }
+  },
+  "[python]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    },
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "monosans.djlint"
+  },
+  "[django-html]": {
+    "editor.defaultFormatter": "monosans.djlint"
+  },
+  "[jinja]": {
+    "editor.defaultFormatter": "monosans.djlint"
+  },
+  "[jinja-html]": {
+    "editor.defaultFormatter": "monosans.djlint"
+  }
+}
