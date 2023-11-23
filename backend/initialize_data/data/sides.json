@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "quantity": "Unos trozos",
+    "product_id": 24,
+    "recipe_id": 3
+  },
+  {
+    "id": 2,
+    "quantity": "Unos trozos",
+    "product_id": 25,
+    "recipe_id": 3
+  },
+  {
+    "id": 3,
+    "quantity": "Unos trozos",
+    "product_id": 33,
+    "recipe_id": 3
+  }
+]

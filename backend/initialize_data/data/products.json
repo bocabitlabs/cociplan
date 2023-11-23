@@ -1,0 +1,357 @@
+[
+  {
+    "id": 1,
+    "name": "Arroz",
+    "type": "PASTA_RICE"
+  },
+  {
+    "id": 2,
+    "name": "Leche entera",
+    "type": "EGG_MILK_PRODUCTS"
+  },
+  {
+    "id": 3,
+    "name": "Lentejas",
+    "type": "LEGUMES"
+  },
+  {
+    "id": 4,
+    "name": "Huevos",
+    "type": "EGG_MILK_PRODUCTS"
+  },
+  {
+    "id": 5,
+    "name": "Fabas",
+    "type": "LEGUMES"
+  },
+  {
+    "id": 6,
+    "name": "Patatas",
+    "type": "VEGETABLES"
+  },
+  {
+    "id": 7,
+    "name": "Pimiento rojo",
+    "type": "VEGETABLES"
+  },
+  {
+    "id": 8,
+    "name": "Pimiento verde",
+    "type": "VEGETABLES"
+  },
+  {
+    "id": 9,
+    "name": "Pimiento amarillo",
+    "type": "VEGETABLES"
+  },
+  {
+    "id": 10,
+    "name": "Ajos",
+    "type": "VEGETABLES"
+  },
+  {
+    "id": 11,
+    "name": "Espárragos",
+    "type": "VEGETABLES"
+  },
+  {
+    "id": 12,
+    "name": "Salsa carbonara",
+    "type": "OTHER"
+  },
+  {
+    "id": 13,
+    "name": "Guisantes",
+    "type": "VEGETABLES"
+  },
+  {
+    "id": 14,
+    "name": "Bonito",
+    "type": "FISH"
+  },
+  {
+    "id": 15,
+    "name": "Lubina",
+    "type": "FISH"
+  },
+  {
+    "id": 16,
+    "name": "Merluza",
+    "type": "FISH"
+  },
+  {
+    "id": 17,
+    "name": "Dorada",
+    "type": "FISH"
+  },
+  {
+    "id": 18,
+    "name": "Pimienta negra",
+    "type": "OTHER"
+  },
+  {
+    "id": 19,
+    "name": "Fondue",
+    "type": "EGG_MILK_PRODUCTS"
+  },
+  {
+    "id": 20,
+    "name": "Calamares",
+    "type": "FISH"
+  },
+  {
+    "id": 21,
+    "name": "Cebollas",
+    "type": "VEGETABLES"
+  },
+  {
+    "id": 22,
+    "name": "Salsa de tomate",
+    "type": "OTHER"
+  },
+  {
+    "id": 23,
+    "name": "Tomates",
+    "type": "FRUITS"
+  },
+  {
+    "id": 24,
+    "name": "Salchichón",
+    "type": "MEAT_SASUAGE"
+  },
+  {
+    "id": 25,
+    "name": "Jamón serrano",
+    "type": "MEAT_SASUAGE"
+  },
+  {
+    "id": 26,
+    "name": "Lacón",
+    "type": "MEAT_SASUAGE"
+  },
+  {
+    "id": 27,
+    "name": "Chorizo",
+    "type": "MEAT_SASUAGE"
+  },
+  {
+    "id": 28,
+    "name": "Harina",
+    "type": "GRAIN_NUTS_BAKING"
+  },
+  {
+    "id": 29,
+    "name": "Nata",
+    "type": "EGG_MILK_PRODUCTS"
+  },
+  {
+    "id": 30,
+    "name": "Aceite de oliva",
+    "type": "FATS_OILS"
+  },
+  {
+    "id": 31,
+    "name": "Aceite de girasol",
+    "type": "FATS_OILS"
+  },
+  {
+    "id": 32,
+    "name": "Mantequilla",
+    "type": "FATS_OILS"
+  },
+  {
+    "id": 33,
+    "name": "Bacon",
+    "type": "MEAT_SASUAGE"
+  },
+  {
+    "id": 34,
+    "name": "Mayonesa",
+    "type": "OTHER"
+  },
+  {
+    "id": 35,
+    "name": "Mozzarella",
+    "type": "EGG_MILK_PRODUCTS"
+  },
+  {
+    "id": 36,
+    "name": "Pan",
+    "type": "GRAIN_NUTS_BAKING"
+  },
+  {
+    "id": 37,
+    "name": "Levadura",
+    "type": "GRAIN_NUTS_BAKING"
+  },
+  {
+    "id": 38,
+    "name": "Carne picada de ternera",
+    "type": "MEAT_SASUAGE"
+  },
+  {
+    "id": 39,
+    "name": "Carne picada de pollo",
+    "type": "MEAT_SASUAGE"
+  },
+  {
+    "id": 40,
+    "name": "Perejil",
+    "type": "VEGETABLES"
+  },
+  {
+    "id": 41,
+    "name": "Pan de molde",
+    "type": "GRAIN_NUTS_BAKING"
+  },
+  {
+    "id": 42,
+    "name": "Berenjenas",
+    "type": "VEGETABLES"
+  },
+  {
+    "id": 43,
+    "name": "Pollo",
+    "type": "MEAT_SASUAGE"
+  },
+  {
+    "id": 44,
+    "name": "Sal",
+    "type": "OTHER"
+  },
+  {
+    "id": 45,
+    "name": "Brócoli",
+    "type": "VEGETABLES"
+  },
+  {
+    "id": 46,
+    "name": "Pimentón dulce",
+    "type": "OTHER"
+  },
+  {
+    "id": 47,
+    "name": "Aceitunas",
+    "type": "OTHER"
+  },
+  {
+    "id": 48,
+    "name": "Vinagre",
+    "type": "OTHER"
+  },
+  {
+    "id": 49,
+    "name": "Pimiento rojo asado",
+    "type": "VEGETABLES"
+  },
+  {
+    "id": 50,
+    "name": "Queso en lonchas",
+    "type": "EGG_MILK_PRODUCTS"
+  },
+  {
+    "id": 51,
+    "name": "Tortillas de fajitas",
+    "type": "GRAIN_NUTS_BAKING"
+  },
+  {
+    "id": 52,
+    "name": "Garbanzos",
+    "type": "LEGUMES"
+  },
+  {
+    "id": 53,
+    "name": "Zanahorias",
+    "type": "VEGETABLES"
+  },
+  {
+    "id": 54,
+    "name": "Judías",
+    "type": "VEGETABLES"
+  },
+  {
+    "id": 55,
+    "name": "Adobo",
+    "type": "OTHER"
+  },
+  {
+    "id": 56,
+    "name": "Vino blanco",
+    "type": "OTHER"
+  },
+  {
+    "id": 57,
+    "name": "Masa de pizza",
+    "type": "GRAIN_NUTS_BAKING"
+  },
+  {
+    "id": 58,
+    "name": "Queso para pizza",
+    "type": "EGG_MILK_PRODUCTS"
+  },
+  {
+    "id": 59,
+    "name": "Queso rayado",
+    "type": "EGG_MILK_PRODUCTS"
+  },
+  {
+    "id": 60,
+    "name": "Jamón york",
+    "type": "MEAT_SASUAGE"
+  },
+  {
+    "id": 61,
+    "name": "Salchichas",
+    "type": "MEAT_SASUAGE"
+  },
+  {
+    "id": 62,
+    "name": "Berzas",
+    "type": "VEGETABLES"
+  },
+  {
+    "id": 63,
+    "name": "Calabaza",
+    "type": "VEGETABLES"
+  },
+  {
+    "id": 64,
+    "name": "Panecillos duros",
+    "type": "OTHER"
+  },
+  {
+    "id": 65,
+    "name": "Calabacín",
+    "type": "VEGETABLES"
+  },
+  {
+    "id": 66,
+    "name": "Champiñones",
+    "type": "VEGETABLES"
+  },
+  {
+    "id": 67,
+    "name": "Macarrones",
+    "type": "PASTA_RICE"
+  },
+  {
+    "id": 68,
+    "name": "Espaguetis",
+    "type": "PASTA_RICE"
+  },
+  {
+    "id": 69,
+    "name": "Queso de fondue",
+    "type": "EGG_MILK_PRODUCTS"
+  },
+  {
+    "id": 70,
+    "name": "Cous cous",
+    "type": "PASTA_RICE"
+  },
+  {
+    "id": 71,
+    "name": "Salmón",
+    "type": "FISH"
+  }
+]

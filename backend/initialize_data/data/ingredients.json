@@ -1,0 +1,63 @@
+[
+  {
+    "id": 1,
+    "quantity": "1 paquete",
+    "product_id": 38,
+    "recipe_id": 1
+  },
+  {
+    "id": 2,
+    "quantity": "1",
+    "product_id": 39,
+    "recipe_id": 1
+  },
+  {
+    "id": 3,
+    "quantity": "3",
+    "product_id": 42,
+    "recipe_id": 2
+  },
+  {
+    "id": 4,
+    "quantity": "1",
+    "product_id": 21,
+    "recipe_id": 2
+  },
+  {
+    "id": 5,
+    "quantity": "medio",
+    "product_id": 7,
+    "recipe_id": 2
+  },
+  {
+    "id": 6,
+    "quantity": "medio",
+    "product_id": 8,
+    "recipe_id": 2
+  },
+  {
+    "id": 7,
+    "quantity": "1 chorro",
+    "product_id": 22,
+    "recipe_id": 2
+  },
+  {
+    "id": 8,
+    "quantity": "3 gr",
+    "product_id": 44,
+    "recipe_id": 2
+  },
+  {
+    "id": 9,
+    "quantity": "1",
+    "product_id": 45,
+    "recipe_id": 3
+  },
+  {
+    "id": 10,
+    "quantity": "Depende del tamaño. 2 ó 3",
+    "product_id": 10,
+    "recipe_id": 3
+  }
+  
+]
