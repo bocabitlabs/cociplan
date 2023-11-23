@@ -174,7 +174,8 @@ client/node_modules/
 backend/config/config.py
 TOKEN.txt
 mysql.conf
-media
+media/*
+!media/.gitkeep
 client/src/config.js
 client/.env.production
 .env.prod
