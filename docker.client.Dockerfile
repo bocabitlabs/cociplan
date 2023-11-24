@@ -8,8 +8,8 @@ ENV VITE_PORT=
 ENV VITE_API_URL=
 
 LABEL org.opencontainers.image.authors='renefernandez@duck.com' \
-      org.opencontainers.image.url='https://github.com/renefs/cociplan/pkgs/container/cociplan-client' \
-      org.opencontainers.image.source="https://github.com/renefs/cociplan" \
+      org.opencontainers.image.url='https://github.com/renefs/bocabitlabs/pkgs/container/cociplan-client' \
+      org.opencontainers.image.source="https://github.com/bocabitlabs/cociplan" \
       org.opencontainers.image.vendor='Rene Fernandez' \
       org.opencontainers.image.licenses='GPL-3.0-or-later'
 

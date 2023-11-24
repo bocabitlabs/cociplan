@@ -14,8 +14,8 @@ ENV POETRY_CACHE_DIR ${WORKDIR}/.cache
 ENV VIRTUAL_ENVIRONMENT_PATH ${WORKDIR}/.venv
 
 LABEL org.opencontainers.image.authors='renefernandez@duck.com' \
-      org.opencontainers.image.url='https://github.com/renefs/cociplan/pkgs/container/cociplan' \
-      org.opencontainers.image.source="https://github.com/renefs/cociplan" \
+      org.opencontainers.image.url='https://github.com/bocabitlabs/cociplan/pkgs/container/cociplan' \
+      org.opencontainers.image.source="https://github.com/bocabitlabs/cociplan" \
       org.opencontainers.image.vendor='Rene Fernandez' \
       org.opencontainers.image.licenses='GPL-3.0-or-later'
 
