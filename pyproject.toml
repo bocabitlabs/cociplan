@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cociplan"
-version = "1.0.0"
+version = "1.0.1"
 description = "Weekly menu planner"
 authors = ["Rene Fernandez <renefernandez@duck.com>"]
 license = "GNU General Public License v3 (GPLv3)"
