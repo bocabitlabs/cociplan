@@ -1,4 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import {
   ActionIcon,
   Box,
@@ -28,9 +31,6 @@ import StarterKit from "@tiptap/starter-kit";
 import ImageDropZone from "components/ImageDropzone/ImageDropZone";
 import { useProducts } from "hooks/products/use-products";
 import { useUpdaterecipe } from "hooks/recipes/use-recipes";
-import { useCallback, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import { IProduct } from "types/products";
 import { DaysOfWeek, IRecipe, MealTemps, MealTypes } from "types/recipes";
 import { getBase64 } from "utils/base_64";
@@ -284,7 +284,7 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
           <Select
             label={t("Lunch of the day")}
             withAsterisk
-            placeholder={t("Elije la comida del día")}
+            placeholder={t<string>("Elije la comida del día")}
             data={mealTypes}
             {...form.getInputProps("meal")}
             required
@@ -294,7 +294,7 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
           <Select
             label={t("Comida del día preferida")}
             withAsterisk
-            placeholder={t("Elije cuando prefieres comerlo")}
+            placeholder={t<string>("Elije cuando prefieres comerlo")}
             data={mealTypes}
             {...form.getInputProps("preferedMeal")}
             required
@@ -316,7 +316,7 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
           <Select
             label={t("Días de la semana")}
             withAsterisk
-            placeholder={t("Elije para cuándo es esta receta")}
+            placeholder={t<string>("Elije para cuándo es esta receta")}
             data={daysOfWeek}
             {...form.getInputProps("daysOfWeek")}
             required
@@ -326,7 +326,7 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
           <Select
             label={t("Caliente/Fría")}
             withAsterisk
-            placeholder={t("Elije si es caliente o fria")}
+            placeholder={t<string>("Elije si es caliente o fria")}
             data={mealTemps}
             {...form.getInputProps("mealTemp")}
             required
@@ -419,7 +419,7 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
 
           <NumberInput
             defaultValue={18}
-            placeholder={t("Número de comensales")}
+            placeholder={t<string>("Número de comensales")}
             label={t("Comensales")}
             withAsterisk
             {...form.getInputProps("servings")}
