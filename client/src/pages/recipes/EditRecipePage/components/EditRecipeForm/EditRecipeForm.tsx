@@ -1,25 +1,22 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { useCallback, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import {
   ActionIcon,
   Box,
   Button,
+  Checkbox,
   Group,
-  Rating,
-  Text,
-  TextInput,
+  Image,
   NumberInput,
+  Rating,
   Select,
   Switch,
-  Checkbox,
-  Image,
+  Text,
+  TextInput,
 } from "@mantine/core";
 import { FileWithPath } from "@mantine/dropzone";
 import { useForm } from "@mantine/form";
 import { randomId } from "@mantine/hooks";
-import { RichTextEditor, Link } from "@mantine/tiptap";
+import { Link, RichTextEditor } from "@mantine/tiptap";
 import { IconFlame, IconTrash } from "@tabler/icons-react";
 import Highlight from "@tiptap/extension-highlight";
 import SubScript from "@tiptap/extension-subscript";
@@ -31,6 +28,9 @@ import StarterKit from "@tiptap/starter-kit";
 import ImageDropZone from "components/ImageDropzone/ImageDropZone";
 import { useProducts } from "hooks/products/use-products";
 import { useUpdaterecipe } from "hooks/recipes/use-recipes";
+import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { IProduct } from "types/products";
 import { DaysOfWeek, IRecipe, MealTemps, MealTypes } from "types/recipes";
 import { getBase64 } from "utils/base_64";
@@ -249,7 +249,9 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
     newValues.notes = notesEditor?.getJSON();
     newValues.instructions = instructionsEditor?.getJSON();
     newValues.description = descriptionEditor?.getJSON();
-    newValues.image = base64file || null;
+    if (base64file) {
+      newValues.image = base64file;
+    }
 
     console.log(newValues);
     mutate({ recipeId: recipe.id, newRecipe: newValues });
