@@ -7,6 +7,7 @@
   },
   "eslint.workingDirectories": ["/client"],
   "eslint.format.enable": true,
+  "eslint.validate": ["javascript", "typescript"],
   "python.languageServer": "Default",
   "python.autoComplete.extraPaths": ["venv", "/backend"],
   "python.analysis.extraPaths": ["backend"],
@@ -17,6 +18,13 @@
   "python.analysis.useLibraryCodeForTypes": true,
   "python.analysis.ignore": ["**/site-packages/**/*.py", "**/migrations/*.py"],
   "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    }
+  },
+  "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
@@ -41,7 +49,7 @@
   "[jinja-html]": {
     "editor.defaultFormatter": "monosans.djlint"
   },
-  "[javascript][python]": {
+  "[javascript][python][typescript]": {
     "editor.codeActionsOnSave": {
       "source.organizeImports": "explicit"
     }
