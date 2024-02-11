@@ -19,21 +19,16 @@ import {
 import { FileWithPath } from "@mantine/dropzone";
 import { useForm } from "@mantine/form";
 import { randomId } from "@mantine/hooks";
-import { Link, RichTextEditor } from "@mantine/tiptap";
+import { RichTextEditor } from "@mantine/tiptap";
 import { IconFlame, IconTrash } from "@tabler/icons-react";
-import Highlight from "@tiptap/extension-highlight";
-import SubScript from "@tiptap/extension-subscript";
-import Superscript from "@tiptap/extension-superscript";
-import TextAlign from "@tiptap/extension-text-align";
-import Underline from "@tiptap/extension-underline";
 import { useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
 import ImageDropZone from "components/ImageDropzone/ImageDropZone";
 import { useProducts } from "hooks/products/use-products";
 import { useUpdaterecipe } from "hooks/recipes/use-recipes";
 import { IProduct } from "types/products";
 import { DaysOfWeek, IRecipe, MealTemps, MealTypes } from "types/recipes";
 import { getBase64 } from "utils/base_64";
+import { editorExtensions } from "utils/editor";
 
 const mealTypes = [
   { value: "LUNCH", label: "Comida" },
@@ -107,41 +102,17 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
   });
 
   const notesEditor = useEditor({
-    extensions: [
-      StarterKit,
-      Underline,
-      Link,
-      Superscript,
-      SubScript,
-      Highlight,
-      TextAlign.configure({ types: ["heading", "paragraph"] }),
-    ],
+    extensions: editorExtensions,
     content: recipe ? recipe.notes : "",
   });
 
   const instructionsEditor = useEditor({
-    extensions: [
-      StarterKit,
-      Underline,
-      Link,
-      Superscript,
-      SubScript,
-      Highlight,
-      TextAlign.configure({ types: ["heading", "paragraph"] }),
-    ],
+    extensions: editorExtensions,
     content: recipe ? recipe.instructions : "",
   });
 
   const descriptionEditor = useEditor({
-    extensions: [
-      StarterKit,
-      Underline,
-      Link,
-      Superscript,
-      SubScript,
-      Highlight,
-      TextAlign.configure({ types: ["heading", "paragraph"] }),
-    ],
+    extensions: editorExtensions,
     content: recipe ? recipe.description : "",
   });
 

@@ -19,21 +19,16 @@ import {
 import { FileWithPath } from "@mantine/dropzone";
 import { useForm } from "@mantine/form";
 import { randomId } from "@mantine/hooks";
-import { RichTextEditor, Link } from "@mantine/tiptap";
+import { RichTextEditor } from "@mantine/tiptap";
 import { IconFlame, IconTrash } from "@tabler/icons-react";
-import Highlight from "@tiptap/extension-highlight";
-import SubScript from "@tiptap/extension-subscript";
-import Superscript from "@tiptap/extension-superscript";
-import TextAlign from "@tiptap/extension-text-align";
-import Underline from "@tiptap/extension-underline";
 import { useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
 import ImageDropZone from "components/ImageDropzone/ImageDropZone";
 import { useProducts } from "hooks/products/use-products";
 import { useAddrecipe } from "hooks/recipes/use-recipes";
 import { IProduct } from "types/products";
 import { DaysOfWeek, MealTemps, MealTypes } from "types/recipes";
 import { getBase64 } from "utils/base_64";
+import { editorExtensions } from "utils/editor";
 
 const mealTypes = [
   { value: "LUNCH", label: "Comida" },
@@ -109,39 +104,15 @@ export default function AddRecipeForm() {
   });
 
   const notesEditor = useEditor({
-    extensions: [
-      StarterKit,
-      Underline,
-      Link,
-      Superscript,
-      SubScript,
-      Highlight,
-      TextAlign.configure({ types: ["heading", "paragraph"] }),
-    ],
+    extensions: editorExtensions,
   });
 
   const instructionsEditor = useEditor({
-    extensions: [
-      StarterKit,
-      Underline,
-      Link,
-      Superscript,
-      SubScript,
-      Highlight,
-      TextAlign.configure({ types: ["heading", "paragraph"] }),
-    ],
+    extensions: editorExtensions,
   });
 
   const descriptionEditor = useEditor({
-    extensions: [
-      StarterKit,
-      Underline,
-      Link,
-      Superscript,
-      SubScript,
-      Highlight,
-      TextAlign.configure({ types: ["heading", "paragraph"] }),
-    ],
+    extensions: editorExtensions,
   });
 
   if (productsFetching) {
@@ -161,14 +132,14 @@ export default function AddRecipeForm() {
         <Select
           withAsterisk
           searchable
-          placeholder={t("Elije el producto")}
+          placeholder={t<string>("Elije el producto")}
           data={productsOptions}
           {...form.getInputProps(`ingredients.${index}.product`)}
           required
           mt="md"
         />
         <TextInput
-          placeholder={t("Quantity")}
+          placeholder={t<string>("Quantity")}
           withAsterisk
           sx={{ flex: 1 }}
           {...form.getInputProps(`ingredients.${index}.quantity`)}
@@ -191,19 +162,19 @@ export default function AddRecipeForm() {
       label: product.name,
     }));
 
-    const fields = form.values.sides.map((item, index) => (
+    const fields = form.values.sides.map((item: any, index) => (
       <Group key={item.key} mt="xs">
         <Select
           withAsterisk
           searchable
-          placeholder={t("Elije el producto")}
+          placeholder={t<string>("Elije el producto")}
           data={productsOptions}
           {...form.getInputProps(`sides.${index}.product`)}
           required
           mt="md"
         />
         <TextInput
-          placeholder={t("Quantity")}
+          placeholder={t<string>("Quantity")}
           withAsterisk
           sx={{ flex: 1 }}
           {...form.getInputProps(`sides.${index}.quantity`)}
@@ -254,7 +225,7 @@ export default function AddRecipeForm() {
           <TextInput
             withAsterisk
             label={t("Name")}
-            placeholder={t("Lentejas, Arroz a la cubana...")}
+            placeholder={t<string>("Lentejas, Arroz a la cubana...")}
             required
             {...form.getInputProps("name")}
             mt="md"
@@ -272,7 +243,7 @@ export default function AddRecipeForm() {
           <Select
             label={t("Comida del día")}
             withAsterisk
-            placeholder={t("Elije la comida del día")}
+            placeholder={t<string>("Elije la comida del día")}
             data={mealTypes}
             {...form.getInputProps("meal")}
             required
@@ -294,7 +265,7 @@ export default function AddRecipeForm() {
           <Select
             label={t("Días de la semana")}
             withAsterisk
-            placeholder={t("Elije para cuándo es esta receta")}
+            placeholder={t<string>("Elije para cuándo es esta receta")}
             data={daysOfWeek}
             {...form.getInputProps("daysOfWeek")}
             required
@@ -304,7 +275,7 @@ export default function AddRecipeForm() {
           <Select
             label={t("Comida del día preferida")}
             withAsterisk
-            placeholder={t("Elije cuando prefieres comerlo")}
+            placeholder={t<string>("Elije cuando prefieres comerlo")}
             data={mealTypes}
             {...form.getInputProps("preferedMeal")}
             required
@@ -314,7 +285,7 @@ export default function AddRecipeForm() {
           <Select
             label={t("Caliente/Fría")}
             withAsterisk
-            placeholder={t("Elije si es caliente o fria")}
+            placeholder={t<string>("Elije si es caliente o fria")}
             data={mealTemps}
             {...form.getInputProps("mealTemp")}
             required
@@ -403,7 +374,7 @@ export default function AddRecipeForm() {
 
           <NumberInput
             defaultValue={18}
-            placeholder={t("Número de comensales")}
+            placeholder={t<string>("Número de comensales")}
             label={t("Comensales")}
             withAsterisk
             {...form.getInputProps("servings")}

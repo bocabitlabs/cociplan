@@ -16,15 +16,9 @@ import {
 } from "@mantine/core";
 import { IconClock, IconEdit, IconFlame, IconUsers } from "@tabler/icons-react";
 import { generateHTML } from "@tiptap/core";
-import Bold from "@tiptap/extension-bold";
-import BulletList from "@tiptap/extension-bullet-list";
-import Document from "@tiptap/extension-document";
-import ListItem from "@tiptap/extension-list-item";
-import OrderedList from "@tiptap/extension-ordered-list";
-import Paragraph from "@tiptap/extension-paragraph";
-import TextHtml from "@tiptap/extension-text";
 import { IIngredient } from "types/ingredients";
 import { IRecipe } from "types/recipes";
+import { editorExtensions, renderExtensions } from "utils/editor";
 
 interface Props {
   recipe: IRecipe;
@@ -39,16 +33,7 @@ export default function RecipeDetails({ recipe }: Props) {
       if (typeof descr === "string") {
         descr = JSON.parse(descr);
       }
-      return generateHTML(descr, [
-        Document,
-        Paragraph,
-        TextHtml,
-        Bold,
-        OrderedList,
-        BulletList,
-        ListItem,
-        // other extensions …
-      ]);
+      return generateHTML(descr, renderExtensions);
     }
     return "";
   }, [recipe]);
@@ -60,16 +45,7 @@ export default function RecipeDetails({ recipe }: Props) {
       if (typeof instr === "string") {
         instr = JSON.parse(instr);
       }
-      return generateHTML(instr, [
-        Document,
-        Paragraph,
-        TextHtml,
-        Bold,
-        OrderedList,
-        BulletList,
-        ListItem,
-        // other extensions …
-      ]);
+      return generateHTML(instr, editorExtensions);
     }
     return "";
   }, [recipe]);
@@ -81,16 +57,7 @@ export default function RecipeDetails({ recipe }: Props) {
       if (typeof notesParsed === "string") {
         notesParsed = JSON.parse(notesParsed);
       }
-      return generateHTML(notesParsed, [
-        Document,
-        Paragraph,
-        TextHtml,
-        Bold,
-        OrderedList,
-        BulletList,
-        ListItem,
-        // other extensions …
-      ]);
+      return generateHTML(notesParsed, editorExtensions);
     }
     return "";
   }, [recipe]);

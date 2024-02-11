@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "homepage": "/",
   "private": true,
   "dependencies": {
@@ -22,6 +22,7 @@
     "@tiptap/extension-bold": "^2.0.3",
     "@tiptap/extension-bullet-list": "^2.0.3",
     "@tiptap/extension-document": "^2.0.3",
+    "@tiptap/extension-heading": "^2.2.2",
     "@tiptap/extension-highlight": "^2.0.3",
     "@tiptap/extension-link": "^2.0.3",
     "@tiptap/extension-list-item": "^2.0.3",
