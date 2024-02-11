@@ -13,27 +13,17 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
-import environ
 import sentry_sdk
+from decouple import config
 from django.db.models.query import QuerySet
 from sentry_sdk.integrations.django import DjangoIntegration
-
-env = environ.Env(
-    # set casting, default value
-    DEBUG=(bool, False)
-)
 
 # Set the project base directory
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Take environment variables from .env file
-environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
-
-print(os.path.join(BASE_DIR, ".env"))
-
 # False if not in os.environ because of casting above
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DEBUG")
+DEBUG = config("DEBUG", default=False, cast=bool)
 
 current_dir = os.path.abspath(os.path.dirname(__file__))
 path = Path(current_dir)
@@ -42,7 +32,7 @@ project_dir = path.parent.absolute().parent
 # NOTE: there are probably other items you'll need to monkey patch depending on
 # your version.
 for cls in [QuerySet]:
-    cls.__class_getitem__ = classmethod(lambda cls, *args, **kwargs: cls)  # type: ignore [attr-defined]
+    cls.__class_getitem__ = classmethod(lambda cls, *args, **kwargs: cls)
 
 
 # Quick-start development settings - unsuitable for production
@@ -50,8 +40,10 @@ for cls in [QuerySet]:
 
 # Raises Django's ImproperlyConfigured
 # exception if SECRET_KEY not in os.environ
-SECRET_KEY = env("SECRET_KEY")
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
+SECRET_KEY = config("SECRET_KEY")
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS", cast=lambda v: [s.strip() for s in v.split(",")]
+)
 
 
 # Application definition
@@ -93,7 +85,7 @@ REST_FRAMEWORK = {
         # Any other renders
     ),
     "DEFAULT_PARSER_CLASSES": (
-        # If you use MultiPartFormParser or FormParser, we also have a camel case version
+        # If you use MultiPartFormParser or FormParser, we also have a camel case
         "djangorestframework_camel_case.parser.CamelCaseFormParser",
         "djangorestframework_camel_case.parser.CamelCaseMultiPartParser",
         "djangorestframework_camel_case.parser.CamelCaseJSONParser",
@@ -124,9 +116,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "cociplan.wsgi.application"
 
-DATABASE_MYSQL_CONFIG_PATH = env("DATABASE_MYSQL_CONFIG_PATH", default=os.path.join(project_dir, "data", "mysql.conf"))
+DB_TYPE = config("DATABASE_TYPE")
 
-SQLITE_DATABASE_PATH = env("DATABASE_SQLITE_PATH", default=os.path.join(project_dir, "data", "db.sqlite3"))
+SQLITE_DB_PATH = config("DATABASE_SQLITE_PATH", default="/usr/src/data/db.sqlite3")
 
 
 # Database
@@ -135,16 +127,18 @@ SQLITE_DATABASE_PATH = env("DATABASE_SQLITE_PATH", default=os.path.join(project_
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": SQLITE_DATABASE_PATH,
+        "NAME": SQLITE_DB_PATH,
     }
 }
-if env("DATABASE_TYPE", default="sqlite") == "mysql":
+if DB_TYPE == "mysql":
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.mysql",
-            "OPTIONS": {
-                "read_default_file": DATABASE_MYSQL_CONFIG_PATH,
-            },
+            "NAME": config("DB_NAME", default="cociplan"),
+            "USER": config("DB_USER", default="root"),
+            "PASSWORD": config("DB_PASSWORD", default="example"),
+            "HOST": config("DB_HOSTNAME", default="db"),
+            "PORT": config("DB_PORT", default=3306, cast=int),
         }
     }
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -155,7 +149,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",  # noqa
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
@@ -174,7 +168,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = env("TIME_ZONE", default="UTC")
+TIME_ZONE = config("TIME_ZONE", default="UTC")
 
 USE_I18N = True
 
@@ -188,22 +182,26 @@ STATIC_URL = "/static-files/"
 STATIC_ROOT = "/app/static/"
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = env.path("MEDIA_ROOT", default=os.path.join(project_dir, "media"))
+MEDIA_ROOT = config("MEDIA_ROOT")
 
-SWAGGER_SETTINGS = {}
+SWAGGER_SETTINGS: dict = {}
 
-LOGS_ROOT = env.path("LOGS_ROOT", default=os.path.join(project_dir, "logs"))
+LOG_LEVEL = config("LOG_LEVEL", default="INFO")
+LOGS_ROOT = config("LOGS_ROOT")
+LOGGER_HANDLERS = config(
+    "LOGGER_HANDLERS", cast=lambda v: [s.strip() for s in v.split(",")]
+)
 
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
         "file": {
-            "format": "{levelname} | {asctime} | {module}:{lineno} | {process:d} | {thread:d} | {message}",
+            "format": "{levelname} | {asctime} | {module}:{lineno} | {process:d} | {thread:d} | {message}",  # noqa
             "style": "{",
         },
         "console": {
-            "format": "{levelname} | {asctime} | {message} | {pathname}:{lineno} | {module} | {funcName}",
+            "format": "{levelname} | {asctime} | {message} | {pathname}:{lineno} | {module} | {funcName}",  # noqa
             "style": "{",
         },
     },
@@ -220,21 +218,21 @@ LOGGING = {
     },
     "loggers": {
         "*": {
-            "handlers": env.list("LOGGER_HANDLERS", default=["console"]),
+            "handlers": LOGGER_HANDLERS,
             "level": "ERROR",
             "propagate": True,
         },
-        "cociplan": {
-            "handlers": env.list("LOGGER_HANDLERS", default=["console"]),
-            "level": env("LOG_LEVEL", default="INFO"),
+        "buho_backend": {
+            "handlers": LOGGER_HANDLERS,
+            "level": LOG_LEVEL,
             "propagate": True,
         },
     },
 }
 
-if env.bool("ENABLE_SENTRY", default=False):
+if config("ENABLE_SENTRY", default=False, cast=bool):
     sentry_sdk.init(
-        dsn=env("SENTRY_DSN", default=""),  # type: ignore
+        dsn=config("SENTRY_DSN", default=""),  # type: ignore
         integrations=[
             DjangoIntegration(),
         ],
@@ -248,6 +246,6 @@ if env.bool("ENABLE_SENTRY", default=False):
     )
 
 
-CORS_ALLOWED_ORIGINS = env.list(
-    "CORS_ALLOWED_ORIGINS", default=["http://localhost:3000", "http://localhost:8000", "http://localhost:8080"]
+CORS_ALLOWED_ORIGINS = config(
+    "CORS_ALLOWED_ORIGINS", cast=lambda v: [s.strip() for s in v.split(",")]
 )
