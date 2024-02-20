@@ -96,13 +96,13 @@
     "prettier:check": "prettier --check .",
     "prepare-husky": "cd .. && husky install client/.husky",
     "version": "node src/make_version.js > ./src/version.js",
-    "prebuild": "yarn run version",
-    "prestart": "yarn run version"
+    "prebuild": "npm run version",
+    "prestart": "npm run version"
   },
   "lint-staged": {
     "src/*.{ts,tsx}": [
-      "yarn prettier:fix",
-      "yarn lint"
+      "npm run prettier:fix",
+      "npm run lint"
     ]
   },
   "browserslist": {

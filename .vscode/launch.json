@@ -26,7 +26,7 @@
       "name": "Run Vite: React",
       "type": "node",
       "request": "launch",
-      "runtimeExecutable": "yarn",
+      "runtimeExecutable": "npm",
       "runtimeArgs": ["start"],
       "cwd": "${workspaceRoot}/client",
       "console": "integratedTerminal"
