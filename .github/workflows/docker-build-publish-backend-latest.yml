@@ -1,4 +1,4 @@
-name: Docker Build & Publish latest
+name: Docker Build & Publish Backend latest
 on:
   push:
     branches:

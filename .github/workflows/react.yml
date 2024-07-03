@@ -25,11 +25,11 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
+          cache: npm
           cache-dependency-path: client/package.lock.json
       - name: Install Dependencies
         run: |
-          cd client && npm install
+          cd client && npm ci
       - name: Lint
         run: |
           cd client && npm run lint
