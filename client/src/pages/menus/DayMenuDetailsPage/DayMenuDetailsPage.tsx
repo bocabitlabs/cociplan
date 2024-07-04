@@ -12,7 +12,8 @@ import { IDailyMenu } from "types/weekly-menus";
 
 export default function DayMenuDetailsPage() {
   const { menuId, dayName } = useParams();
-  const { data, isFetching } = useWeeklyMenu(menuId);
+  const menuIdNumber = menuId ? parseInt(menuId, 10) : undefined;
+  const { data, isFetching } = useWeeklyMenu(menuIdNumber);
   const { t } = useTranslation();
 
   const [dayMenu, setDayMenu] = useState<IDailyMenu | null>(null);

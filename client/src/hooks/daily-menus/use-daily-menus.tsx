@@ -6,12 +6,12 @@ import { apiClient } from "api/api-client";
 import queryClient from "api/query-client";
 import { IDailyMenu } from "types/daily-menus";
 
-export const fetchDailyMenu = async (menuId: string | undefined) => {
+export const fetchDailyMenu = async (menuId: number | undefined) => {
   const { data } = await apiClient.get<IDailyMenu>(`/daily-menus/${menuId}`);
   return data;
 };
 
-export function useDailyMenu(menuId: string | undefined, options = {}) {
+export function useDailyMenu(menuId: number | undefined, options = {}) {
   return useQuery<IDailyMenu, Error>(
     ["daily-menus", menuId],
     () => fetchDailyMenu(menuId),
@@ -23,10 +23,10 @@ export function useDailyMenu(menuId: string | undefined, options = {}) {
 }
 
 interface IUpdateDailyMenu {
-  dailyMenuId: string;
-  lunchRecipe: string | undefined;
-  dinnerRecipe: string | undefined;
-  weeklyMenuId: string | undefined;
+  dailyMenuId: number;
+  lunchRecipe: number | undefined;
+  dinnerRecipe: number | undefined;
+  weeklyMenuId: number | undefined;
 }
 
 export const useUpdateDailyMenu = () => {

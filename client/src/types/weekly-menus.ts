@@ -4,13 +4,13 @@ export type MealTypes = "LUNCH" | "DINNER";
 export type MealTemps = "HOT" | "COLD";
 
 export interface IDailyMenu {
-  id: string;
+  id: number;
   lunchRecipe: IRecipe;
   dinnerRecipe: IRecipe;
 }
 
 export interface IWeeklyMenu {
-  id: string;
+  id: number;
   dateCreated: string;
   name: string;
   mondayMenu: IDailyMenu;

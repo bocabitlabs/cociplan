@@ -21,12 +21,12 @@ export function useWeeklyMenus(options = {}) {
   );
 }
 
-export const fetchWeeklyMenu = async (menuId: string | undefined) => {
+export const fetchWeeklyMenu = async (menuId: number | undefined) => {
   const { data } = await apiClient.get<IWeeklyMenu>(`/weekly-menus/${menuId}`);
   return data;
 };
 
-export function useWeeklyMenu(menuId: string | undefined, options = {}) {
+export function useWeeklyMenu(menuId: number | undefined, options = {}) {
   return useQuery<IWeeklyMenu, Error>(
     ["weekly-menus", menuId],
     () => fetchWeeklyMenu(menuId),
@@ -89,7 +89,7 @@ export const useDeleteWeeklyMenu = () => {
 };
 
 interface IUpdateWeeklyMenu {
-  id: string;
+  id: number;
   name: string | undefined;
 }
 
