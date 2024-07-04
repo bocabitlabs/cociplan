@@ -11,20 +11,17 @@ const resources = {
   en: { translation: { ...english } },
 };
 
-// const languages = ["en", "ko"];
-
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .use(LanguageDetector)
   .init({
     resources,
-    detection: { order: ["path", "navigator"] },
     debug: true,
     fallbackLng: ["en", "es"],
     // you can use the i18n.changeLanguage function to change the language manually: https://www.i18next.com/overview/api#changelanguage
     // if you're using a language detector, do not define the lng option
     interpolation: {
-      escapeValue: false, // react already safes from xss
+      escapeValue: false, // react already safe from xss
     },
   });
 

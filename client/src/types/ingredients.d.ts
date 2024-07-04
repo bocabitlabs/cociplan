@@ -6,7 +6,7 @@ export interface IIngredientFormFields {
 }
 
 export interface IIngredient extends IIngredientFormFields {
-  id: string;
+  id: number;
   dateCreated: string;
   lastUpdated: string;
   product: IProduct;

@@ -25,7 +25,7 @@ import { IDailyMenu } from "types/weekly-menus";
 interface DayCardProps {
   dayName: string | undefined;
   dailyMenu: IDailyMenu | undefined;
-  weeklyMenuId: string | undefined;
+  weeklyMenuId: number | undefined;
 }
 
 export function DayCard({ dailyMenu, dayName, weeklyMenuId }: DayCardProps) {

@@ -16,5 +16,5 @@ export interface IProductFormFields {
 }
 
 export interface IProduct extends IProductFormFields {
-  id: string;
+  id: number;
 }

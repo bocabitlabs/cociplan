@@ -9,7 +9,8 @@ import { useWeeklyMenu } from "hooks/weekly-menus/use-weekly-menus";
 
 export default function MenuDetailsPage() {
   const { menuId } = useParams();
-  const { data, isLoading, error } = useWeeklyMenu(menuId);
+  const menuIdNumber = menuId ? parseInt(menuId, 10) : undefined;
+  const { data, isLoading, error } = useWeeklyMenu(menuIdNumber);
   const { t } = useTranslation();
 
   const items = [
