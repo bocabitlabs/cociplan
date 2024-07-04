@@ -224,6 +224,11 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
       newValues.image = base64file;
     }
 
+    // Only send the image if it has changed. Otherwise, remove it from the object
+    if (recipe.image === newValues.image) {
+      delete newValues.image;
+    }
+
     console.log(newValues);
     mutate({ recipeId: recipe.id, newRecipe: newValues });
     navigate(-1);
