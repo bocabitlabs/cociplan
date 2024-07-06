@@ -79,24 +79,26 @@ export default function WeeklyMenusList() {
         <CreateWeeklyMenuButton />
       </Group>
       <Table>
-        <thead>
-          <tr>
+        <Table.Thead>
+          <Table.Tr>
             <th>{t("Fecha")}</th>
             <th>{t("Name")}</th>
             <th>{t("Acciones")}</th>
-          </tr>
-        </thead>
-        <tbody>
+          </Table.Tr>
+        </Table.Thead>
+        <Table.Tbody>
           {data &&
             data.map((menu: IWeeklyMenu) => (
-              <tr key={menu.id}>
-                <td>{dayjs(menu.dateCreated).format("DD/MM/YYYY HH:mm")}</td>
-                <td>
+              <Table.Tr key={menu.id}>
+                <Table.Td>
+                  {dayjs(menu.dateCreated).format("DD/MM/YYYY HH:mm")}
+                </Table.Td>
+                <Table.Td>
                   <Anchor component={Link} to={`/menus/${menu.id}`}>
                     {menu.name}
                   </Anchor>
-                </td>
-                <td>
+                </Table.Td>
+                <Table.Td>
                   <Group>
                     <ActionIcon color="red" title={t("Borrar menu semanal")}>
                       <IconTrash
@@ -110,10 +112,10 @@ export default function WeeklyMenusList() {
                       <IconEdit />
                     </ActionIcon>
                   </Group>
-                </td>
-              </tr>
+                </Table.Td>
+              </Table.Tr>
             ))}
-        </tbody>
+        </Table.Tbody>
       </Table>
       <Modal opened={opened} onClose={close} title="Borrar menú semanal">
         <Stack>

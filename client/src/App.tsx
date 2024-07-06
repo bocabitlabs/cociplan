@@ -1,124 +1,61 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import {
-  ActionIcon,
   AppShell,
-  Button,
-  ColorScheme,
-  ColorSchemeProvider,
+  Burger,
   Group,
-  Header,
   MantineProvider,
-  Navbar,
+  ScrollArea,
 } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { Notifications } from "@mantine/notifications";
-import { IconMoonStars, IconSun } from "@tabler/icons-react";
-import Brand from "components/Brand/Brand";
+import LanguageSelector from "components/LanguageSelector/LanguageSelector";
+import Logo from "components/Logo/Logo";
 import NavigationLinks from "components/NavigationLinks/NavigationLinks";
-import i18n from "i18n";
-
-function useDarkMode() {
-  return (
-    window.matchMedia &&
-    window.matchMedia("(prefers-color-scheme:dark)").matches
-  );
-}
+import ToggleThemeButton from "components/ToggleThemeButton/ToggleThemeButton";
 
 function App() {
-  const [colorScheme, setColorScheme] = useState<ColorScheme>(
-    useDarkMode() ? "dark" : "light",
-  );
-  const toggleColorScheme = (value?: ColorScheme) =>
-    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
-  const [opened, setOpened] = useState(false);
-
-  const changeLanguage = (lng: string) => {
-    console.log("Change language to", lng);
-    i18n.changeLanguage(lng);
-  };
+  const [opened, { toggle, close }] = useDisclosure();
 
   const location = useLocation();
   useEffect(() => {
-    setOpened(false);
-  }, [location]);
+    close();
+  }, [close, location]);
 
   return (
-    <ColorSchemeProvider
-      colorScheme={colorScheme}
-      toggleColorScheme={toggleColorScheme}
-    >
-      <MantineProvider
-        theme={{ colorScheme }}
-        withNormalizeCSS
-        withGlobalStyles
+    <MantineProvider defaultColorScheme="light">
+      <AppShell
+        header={{ height: 60 }}
+        navbar={{
+          width: 300,
+          breakpoint: "sm",
+          collapsed: { mobile: !opened },
+        }}
+        padding="md"
       >
-        <AppShell
-          navbarOffsetBreakpoint="sm"
-          padding="md"
-          navbar={
-            <Navbar
-              hiddenBreakpoint="sm"
-              hidden={!opened}
-              width={{ sm: 250, lg: 300 }}
-              height="calc(100vh - 105px)"
-              p="md"
-            >
-              <Navbar.Section grow mt="md">
-                <NavigationLinks />
-              </Navbar.Section>
-              <Navbar.Section>
-                <Group>
-                  <ActionIcon
-                    variant="default"
-                    onClick={() => toggleColorScheme()}
-                    size={30}
-                  >
-                    {colorScheme === "dark" ? (
-                      <IconSun size={16} />
-                    ) : (
-                      <IconMoonStars size={16} />
-                    )}
-                  </ActionIcon>
-
-                  <Button
-                    variant="subtle"
-                    compact
-                    uppercase
-                    onClick={() => changeLanguage("es")}
-                  >
-                    es
-                  </Button>
-                  <Button
-                    variant="subtle"
-                    compact
-                    uppercase
-                    onClick={() => changeLanguage("en")}
-                  >
-                    en
-                  </Button>
-                </Group>
-              </Navbar.Section>
-            </Navbar>
-          }
-          header={
-            <Header height={60} p="xs">
-              <Brand opened={opened} setOpened={setOpened} />
-            </Header>
-          }
-          styles={(theme) => ({
-            main: {
-              backgroundColor:
-                theme.colorScheme === "dark"
-                  ? theme.colors.dark[8]
-                  : theme.colors.gray[0],
-            },
-          })}
-        >
+        <AppShell.Header>
+          <Group h="100%" px="md" justify="space-between">
+            <Group>
+              <Burger onClick={toggle} hiddenFrom="sm" size="sm" />
+              <Logo />
+            </Group>
+            <Group>
+              <LanguageSelector />
+              <ToggleThemeButton />
+            </Group>
+          </Group>
+        </AppShell.Header>
+        <AppShell.Navbar hidden={!opened} p="md">
+          <AppShell.Section my="md" component={ScrollArea}>
+            <NavigationLinks />
+          </AppShell.Section>
+        </AppShell.Navbar>
+        <AppShell.Main style={{ backgroundColor: "#fbfbfb" }}>
           <Outlet />
-        </AppShell>
-        <Notifications />
-      </MantineProvider>
-    </ColorSchemeProvider>
+        </AppShell.Main>
+      </AppShell>
+      <Notifications />
+    </MantineProvider>
   );
 }
 

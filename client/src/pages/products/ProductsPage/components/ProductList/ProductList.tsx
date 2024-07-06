@@ -46,29 +46,29 @@ export default function ProductsList() {
         <InitializeProductsButton />
       </Group>
       <Table>
-        <thead>
-          <tr>
+        <Table.Thead>
+          <Table.Tr>
             <th>{t("Name")}</th>
             <th>{t("Type")}</th>
             <th>{t("Actions")}</th>
-          </tr>
-        </thead>
-        <tbody>
+          </Table.Tr>
+        </Table.Thead>
+        <Table.Tbody>
           {data &&
             data.map((product: IProduct) => (
-              <tr key={product.id}>
-                <td>{product.name}</td>
-                <td>{t(product.type)}</td>
-                <td>
+              <Table.Tr key={product.id}>
+                <Table.Td>{product.name}</Table.Td>
+                <Table.Td>{t(product.type)}</Table.Td>
+                <Table.Td>
                   <ActionIcon color="red" title={t("Borrar producto")}>
                     <IconTrash
                       onClick={() => handleOpenModal(product.id, product.name)}
                     />
                   </ActionIcon>
-                </td>
-              </tr>
+                </Table.Td>
+              </Table.Tr>
             ))}
-        </tbody>
+        </Table.Tbody>
       </Table>
       <Modal opened={opened} onClose={close} title="Borrar producto">
         <Stack>

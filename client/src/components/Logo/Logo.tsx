@@ -1,12 +1,18 @@
-import { Group, ColorScheme, Text, Image } from "@mantine/core";
+import { Group, Image, Title } from "@mantine/core";
 
-export default function Logo({ colorScheme }: { colorScheme: ColorScheme }) {
+export default function Logo() {
   return (
     <Group>
-      <Image src="/icons/favicon-192.png" width={40} height={40} />
-      <Text color={colorScheme === "dark" ? "#fff" : "#000"}>
-        <strong>Cociplan</strong>{" "}
-      </Text>
+      <Image
+        fit="contain"
+        src="/icons/favicon-192.png"
+        width="auto"
+        height={40}
+        style={{ width: "auto" }}
+      />
+      <Title order={1} size="1.5rem">
+        Cociplan
+      </Title>
     </Group>
   );
 }

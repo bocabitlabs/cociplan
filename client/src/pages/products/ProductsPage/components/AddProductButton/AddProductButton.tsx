@@ -68,13 +68,13 @@ export default function AddProductButton() {
             <NativeSelect
               label={t("Tipo")}
               withAsterisk
-              placeholder={t("Elije un tipo de producto")}
+              placeholder={t<string>("Elije un tipo de producto")}
               data={productTypes}
               {...form.getInputProps("type")}
               required
             />
 
-            <Group position="right" mt="md">
+            <Group mt="md">
               <Button type="submit">{t("Crear")}</Button>
             </Group>
           </form>

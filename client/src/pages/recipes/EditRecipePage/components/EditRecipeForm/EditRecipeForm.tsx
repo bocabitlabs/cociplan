@@ -12,6 +12,7 @@ import {
   NumberInput,
   Rating,
   Select,
+  SimpleGrid,
   Switch,
   Text,
   TextInput,
@@ -118,7 +119,7 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
 
   const getIngredients = useCallback(() => {
     const productsOptions = products.map((product: IProduct) => ({
-      value: product.id,
+      value: product.id.toString(),
       label: product.name,
     }));
     // Add an option at the beginning of the array
@@ -138,7 +139,7 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
         <TextInput
           placeholder="Quantity"
           withAsterisk
-          sx={{ flex: 1 }}
+          style={{ flex: 1 }}
           {...form.getInputProps(`ingredients.${index}.quantity`)}
         />
 
@@ -160,7 +161,7 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
         // eslint-disable-next-line react/no-array-index-key
         key={index}
         src={imageUrl}
-        imageProps={{ onLoad: () => URL.revokeObjectURL(imageUrl) }}
+        onLoad={() => URL.revokeObjectURL(imageUrl)}
         width={200}
         mt="md"
       />
@@ -169,7 +170,7 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
 
   const getSides = useCallback(() => {
     const productsOptions = products.map((product: IProduct) => ({
-      value: product.id,
+      value: product.id.toString(),
       label: product.name,
     }));
     // Add an option at the beginning of the array
@@ -188,7 +189,7 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
         <TextInput
           placeholder="Quantity"
           withAsterisk
-          sx={{ flex: 1 }}
+          style={{ flex: 1 }}
           {...form.getInputProps(`sides.${index}.quantity`)}
         />
 
@@ -310,13 +311,18 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
           />
 
           <Group mt="md">
-            <ImageDropZone mt="md" onDrop={handleDrop} />
+            <SimpleGrid
+              cols={{ base: 1, sm: 4 }}
+              mt={previews.length > 0 ? "xl" : 0}
+            >
+              <ImageDropZone mt="md" onDrop={handleDrop} />
 
-            {files.length === 0 && recipe && recipe.image && (
-              <Image src={recipe.image} width={200} mt="md" />
-            )}
+              {files.length === 0 && recipe && recipe.image && (
+                <Image src={recipe.image} width={200} mt="md" />
+              )}
 
-            {previews}
+              {previews}
+            </SimpleGrid>
           </Group>
 
           <Text fz="lg" mt="md">

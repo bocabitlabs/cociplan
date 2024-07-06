@@ -15,8 +15,9 @@ import {
   Switch,
   Image,
   Checkbox,
+  SimpleGrid,
 } from "@mantine/core";
-import { FileWithPath } from "@mantine/dropzone";
+import { FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { useForm } from "@mantine/form";
 import { randomId } from "@mantine/hooks";
 import { RichTextEditor } from "@mantine/tiptap";
@@ -69,9 +70,10 @@ export default function AddRecipeForm() {
         // eslint-disable-next-line react/no-array-index-key
         key={index}
         src={imageUrl}
-        imageProps={{ onLoad: () => URL.revokeObjectURL(imageUrl) }}
+        onLoad={() => URL.revokeObjectURL(imageUrl)}
         width={200}
         mt="md"
+        height="auto"
       />
     );
   });
@@ -121,7 +123,7 @@ export default function AddRecipeForm() {
 
   const getIngredients = () => {
     const productsOptions = products.map((product: IProduct) => ({
-      value: product.id,
+      value: product.id.toString(),
       label: product.name,
     }));
     // Add an option at the beginning of the array
@@ -141,7 +143,7 @@ export default function AddRecipeForm() {
         <TextInput
           placeholder={t<string>("Quantity")}
           withAsterisk
-          sx={{ flex: 1 }}
+          style={{ flex: 1 }}
           {...form.getInputProps(`ingredients.${index}.quantity`)}
         />
 
@@ -158,7 +160,7 @@ export default function AddRecipeForm() {
 
   const getSides = () => {
     const productsOptions = products.map((product: IProduct) => ({
-      value: product.id,
+      value: product.id.toString(),
       label: product.name,
     }));
 
@@ -176,7 +178,7 @@ export default function AddRecipeForm() {
         <TextInput
           placeholder={t<string>("Quantity")}
           withAsterisk
-          sx={{ flex: 1 }}
+          style={{ flex: 1 }}
           {...form.getInputProps(`sides.${index}.quantity`)}
         />
 
@@ -293,9 +295,18 @@ export default function AddRecipeForm() {
           />
 
           <Group mt="md">
-            <ImageDropZone mt="md" onDrop={handleDrop} />
+            <SimpleGrid
+              cols={{ base: 1, sm: 4 }}
+              mt={previews.length > 0 ? "xl" : 0}
+            >
+              <ImageDropZone
+                accept={IMAGE_MIME_TYPE}
+                mt="md"
+                onDrop={handleDrop}
+              />
 
-            {previews}
+              {previews}
+            </SimpleGrid>
           </Group>
 
           <Text fz="lg" mt="md">
@@ -403,7 +414,7 @@ export default function AddRecipeForm() {
             {t("Descripcion")}
           </Text>
 
-          <RichTextEditor editor={descriptionEditor}>
+          <RichTextEditor editor={descriptionEditor} style={{ minHeight: 200 }}>
             <RichTextEditor.Toolbar sticky stickyOffset={60}>
               <RichTextEditor.ControlsGroup>
                 <RichTextEditor.Bold />
@@ -451,7 +462,10 @@ export default function AddRecipeForm() {
             {t("Pasos a seguir")}
           </Text>
 
-          <RichTextEditor editor={instructionsEditor}>
+          <RichTextEditor
+            editor={instructionsEditor}
+            style={{ minHeight: 200 }}
+          >
             <RichTextEditor.Toolbar sticky stickyOffset={60}>
               <RichTextEditor.ControlsGroup>
                 <RichTextEditor.Bold />
@@ -499,7 +513,7 @@ export default function AddRecipeForm() {
             {t("Notas de la receta")}
           </Text>
 
-          <RichTextEditor editor={notesEditor}>
+          <RichTextEditor editor={notesEditor} style={{ minHeight: 200 }}>
             <RichTextEditor.Toolbar sticky stickyOffset={60}>
               <RichTextEditor.ControlsGroup>
                 <RichTextEditor.Bold />
