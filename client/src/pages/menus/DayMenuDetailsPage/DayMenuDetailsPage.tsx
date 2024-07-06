@@ -1,5 +1,4 @@
-/* eslint-disable react/no-danger */
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 import { Anchor, Breadcrumbs, Grid, Title } from "@mantine/core";

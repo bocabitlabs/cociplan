@@ -14,7 +14,7 @@ export default function CreateWeeklyMenuButton() {
 
   return (
     <Button
-      leftIcon={<IconPlus size="1rem" />}
+      leftSection={<IconPlus size="1rem" />}
       loading={isLoading}
       onClick={handleClick}
     >

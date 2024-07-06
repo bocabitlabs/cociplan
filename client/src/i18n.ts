@@ -16,7 +16,7 @@ i18n
   .use(LanguageDetector)
   .init({
     resources,
-    debug: true,
+    debug: false,
     fallbackLng: ["en", "es"],
     // you can use the i18n.changeLanguage function to change the language manually: https://www.i18next.com/overview/api#changelanguage
     // if you're using a language detector, do not define the lng option

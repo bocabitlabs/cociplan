@@ -4,18 +4,18 @@ import { Group, Title, Text, Badge, ActionIcon } from "@mantine/core";
 import { IconArrowLeft } from "@tabler/icons-react";
 
 interface PageTitleProps {
-  withBackButton?: boolean;
   header: string;
-  subHeader?: string;
-  icon?: React.ReactNode;
+  subHeader?: string | null;
+  icon?: React.ReactNode | null;
+  withBackButton?: boolean;
 }
 
 function PageTitle({
-  withBackButton,
+  withBackButton = false,
   header,
-  subHeader,
-  icon,
-}: PageTitleProps) {
+  subHeader = null,
+  icon = null,
+}: Readonly<PageTitleProps>) {
   const navigate = useNavigate();
   const navigateBack = () => {
     navigate(-1);
@@ -23,16 +23,7 @@ function PageTitle({
 
   return (
     <Group grow>
-      <Title
-        order={1}
-        sx={(theme) => ({
-          color:
-            theme.colorScheme === "dark"
-              ? theme.colors.dark[2]
-              : theme.colors.gray[9],
-        })}
-        mt="md"
-      >
+      <Title order={1} mt="md" textWrap="wrap">
         {withBackButton && (
           <ActionIcon style={{ display: "inline" }} onClick={navigateBack}>
             <IconArrowLeft />
@@ -40,25 +31,15 @@ function PageTitle({
         )}{" "}
         {icon} {header}
       </Title>
-      <Text
-        size="sm"
-        sx={(theme) => ({
-          color:
-            theme.colorScheme === "dark"
-              ? theme.colors.dark[3]
-              : theme.colors.gray[7],
-        })}
-      >
-        {subHeader && <Badge>{subHeader}</Badge>}
-      </Text>
+      <Text size="sm">{subHeader && <Badge>{subHeader}</Badge>}</Text>
     </Group>
   );
 }
 
 PageTitle.defaultProps = {
-  withBackButton: false,
-  subHeader: null,
   icon: null,
+  subHeader: null,
+  withBackButton: false,
 };
 
 export default PageTitle;

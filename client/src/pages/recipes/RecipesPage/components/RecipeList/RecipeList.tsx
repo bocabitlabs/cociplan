@@ -67,7 +67,7 @@ export default function RecipeList() {
       <Group>
         <Button
           onClick={() => navigate(routes.recipesAddRoute)}
-          leftIcon={<IconPlus />}
+          leftSection={<IconPlus />}
         >
           {t("Add new recipe")}
         </Button>
@@ -76,80 +76,75 @@ export default function RecipeList() {
       {isLoadindRecipes && <Text>{t("Cargando...")}</Text>}
       {data && (
         <Table>
-          <thead>
-            <tr>
-              {isMobile && <th>{t("Image")}</th>}
-              <th>{t("Name")}</th>
-              <th>{t("Type")}</th>
-              {isMobile && <th>{t("Seasons")}</th>}
-              <th>{t("Actions")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data &&
-              data.map((recipe: IRecipe) => (
-                <tr key={recipe.id}>
-                  {isMobile && (
-                    <td>
-                      <Image
-                        src={recipe.image}
-                        alt={recipe.name}
-                        withPlaceholder
-                        width={80}
-                      />
-                    </td>
-                  )}
-                  <td>
-                    {recipe.active ? (
-                      <strong>
-                        <Anchor component={Link} to={`${recipe.id}`}>
-                          {recipe.name}
-                        </Anchor>
-                      </strong>
-                    ) : (
+          <Table.Thead>
+            <Table.Tr>
+              {isMobile && <Table.Th>{t("Image")}</Table.Th>}
+              <Table.Th>{t("Name")}</Table.Th>
+              <Table.Th>{t("Type")}</Table.Th>
+              {isMobile && <Table.Th>{t("Seasons")}</Table.Th>}
+              <Table.Th>{t("Actions")}</Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>
+            {data?.map((recipe: IRecipe) => (
+              <Table.Tr key={recipe.id}>
+                {isMobile && (
+                  <Table.Td>
+                    <Image
+                      src={recipe.image}
+                      alt={recipe.name}
+                      fallbackSrc="https://placehold.co/80x80?text=Placeholder"
+                      h={80}
+                      w="auto"
+                      fit="contain"
+                    />
+                  </Table.Td>
+                )}
+                <Table.Td>
+                  {recipe.active ? (
+                    <strong>
                       <Anchor component={Link} to={`${recipe.id}`}>
                         {recipe.name}
                       </Anchor>
-                    )}
-                  </td>
-                  <td>
-                    {recipe.meal === "LUNCH" ? <IconSunHigh /> : <IconMoon />}
-                  </td>
-                  {isMobile && (
-                    <td>
-                      {recipe.seasonSpring && <IconFlower color="teal" />}{" "}
-                      {recipe.seasonSummer && <IconSun color="#f76707" />}
-                      {recipe.seasonAutumn && <IconLeaf color="brown" />}
-                      {recipe.seasonWinter && <IconSnowman color="gray" />}
-                    </td>
+                    </strong>
+                  ) : (
+                    <Anchor component={Link} to={`${recipe.id}`}>
+                      {recipe.name}
+                    </Anchor>
                   )}
-                  <td>
-                    <Group>
-                      <ActionIcon color="red" title="Borrar receta">
-                        <IconTrash
-                          onClick={() =>
-                            handleOpenModal(recipe.id, recipe.name)
-                          }
-                        />
-                      </ActionIcon>
-                      <ActionIcon title="Editar receta">
-                        <IconEdit
-                          onClick={() => navigate(`${recipe.id}/edit`)}
-                        />
-                      </ActionIcon>
-                    </Group>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
+                </Table.Td>
+                <Table.Td>
+                  {recipe.meal === "LUNCH" ? <IconSunHigh /> : <IconMoon />}
+                </Table.Td>
+                {isMobile && (
+                  <Table.Td>
+                    {recipe.seasonSpring && <IconFlower color="teal" />}{" "}
+                    {recipe.seasonSummer && <IconSun color="#f76707" />}
+                    {recipe.seasonAutumn && <IconLeaf color="brown" />}
+                    {recipe.seasonWinter && <IconSnowman color="gray" />}
+                  </Table.Td>
+                )}
+                <Table.Td>
+                  <Group>
+                    <ActionIcon color="red" title="Borrar receta">
+                      <IconTrash
+                        onClick={() => handleOpenModal(recipe.id, recipe.name)}
+                      />
+                    </ActionIcon>
+                    <ActionIcon title="Editar receta">
+                      <IconEdit onClick={() => navigate(`${recipe.id}/edit`)} />
+                    </ActionIcon>
+                  </Group>
+                </Table.Td>
+              </Table.Tr>
+            ))}
+          </Table.Tbody>
         </Table>
       )}
       <Modal opened={opened} onClose={close} title="Borrar receta">
         <Stack>
           <Text>Estas seguro de que quieres borrar la receta?</Text>
-          <Text weight={500} mt="sm">
-            {selectedRecipe.name}
-          </Text>
+          <Text mt="sm">{selectedRecipe.name}</Text>
           <Group>
             <Button
               loading={isLoadingDelete}

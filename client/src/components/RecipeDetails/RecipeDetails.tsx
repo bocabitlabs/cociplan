@@ -104,11 +104,11 @@ export default function RecipeDetails({ recipe }: Props) {
           <Text>{recipe.servings}</Text>
         </Group>
       </Grid.Col>
-      <Grid.Col md={16} sm={24}>
+      <Grid.Col span={{ md: 16, sm: 24 }}>
         <Paper shadow="xs" p="md">
           <Grid columns={24}>
             <Grid.Col span={24}>
-              <Group position="apart">
+              <Group justify="space-between">
                 {recipe.active ? (
                   <Badge color="teal">{t("Activa")}</Badge>
                 ) : (
@@ -121,7 +121,7 @@ export default function RecipeDetails({ recipe }: Props) {
             </Grid.Col>
           </Grid>
           <Grid>
-            <Grid.Col md={9} order={2} orderSm={2} orderLg={1}>
+            <Grid.Col span={{ md: 9, order: 2, orderSm: 2, orderLg: 1 }}>
               <Stack>
                 <Text>
                   <div dangerouslySetInnerHTML={{ __html: description }} />
@@ -150,20 +150,19 @@ export default function RecipeDetails({ recipe }: Props) {
                 )}
               </Stack>
             </Grid.Col>
-            <Grid.Col md={3} order={1} orderSm={1} orderLg={2}>
+            <Grid.Col span={{ md: 3, order: 1, orderSm: 1, orderLg: 2 }}>
               <Image
                 maw="auto"
                 mx="auto"
                 radius="md"
                 src={recipe.image}
                 alt={t<string>("Imagen de la receta")}
-                withPlaceholder
               />
             </Grid.Col>
           </Grid>
         </Paper>
       </Grid.Col>
-      <Grid.Col sm={24} md={6}>
+      <Grid.Col span={{ sm: 24, md: 6 }}>
         <Stack>
           <Title order={5}>{t("Detalles")}</Title>
           {recipe.meal === "LUNCH" && (

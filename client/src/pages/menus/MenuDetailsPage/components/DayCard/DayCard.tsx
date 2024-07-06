@@ -74,21 +74,16 @@ export function DayCard({ dailyMenu, dayName, weeklyMenuId }: DayCardProps) {
     <>
       <Card shadow="sm">
         <Card.Section>
-          <Image
-            src={dailyMenu?.lunchRecipe.image}
-            height={160}
-            alt="Recipe"
-            withPlaceholder
-          />
+          <Image src={dailyMenu?.lunchRecipe.image} height={160} alt="Recipe" />
         </Card.Section>
-        <Group position="apart" mt="md" mb="xs">
+        <Group justify="space-around" mt="md" mb="xs">
           <Title order={3}>{dayName}</Title>
           <ActionIcon onClick={open}>
             <IconEdit />
           </ActionIcon>
         </Group>
 
-        <Stack spacing="xs" align="center">
+        <Stack gap="xs" align="center">
           <Text c="dimmed" fz="sm">
             Comida
           </Text>
@@ -136,7 +131,7 @@ export function DayCard({ dailyMenu, dayName, weeklyMenuId }: DayCardProps) {
             required
           />
 
-          <Group position="right" mt="md">
+          <Group mt="md">
             <Button type="submit">{t("Update")}</Button>
           </Group>
         </form>
