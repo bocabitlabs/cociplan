@@ -1,6 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
-import { Anchor, Breadcrumbs, Grid, Stack } from "@mantine/core";
+import {
+  Anchor,
+  Breadcrumbs,
+  Grid,
+  LoadingOverlay,
+  Stack,
+} from "@mantine/core";
 import { DayCard } from "./components/DayCard/DayCard";
 import { Footer } from "components/Footer/Footer";
 import PageTitle from "components/PageTitle/PageTitle";
@@ -22,13 +28,16 @@ export default function MenuDetailsPage() {
     </Anchor>
   ));
 
-  if (isLoading) return <div>{t("Cargando...")}</div>;
-
   if (error) return <div>{t("Error")}</div>;
 
   if (data) {
     return (
       <Grid>
+        <LoadingOverlay
+          visible={isLoading}
+          zIndex={1000}
+          overlayProps={{ radius: "sm", blur: 2 }}
+        />
         <Grid.Col>
           <Breadcrumbs>{items}</Breadcrumbs>
           <PageTitle

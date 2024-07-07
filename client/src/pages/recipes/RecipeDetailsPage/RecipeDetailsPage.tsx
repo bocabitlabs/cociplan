@@ -1,7 +1,7 @@
 /* eslint-disable react/no-danger */
 import React from "react";
 import { Link, useParams } from "react-router-dom";
-import { Anchor, Breadcrumbs, Grid } from "@mantine/core";
+import { Anchor, Breadcrumbs, Grid, LoadingOverlay } from "@mantine/core";
 import { Footer } from "components/Footer/Footer";
 import PageTitle from "components/PageTitle/PageTitle";
 import RecipeDetails from "components/RecipeDetails/RecipeDetails";
@@ -9,7 +9,7 @@ import { useRecipe } from "hooks/recipes/use-recipes";
 
 export default function RecipeDetailsPage() {
   const { recipeId } = useParams();
-  const { data, isFetching } = useRecipe(recipeId ? +recipeId : undefined);
+  const { data, isLoading } = useRecipe(recipeId ? +recipeId : undefined);
 
   const items = [
     { title: "Inicio", href: "../.." },
@@ -22,11 +22,14 @@ export default function RecipeDetailsPage() {
     </Anchor>
   ));
 
-  if (isFetching) return <div>Cargando...</div>;
-
   if (data) {
     return (
       <Grid columns={24}>
+        <LoadingOverlay
+          visible={isLoading}
+          zIndex={1000}
+          overlayProps={{ radius: "sm", blur: 2 }}
+        />
         <Grid.Col span={24}>
           <Breadcrumbs>{items}</Breadcrumbs>
           <PageTitle
@@ -34,7 +37,6 @@ export default function RecipeDetailsPage() {
             withBackButton
           />
         </Grid.Col>
-        {isFetching && <div>Cargando receta...</div>}
         {data && <RecipeDetails recipe={data} />}
         <Grid.Col span={24}>
           <Footer />

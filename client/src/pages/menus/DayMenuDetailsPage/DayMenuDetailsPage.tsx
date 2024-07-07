@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
-import { Anchor, Breadcrumbs, Grid, Title } from "@mantine/core";
+import {
+  Anchor,
+  Breadcrumbs,
+  Grid,
+  LoadingOverlay,
+  Title,
+} from "@mantine/core";
 import { Footer } from "components/Footer/Footer";
 import PageTitle from "components/PageTitle/PageTitle";
 import RecipeDetails from "components/RecipeDetails/RecipeDetails";
@@ -12,7 +18,7 @@ import { IDailyMenu } from "types/weekly-menus";
 export default function DayMenuDetailsPage() {
   const { menuId, dayName } = useParams();
   const menuIdNumber = menuId ? parseInt(menuId, 10) : undefined;
-  const { data, isFetching } = useWeeklyMenu(menuIdNumber);
+  const { data, isLoading } = useWeeklyMenu(menuIdNumber);
   const { t } = useTranslation();
 
   const [dayMenu, setDayMenu] = useState<IDailyMenu | null>(null);
@@ -61,10 +67,13 @@ export default function DayMenuDetailsPage() {
     }
   }, [data, dayName]);
 
-  if (isFetching) return <div>Cargando...</div>;
-
   return (
     <Grid columns={24}>
+      <LoadingOverlay
+        visible={isLoading}
+        zIndex={1000}
+        overlayProps={{ radius: "sm", blur: 2 }}
+      />
       <Grid.Col span={24}>
         <Breadcrumbs>{items}</Breadcrumbs>
         <PageTitle
