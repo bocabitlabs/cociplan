@@ -66,7 +66,7 @@ export default function RecipeList() {
 
   return (
     <Stack>
-      <Group>
+      <Group justify="space-between">
         <Button
           onClick={() => navigate(routes.recipesAddRoute)}
           leftSection={<IconPlus />}
