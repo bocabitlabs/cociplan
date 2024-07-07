@@ -1,5 +1,3 @@
-/* eslint-disable react/no-danger */
-import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { Anchor, Breadcrumbs, Grid, LoadingOverlay } from "@mantine/core";
 import { Footer } from "components/Footer/Footer";
