@@ -61,9 +61,9 @@ export default function ProductsList() {
         />
         <Table.Thead>
           <Table.Tr>
-            <th>{t("Name")}</th>
-            <th>{t("Type")}</th>
-            <th>{t("Actions")}</th>
+            <Table.Th>{t("Name")}</Table.Th>
+            <Table.Th>{t("Type")}</Table.Th>
+            <Table.Th>{t("Actions")}</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>

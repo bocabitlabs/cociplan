@@ -27,6 +27,7 @@ import {
 } from "@tabler/icons-react";
 import InitializeRecipesButton from "../InitializeRecipesButton/InitializeRecipesButton";
 import { useDeleteRecipe, useRecipes } from "hooks/recipes/use-recipes";
+import { getRecipeTypeLabel } from "pages/recipes/recipe-types";
 import routes from "routes";
 import { IRecipe } from "types/recipes";
 
@@ -86,6 +87,7 @@ export default function RecipeList() {
               {isMobile && <Table.Th>{t("Image")}</Table.Th>}
               <Table.Th>{t("Name")}</Table.Th>
               <Table.Th>{t("Type")}</Table.Th>
+              <Table.Th>{t("Meal")}</Table.Th>
               {isMobile && <Table.Th>{t("Seasons")}</Table.Th>}
               <Table.Th>{t("Actions")}</Table.Th>
             </Table.Tr>
@@ -118,6 +120,7 @@ export default function RecipeList() {
                     </Anchor>
                   )}
                 </Table.Td>
+                <Table.Td>{getRecipeTypeLabel(recipe.type)}</Table.Td>
                 <Table.Td>
                   {recipe.meal === "LUNCH" ? <IconSunHigh /> : <IconMoon />}
                 </Table.Td>

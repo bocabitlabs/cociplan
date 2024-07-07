@@ -6,6 +6,7 @@ import {
   Anchor,
   Button,
   Group,
+  LoadingOverlay,
   Modal,
   Stack,
   Table,
@@ -30,7 +31,10 @@ export default function WeeklyMenusList() {
   const [opened, { open, close }] = useDisclosure(false);
   const [openedEdit, { open: openEdit, close: closeEdit }] =
     useDisclosure(false);
-  const [selectedMenu, setSelectedMenu] = useState({ id: "", name: "" });
+  const [selectedMenu, setSelectedMenu] = useState<{
+    id: number | null;
+    name: string;
+  }>({ id: null, name: "" });
   const { t } = useTranslation();
   const form = useForm({
     initialValues: {
@@ -38,43 +42,50 @@ export default function WeeklyMenusList() {
     },
   });
   const { mutate: updateMutate } = useUpdateWeeklyMenu();
-  const handleOpenModal = (menuId: string, menuName: string) => {
+  const handleOpenModal = (menuId: number, menuName: string) => {
     setSelectedMenu({ id: menuId, name: menuName });
     open();
   };
 
   const handleCloseModal = () => {
-    setSelectedMenu({ id: "", name: "" });
+    setSelectedMenu({ id: null, name: "" });
     close();
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: number | null) => {
+    if (id === null) {
+      throw new Error("Cannot delete Weekly menu. id is null");
+    }
     mutate(id);
     handleCloseModal();
   };
 
-  const handleOpenEditModal = (menuId: string, menuName: string) => {
+  const handleOpenEditModal = (menuId: number, menuName: string) => {
     setSelectedMenu({ id: menuId, name: menuName });
     form.setFieldValue("name", menuName);
     openEdit();
   };
 
   const handleCloseEditModal = () => {
-    setSelectedMenu({ id: "", name: "" });
+    setSelectedMenu({ id: null, name: "" });
     closeEdit();
   };
 
-  const handleUpdate = (id: string) => {
+  const handleUpdate = (id: number | null) => {
+    if (id === null) {
+      throw new Error("Cannot update Weekly menu. id is null");
+    }
     updateMutate({ id, name: form.values.name });
     handleCloseEditModal();
   };
 
-  if (isLoading) {
-    return <div>{t("Cargando...")}</div>;
-  }
-
   return (
     <Stack>
+      <LoadingOverlay
+        visible={isLoading}
+        zIndex={1000}
+        overlayProps={{ radius: "sm", blur: 2 }}
+      />
       <Group>
         <CreateWeeklyMenuButton />
       </Group>
@@ -122,11 +133,11 @@ export default function WeeklyMenusList() {
           <Text>
             {t("Estas seguro de que quieres borrar el menu semanal?")}
           </Text>
-          <Text weight={500} mt="sm">
+          <Text fw={500} mt="sm">
             {selectedMenu.name}
           </Text>
           <Group>
-            <Button onClick={() => handleDelete(+selectedMenu.id)}>
+            <Button onClick={() => handleDelete(selectedMenu.id)}>
               {t("Sí, borrar menú")}
             </Button>
             <Button onClick={handleCloseModal} variant="light">

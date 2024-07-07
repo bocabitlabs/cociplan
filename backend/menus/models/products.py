@@ -20,7 +20,9 @@ class ProductType(models.TextChoices):
 class Product(models.Model):
     id = models.BigAutoField(primary_key=True)
     name: models.CharField = models.CharField(max_length=200, unique=True)
-    type = models.CharField(choices=ProductType.choices, default=ProductType.NONE, max_length=200)
+    type = models.CharField(
+        choices=ProductType.choices, default=ProductType.NONE, max_length=200
+    )
 
     date_created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
     last_updated: models.DateTimeField = models.DateTimeField(auto_now=True)

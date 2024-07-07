@@ -21,6 +21,7 @@ export interface IRecipeFormFields {
   servings: number;
   isOnlyDinner: boolean;
   isOnlyLunch: boolean;
+  isOvenRecipe: boolean;
   canBeDinner: boolean;
   canBeLunch: boolean;
   daysOfWeek: DaysOfWeek;
@@ -28,6 +29,24 @@ export interface IRecipeFormFields {
   seasonSummer: boolean;
   seasonAutumn: boolean;
   seasonWinter: boolean;
+  type:
+    | "MEAT_SASUAGE"
+    | "FISH"
+    | "VEGETABLES"
+    | "LEGUMES"
+    | "EGGS"
+    | "FRUITS"
+    | "MILK_RECIPE"
+    | "GRAIN_NUTS"
+    | "BAKING"
+    | "POULTRY"
+    | "PASTA"
+    | "RICE"
+    | "POTATOES"
+    | "SOUPS"
+    | "OTHER"
+    | "DESSERTS"
+    | "NONE";
 }
 
 export interface IRecipe extends IRecipeFormFields {

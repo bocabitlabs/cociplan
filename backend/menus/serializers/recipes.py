@@ -1,13 +1,17 @@
 import logging
 
 from drf_extra_fields.fields import Base64ImageField
+from rest_framework import serializers
+
 from menus.models.ingredients import Ingredient
 from menus.models.products import Product
 from menus.models.recipes import Recipe
 from menus.models.sides import Side
-from menus.serializers.ingredients import IngredientSerializer, IngredientWriteSerializer
+from menus.serializers.ingredients import (
+    IngredientSerializer,
+    IngredientWriteSerializer,
+)
 from menus.serializers.sides import SideSerializer, SideWriteSerializer
-from rest_framework import serializers
 
 logger = logging.getLogger("cociplan")
 
@@ -28,6 +32,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             "instructions",
             "is_only_dinner",
             "is_only_lunch",
+            "is_oven_recipe",
             "can_be_dinner",
             "can_be_lunch",
             "days_of_week",
@@ -44,6 +49,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             "season_autumn",
             "season_winter",
             "sides",
+            "type",
             "date_created",
             "last_updated",
         ]
@@ -59,7 +65,9 @@ class RecipeSerializer(serializers.ModelSerializer):
 class RecipeWriteSerializer(serializers.ModelSerializer):
     ingredients = IngredientWriteSerializer(many=True)
     sides = SideWriteSerializer(many=True)
-    image = Base64ImageField(max_length=None, use_url=True, allow_null=True, required=False)
+    image = Base64ImageField(
+        max_length=None, use_url=True, allow_null=True, required=False
+    )
 
     class Meta:
         model = Recipe
@@ -73,6 +81,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             "instructions",
             "is_only_dinner",
             "is_only_lunch",
+            "is_oven_recipe",
             "can_be_dinner",
             "can_be_lunch",
             "days_of_week",
@@ -89,6 +98,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             "season_autumn",
             "season_winter",
             "sides",
+            "type",
             "date_created",
             "last_updated",
         ]
@@ -105,7 +115,9 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             product_id = ingredient.pop("product").id
             if product_id != 0:
                 product = Product.objects.get(pk=product_id)
-                Ingredient.objects.create(product=product, recipe=instance, **ingredient)
+                Ingredient.objects.create(
+                    product=product, recipe=instance, **ingredient
+                )
 
         for side in sides:
             logger.debug(side)
@@ -131,14 +143,18 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             product = ingredient.pop("product")
             if product:
                 product = Product.objects.get(pk=product.id)
-                Ingredient.objects.update_or_create(product=product, recipe=instance, defaults=ingredient)
+                Ingredient.objects.update_or_create(
+                    product=product, recipe=instance, defaults=ingredient
+                )
 
         for side in sides:
             logger.debug(side)
             product = side.pop("product")
             if product:
                 product = Product.objects.get(pk=product.id)
-                Side.objects.update_or_create(product=product, recipe=instance, defaults=side)
+                Side.objects.update_or_create(
+                    product=product, recipe=instance, defaults=side
+                )
 
         #
         instance.save()

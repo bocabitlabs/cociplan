@@ -10,6 +10,7 @@ import {
   Group,
   Image,
   LoadingOverlay,
+  NativeSelect,
   NumberInput,
   Rating,
   Select,
@@ -27,6 +28,7 @@ import { useEditor } from "@tiptap/react";
 import ImageDropZone from "components/ImageDropzone/ImageDropZone";
 import { useProducts } from "hooks/products/use-products";
 import { useUpdateRecipe } from "hooks/recipes/use-recipes";
+import recipeTypes from "pages/recipes/recipe-types";
 import { IProduct } from "types/products";
 import { DaysOfWeek, IRecipe, MealTemps, MealTypes } from "types/recipes";
 import { getBase64 } from "utils/base_64";
@@ -94,12 +96,14 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
       difficulty: recipe?.difficulty || 0,
       isOnlyLunch: recipe?.isOnlyLunch || false,
       isOnlyDinner: recipe?.isOnlyDinner || false,
+      isOvenRecipe: recipe?.isOvenRecipe || false,
       daysOfWeek: recipe?.daysOfWeek || ("ALL" as DaysOfWeek),
       seasonSpring: recipe?.seasonSpring || false,
       seasonSummer: recipe?.seasonSummer || false,
       seasonAutumn: recipe?.seasonAutumn || false,
       seasonWinter: recipe?.seasonWinter || false,
       image: recipe?.image || null,
+      type: recipe?.type || "OTHER",
     },
   });
 
@@ -294,6 +298,21 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
             label={t("Solo para cenar")}
             {...form.getInputProps("isOnlyDinner", { type: "checkbox" })}
             mt="md"
+          />
+
+          <Switch
+            label={t("Es una receta de horno")}
+            {...form.getInputProps("isOvenRecipe", { type: "checkbox" })}
+            mt="md"
+          />
+
+          <NativeSelect
+            label={t("Tipo")}
+            withAsterisk
+            description={t<string>("Elije un tipo de receta")}
+            data={recipeTypes}
+            {...form.getInputProps("type")}
+            required
           />
 
           <Select
