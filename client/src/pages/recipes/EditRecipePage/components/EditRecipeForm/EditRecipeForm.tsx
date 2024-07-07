@@ -74,7 +74,7 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
       meal: recipe?.meal || ("LUNCH" as MealTypes),
       mealTemp: recipe?.mealTemp || ("WARM" as MealTemps),
       ingredients: recipe.ingredients.map((ingredient) => ({
-        product: ingredient.product.id,
+        product: ingredient.product.id.toString(),
         quantity: ingredient.quantity,
         key: randomId(),
       })),
@@ -85,7 +85,7 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
       preparationTime: recipe?.preparationTime || 0,
       servings: recipe?.servings || 0,
       sides: recipe.sides.map((side) => ({
-        product: side.product.id,
+        product: side.product.id.toString(),
         quantity: side.quantity,
         key: randomId(),
       })),
