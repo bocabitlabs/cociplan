@@ -49,7 +49,7 @@ export default function ProductsList() {
 
   return (
     <Stack>
-      <Group>
+      <Group justify="space-between">
         <AddProductButton />
         <InitializeProductsButton />
       </Group>
