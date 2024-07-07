@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Group,
+  LoadingOverlay,
   Modal,
   NativeSelect,
   Text,
@@ -30,7 +31,7 @@ const productTypes = [
 export default function AddProductButton() {
   const { t } = useTranslation();
   const [opened, { open, close }] = useDisclosure(false);
-  const { mutate } = useAddProduct();
+  const { mutate, isLoading } = useAddProduct();
 
   const form = useForm({
     initialValues: {
@@ -55,6 +56,11 @@ export default function AddProductButton() {
         size="md"
       >
         <Box>
+          <LoadingOverlay
+            visible={isLoading}
+            zIndex={1000}
+            overlayProps={{ radius: "sm", blur: 2 }}
+          />
           <Text>{t("PRODUCT_FORM_HELP_TEXT")}</Text>
           <form onSubmit={form.onSubmit(onSubmit)}>
             <TextInput

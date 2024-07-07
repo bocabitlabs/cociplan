@@ -4,6 +4,7 @@ import {
   ActionIcon,
   Button,
   Group,
+  LoadingOverlay,
   Modal,
   Stack,
   Table,
@@ -17,24 +18,31 @@ import { useDeleteProduct, useProducts } from "hooks/products/use-products";
 import { IProduct } from "types/products";
 
 export default function ProductsList() {
-  const { data } = useProducts();
-  const { mutate } = useDeleteProduct();
+  const { data, isLoading } = useProducts();
+  const { mutate, isLoading: isLoadingDelete } = useDeleteProduct();
   const { t } = useTranslation();
 
   const [opened, { open, close }] = useDisclosure(false);
-  const [selectedProduct, setSelectedProduct] = useState({ id: "", name: "" });
+  const [selectedProduct, setSelectedProduct] = useState<{
+    id: number | null;
+    name: string;
+  }>({
+    id: null,
+    name: "",
+  });
 
-  const handleOpenModal = (menuId: string, menuName: string) => {
+  const handleOpenModal = (menuId: number, menuName: string) => {
     setSelectedProduct({ id: menuId, name: menuName });
     open();
   };
 
   const handleCloseModal = () => {
-    setSelectedProduct({ id: "", name: "" });
+    setSelectedProduct({ id: null, name: "" });
     close();
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: number | null) => {
+    if (id === null) return;
     mutate(id);
     handleCloseModal();
   };
@@ -46,6 +54,11 @@ export default function ProductsList() {
         <InitializeProductsButton />
       </Group>
       <Table>
+        <LoadingOverlay
+          visible={isLoading || isLoadingDelete}
+          zIndex={1000}
+          overlayProps={{ radius: "sm", blur: 2 }}
+        />
         <Table.Thead>
           <Table.Tr>
             <th>{t("Name")}</th>
@@ -73,11 +86,11 @@ export default function ProductsList() {
       <Modal opened={opened} onClose={close} title="Borrar producto">
         <Stack>
           <Text>Estas seguro de que quieres borrar el producto?</Text>
-          <Text weight={500} mt="sm">
+          <Text fw={500} mt="sm">
             {t(selectedProduct.name)}
           </Text>
           <Group>
-            <Button onClick={() => handleDelete(+selectedProduct.id)}>
+            <Button onClick={() => handleDelete(selectedProduct.id)}>
               Sí, borrar menù
             </Button>
             <Button onClick={handleCloseModal} variant="light">
