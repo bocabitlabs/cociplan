@@ -16,6 +16,7 @@ import {
   Image,
   Checkbox,
   SimpleGrid,
+  LoadingOverlay,
 } from "@mantine/core";
 import { FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { useForm } from "@mantine/form";
@@ -49,7 +50,7 @@ const daysOfWeek = [
 
 export default function AddRecipeForm() {
   const { t } = useTranslation();
-  const { mutate } = useAddrecipe();
+  const { mutate, isLoading } = useAddrecipe();
   const { data: products, isFetching: productsFetching } = useProducts();
   const navigate = useNavigate();
   const [files, setFiles] = useState<FileWithPath[]>([]);
@@ -218,6 +219,11 @@ export default function AddRecipeForm() {
   return (
     <Group>
       <Box>
+        <LoadingOverlay
+          visible={isLoading}
+          zIndex={1000}
+          overlayProps={{ radius: "sm", blur: 2 }}
+        />
         <Text>
           {t(
             "Añade una receta a tu lista de recetas utilizando este formulario.",

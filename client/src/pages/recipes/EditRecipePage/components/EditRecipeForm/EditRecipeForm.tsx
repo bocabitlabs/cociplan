@@ -9,6 +9,7 @@ import {
   Checkbox,
   Group,
   Image,
+  LoadingOverlay,
   NumberInput,
   Rating,
   Select,
@@ -25,7 +26,7 @@ import { IconFlame, IconTrash } from "@tabler/icons-react";
 import { useEditor } from "@tiptap/react";
 import ImageDropZone from "components/ImageDropzone/ImageDropZone";
 import { useProducts } from "hooks/products/use-products";
-import { useUpdaterecipe } from "hooks/recipes/use-recipes";
+import { useUpdateRecipe } from "hooks/recipes/use-recipes";
 import { IProduct } from "types/products";
 import { DaysOfWeek, IRecipe, MealTemps, MealTypes } from "types/recipes";
 import { getBase64 } from "utils/base_64";
@@ -53,7 +54,7 @@ interface EditRecipeFormProps {
 
 export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
   const { t } = useTranslation();
-  const { mutate } = useUpdaterecipe();
+  const { mutate, isLoading } = useUpdateRecipe();
   const { data: products, isFetching: productsFetching } = useProducts();
   const navigate = useNavigate();
   const [files, setFiles] = useState<FileWithPath[]>([]);
@@ -241,6 +242,11 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
   return (
     <Group>
       <Box>
+        <LoadingOverlay
+          visible={isLoading}
+          zIndex={1000}
+          overlayProps={{ radius: "sm", blur: 2 }}
+        />
         <form onSubmit={form.onSubmit(onSubmit)}>
           <TextInput
             withAsterisk

@@ -11,6 +11,7 @@ import {
   Text,
   Image,
   Anchor,
+  LoadingOverlay,
 } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import {
@@ -73,9 +74,13 @@ export default function RecipeList() {
         </Button>
         <InitializeRecipesButton />
       </Group>
-      {isLoadindRecipes && <Text>{t("Cargando...")}</Text>}
       {data && (
         <Table>
+          <LoadingOverlay
+            visible={isLoadindRecipes || isLoadingDelete}
+            zIndex={1000}
+            overlayProps={{ radius: "sm", blur: 2 }}
+          />
           <Table.Thead>
             <Table.Tr>
               {isMobile && <Table.Th>{t("Image")}</Table.Th>}
