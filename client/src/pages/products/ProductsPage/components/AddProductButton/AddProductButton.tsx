@@ -66,7 +66,7 @@ export default function AddProductButton() {
             <TextInput
               withAsterisk
               label={t("Name")}
-              placeholder={t("Arroz, leche, pasta...")}
+              placeholder={t<string>("Arroz, leche, pasta...")}
               required
               {...form.getInputProps("name")}
             />
@@ -74,7 +74,7 @@ export default function AddProductButton() {
             <NativeSelect
               label={t("Tipo")}
               withAsterisk
-              placeholder={t<string>("Elije un tipo de producto")}
+              description={t<string>("Elije un tipo de producto")}
               data={productTypes}
               {...form.getInputProps("type")}
               required
