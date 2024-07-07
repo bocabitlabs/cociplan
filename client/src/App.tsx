@@ -54,7 +54,7 @@ function App() {
           <Outlet />
         </AppShell.Main>
       </AppShell>
-      <Notifications />
+      <Notifications position="top-center" />
     </MantineProvider>
   );
 }

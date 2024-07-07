@@ -5,7 +5,7 @@ import ReactDOM from "react-dom/client";
 import "@mantine/core/styles.css";
 import "@mantine/tiptap/styles.css";
 import "@mantine/dropzone/styles.css";
-import "react-toastify/dist/ReactToastify.css";
+import "@mantine/notifications/styles.css";
 import "./i18n";
 import { ReactQueryDevtools } from "react-query/devtools";
 import queryClient from "api/query-client";
