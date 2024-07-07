@@ -91,7 +91,7 @@ interface IRecipeUpdateFields {
   newRecipe: IRecipeFormFields;
 }
 
-export const useUpdaterecipe = () => {
+export const useUpdateRecipe = () => {
   return useMutation(
     ({ recipeId, newRecipe }: IRecipeUpdateFields) =>
       apiClient.patch(`/recipes/${recipeId}/`, newRecipe),
