@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
@@ -56,7 +56,7 @@ interface EditRecipeFormProps {
 
 export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
   const { t } = useTranslation();
-  const { mutate, isLoading } = useUpdateRecipe();
+  const { mutate, isLoading, isSuccess } = useUpdateRecipe();
   const { data: products, isLoading: productsLoading } = useProducts();
   const { data: sides, isLoading: sidesLoading } = useSides();
   const navigate = useNavigate();
@@ -231,8 +231,14 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
 
     console.log(newValues);
     mutate({ recipeId: recipe.id, newRecipe: newValues });
-    navigate(-1);
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      form.reset();
+      navigate(-1);
+    }
+  }, [isSuccess, form, navigate]);
 
   if (productsLoading || sidesLoading) {
     return <div>{t("Loading products and side meals...")}</div>;

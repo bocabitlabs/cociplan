@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Box,
@@ -32,7 +33,7 @@ const productTypes = [
 export default function AddProductButton() {
   const { t } = useTranslation();
   const [opened, { open, close }] = useDisclosure(false);
-  const { mutate, isLoading } = useAddProduct();
+  const { mutate, isLoading, isSuccess } = useAddProduct();
 
   const form = useForm({
     initialValues: {
@@ -44,8 +45,14 @@ export default function AddProductButton() {
   const onSubmit = (values: any) => {
     console.log(values);
     mutate(values);
-    close();
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      form.reset();
+      close();
+    }
+  }, [isSuccess, form, close]);
 
   return (
     <>

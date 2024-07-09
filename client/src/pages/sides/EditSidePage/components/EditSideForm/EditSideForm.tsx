@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
@@ -28,7 +28,7 @@ import { useEditor } from "@tiptap/react";
 import ImageDropZone from "components/ImageDropzone/ImageDropZone";
 import { useProducts } from "hooks/products/use-products";
 import { useUpdateRecipe } from "hooks/recipes/use-recipes";
-import recipeTypes from "pages/recipes/recipe-types";
+import { recipeTypes } from "pages/recipes/recipe-types";
 import { IProduct } from "types/products";
 import { DaysOfWeek, IRecipe, MealTemps, MealTypes } from "types/recipes";
 import { getBase64 } from "utils/base_64";
@@ -56,8 +56,8 @@ interface EditRecipeFormProps {
 
 export default function EditSideForm({ recipe }: EditRecipeFormProps) {
   const { t } = useTranslation();
-  const { mutate, isLoading } = useUpdateRecipe();
-  const { data: products, isFetching: productsFetching } = useProducts();
+  const { mutate, isLoading, isSuccess } = useUpdateRecipe();
+  const { data: products, isLoading: productsLoading } = useProducts();
   const navigate = useNavigate();
   const [files, setFiles] = useState<FileWithPath[]>([]);
   const [base64file, setBase64file] = useState<string | null>(null);
@@ -191,10 +191,16 @@ export default function EditSideForm({ recipe }: EditRecipeFormProps) {
 
     console.log(newValues);
     mutate({ recipeId: recipe.id, newRecipe: newValues });
-    navigate(-1);
   };
 
-  if (productsFetching) {
+  useEffect(() => {
+    if (isSuccess) {
+      form.reset();
+      navigate(-1);
+    }
+  }, [isSuccess, form, navigate]);
+
+  if (productsLoading) {
     return <div>{t("Loading products...")}</div>;
   }
   return (

@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
@@ -52,8 +52,8 @@ const daysOfWeek = [
 
 export default function AddRecipeForm() {
   const { t } = useTranslation();
-  const { mutate, isLoading } = useAddrecipe();
-  const { data: products, isFetching: productsFetching } = useProducts();
+  const { mutate, isLoading, isSuccess } = useAddrecipe();
+  const { data: products, isLoading: productsLoading } = useProducts();
   const { data: sides, isLoading: sidesLoading } = useSides();
   const navigate = useNavigate();
   const [files, setFiles] = useState<FileWithPath[]>([]);
@@ -122,10 +122,6 @@ export default function AddRecipeForm() {
   const descriptionEditor = useEditor({
     extensions: editorExtensions,
   });
-
-  if (productsFetching || sidesLoading) {
-    return <div>{t("Loading...")}</div>;
-  }
 
   const generateIngredientsFields = () => {
     const productsOptions = products.map((product: IProduct) => ({
@@ -212,8 +208,18 @@ export default function AddRecipeForm() {
     newValues.image = base64file || null;
 
     mutate(newValues);
-    navigate(-1);
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      form.reset();
+      navigate(-1);
+    }
+  }, [isSuccess, form, navigate]);
+
+  if (productsLoading || sidesLoading) {
+    return <div>{t("Loading...")}</div>;
+  }
 
   return (
     <Group>

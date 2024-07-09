@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
@@ -28,7 +28,7 @@ import { useEditor } from "@tiptap/react";
 import ImageDropZone from "components/ImageDropzone/ImageDropZone";
 import { useProducts } from "hooks/products/use-products";
 import { useAddrecipe } from "hooks/recipes/use-recipes";
-import recipeTypes from "pages/recipes/recipe-types";
+import { recipeTypes } from "pages/recipes/recipe-types";
 import { IProduct } from "types/products";
 import { DaysOfWeek, MealTemps, MealTypes } from "types/recipes";
 import { getBase64 } from "utils/base_64";
@@ -52,8 +52,8 @@ const daysOfWeek = [
 
 export default function AddSideForm() {
   const { t } = useTranslation();
-  const { mutate, isLoading } = useAddrecipe();
-  const { data: products, isFetching: productsFetching } = useProducts();
+  const { mutate, isLoading, isSuccess } = useAddrecipe();
+  const { data: products, isLoading: productsLoading } = useProducts();
   const navigate = useNavigate();
   const [files, setFiles] = useState<FileWithPath[]>([]);
   const [base64file, setBase64file] = useState<string | null>(null);
@@ -122,10 +122,6 @@ export default function AddSideForm() {
     extensions: editorExtensions,
   });
 
-  if (productsFetching) {
-    return <div>{t("Loading...")}</div>;
-  }
-
   const getIngredients = () => {
     const productsOptions = products.map((product: IProduct) => ({
       value: product.id.toString(),
@@ -179,8 +175,18 @@ export default function AddSideForm() {
     newValues.image = base64file || null;
 
     mutate(newValues);
-    navigate(-1);
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      form.reset();
+      navigate(-1);
+    }
+  }, [isSuccess, form, navigate]);
+
+  if (productsLoading) {
+    return <div>{t("Loading...")}</div>;
+  }
 
   return (
     <Group>
