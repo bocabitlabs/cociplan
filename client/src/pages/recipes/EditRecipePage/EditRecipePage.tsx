@@ -1,5 +1,13 @@
+import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
-import { Anchor, Breadcrumbs, Grid, Paper } from "@mantine/core";
+import {
+  Anchor,
+  Breadcrumbs,
+  Grid,
+  LoadingOverlay,
+  Paper,
+  Box,
+} from "@mantine/core";
 import EditRecipeForm from "./components/EditRecipeForm/EditRecipeForm";
 import { Footer } from "components/Footer/Footer";
 import PageTitle from "components/PageTitle/PageTitle";
@@ -7,7 +15,8 @@ import { useRecipe } from "hooks/recipes/use-recipes";
 
 export default function EditRecipePage() {
   const { recipeId } = useParams();
-  const { data, isFetching } = useRecipe(recipeId ? +recipeId : undefined);
+  const { data, isLoading } = useRecipe(recipeId ? +recipeId : undefined);
+  const { t } = useTranslation();
   const items = [
     { title: "Inicio", href: "../../.." },
     { title: "Recetas", href: "../.." },
@@ -19,18 +28,28 @@ export default function EditRecipePage() {
       {item.title}
     </Anchor>
   ));
-  if (isFetching) return <div>Cargando...</div>;
 
   return (
-    <Grid columns={24}>
-      <Grid.Col span={24}>
-        <Breadcrumbs>{items}</Breadcrumbs>
-        <PageTitle header="Editar receta" />
-      </Grid.Col>
-      <Grid.Col span={24}>
-        <Paper shadow="xs" p="md">
-          {data && <EditRecipeForm recipe={data} />}
-        </Paper>
+    <Grid>
+      {data && (
+        <Box pos="relative">
+          <LoadingOverlay
+            visible={isLoading}
+            zIndex={1000}
+            overlayProps={{ radius: "sm", blur: 2 }}
+          />
+          <Grid.Col>
+            <Breadcrumbs>{items}</Breadcrumbs>
+            <PageTitle header={t<string>("Editar receta")} />
+          </Grid.Col>
+          <Grid.Col>
+            <Paper shadow="xs" p="md">
+              <EditRecipeForm recipe={data} />
+            </Paper>
+          </Grid.Col>
+        </Box>
+      )}
+      <Grid.Col>
         <Footer />
       </Grid.Col>
     </Grid>

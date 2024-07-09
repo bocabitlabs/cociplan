@@ -36,10 +36,4 @@ function PageTitle({
   );
 }
 
-PageTitle.defaultProps = {
-  icon: null,
-  subHeader: null,
-  withBackButton: false,
-};
-
 export default PageTitle;

@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 import {
   Anchor,
+  Box,
   Breadcrumbs,
   Grid,
   LoadingOverlay,
@@ -33,11 +34,6 @@ export default function MenuDetailsPage() {
   if (data) {
     return (
       <Grid>
-        <LoadingOverlay
-          visible={isLoading}
-          zIndex={1000}
-          overlayProps={{ radius: "sm", blur: 2 }}
-        />
         <Grid.Col>
           <Breadcrumbs>{items}</Breadcrumbs>
           <PageTitle
@@ -47,57 +43,64 @@ export default function MenuDetailsPage() {
         </Grid.Col>
         <Grid.Col>
           <Stack>
-            <Grid>
-              <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-                <DayCard
-                  dayName={t<string>("Lunes")}
-                  dailyMenu={data?.mondayMenu}
-                  weeklyMenuId={data?.id}
-                />
-              </Grid.Col>
-              <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-                <DayCard
-                  dayName={t<string>("Martes")}
-                  dailyMenu={data?.tuesdayMenu}
-                  weeklyMenuId={data?.id}
-                />
-              </Grid.Col>
-              <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-                <DayCard
-                  dayName={t<string>("Miércoles")}
-                  dailyMenu={data?.wednesdayMenu}
-                  weeklyMenuId={data?.id}
-                />
-              </Grid.Col>
-              <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-                <DayCard
-                  dayName={t<string>("Jueves")}
-                  dailyMenu={data?.thursdayMenu}
-                  weeklyMenuId={data?.id}
-                />
-              </Grid.Col>
-              <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-                <DayCard
-                  dayName={t<string>("Viernes")}
-                  dailyMenu={data?.fridayMenu}
-                  weeklyMenuId={data?.id}
-                />
-              </Grid.Col>
-              <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-                <DayCard
-                  dayName={t<string>("Sábado")}
-                  dailyMenu={data?.saturdayMenu}
-                  weeklyMenuId={data?.id}
-                />
-              </Grid.Col>
-              <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
-                <DayCard
-                  dayName={t<string>("Domingo")}
-                  dailyMenu={data?.sundayMenu}
-                  weeklyMenuId={data?.id}
-                />
-              </Grid.Col>
-            </Grid>
+            <Box pos="relative">
+              <LoadingOverlay
+                visible={isLoading}
+                zIndex={1000}
+                overlayProps={{ radius: "sm", blur: 2 }}
+              />
+              <Grid>
+                <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+                  <DayCard
+                    dayName={t<string>("Lunes")}
+                    dailyMenu={data?.mondayMenu}
+                    weeklyMenuId={data?.id}
+                  />
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+                  <DayCard
+                    dayName={t<string>("Martes")}
+                    dailyMenu={data?.tuesdayMenu}
+                    weeklyMenuId={data?.id}
+                  />
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+                  <DayCard
+                    dayName={t<string>("Miércoles")}
+                    dailyMenu={data?.wednesdayMenu}
+                    weeklyMenuId={data?.id}
+                  />
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+                  <DayCard
+                    dayName={t<string>("Jueves")}
+                    dailyMenu={data?.thursdayMenu}
+                    weeklyMenuId={data?.id}
+                  />
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+                  <DayCard
+                    dayName={t<string>("Viernes")}
+                    dailyMenu={data?.fridayMenu}
+                    weeklyMenuId={data?.id}
+                  />
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+                  <DayCard
+                    dayName={t<string>("Sábado")}
+                    dailyMenu={data?.saturdayMenu}
+                    weeklyMenuId={data?.id}
+                  />
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+                  <DayCard
+                    dayName={t<string>("Domingo")}
+                    dailyMenu={data?.sundayMenu}
+                    weeklyMenuId={data?.id}
+                  />
+                </Grid.Col>
+              </Grid>
+            </Box>
           </Stack>
           <Footer />
         </Grid.Col>

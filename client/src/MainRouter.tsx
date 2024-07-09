@@ -13,6 +13,10 @@ import EditRecipePage from "pages/recipes/EditRecipePage/EditRecipePage";
 import RecipeDetailsPage from "pages/recipes/RecipeDetailsPage/RecipeDetailsPage";
 import RecipesMain from "pages/recipes/RecipesMain";
 import RecipesPage from "pages/recipes/RecipesPage/RecipesPage";
+import AddSidePage from "pages/sides/AddSidePage/AddSidePage";
+import EditSidePage from "pages/sides/EditSidePage/EditSidePage";
+import SidesMain from "pages/sides/SidesMain";
+import SidesPage from "pages/sides/SidesPage/SidesPage";
 import routes from "routes";
 
 export default function Main(): ReactElement {
@@ -32,6 +36,14 @@ export default function Main(): ReactElement {
                 element={<AddRecipePage />}
               />
             </Route>
+
+            <Route path="sides" element={<SidesMain />}>
+              <Route path="" element={<SidesPage />} />
+              <Route path=":recipeId" element={<RecipeDetailsPage />} />
+              <Route path=":recipeId/edit" element={<EditSidePage />} />
+              <Route path={routes.sidesAddRoute} element={<AddSidePage />} />
+            </Route>
+
             <Route path="menus" element={<MenusMain />}>
               <Route path=":menuId" element={<MenuDetailsPage />} />
               <Route path=":menuId/:dayName" element={<DayMenuDetailsPage />} />

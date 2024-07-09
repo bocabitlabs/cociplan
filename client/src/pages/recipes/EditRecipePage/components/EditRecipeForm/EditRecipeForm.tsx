@@ -27,8 +27,8 @@ import { IconFlame, IconTrash } from "@tabler/icons-react";
 import { useEditor } from "@tiptap/react";
 import ImageDropZone from "components/ImageDropzone/ImageDropZone";
 import { useProducts } from "hooks/products/use-products";
-import { useUpdateRecipe } from "hooks/recipes/use-recipes";
-import recipeTypes from "pages/recipes/recipe-types";
+import { useSides, useUpdateRecipe } from "hooks/recipes/use-recipes";
+import { recipeTypes } from "pages/recipes/recipe-types";
 import { IProduct } from "types/products";
 import { DaysOfWeek, IRecipe, MealTemps, MealTypes } from "types/recipes";
 import { getBase64 } from "utils/base_64";
@@ -57,7 +57,8 @@ interface EditRecipeFormProps {
 export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
   const { t } = useTranslation();
   const { mutate, isLoading } = useUpdateRecipe();
-  const { data: products, isFetching: productsFetching } = useProducts();
+  const { data: products, isLoading: productsLoading } = useProducts();
+  const { data: sides, isLoading: sidesLoading } = useSides();
   const navigate = useNavigate();
   const [files, setFiles] = useState<FileWithPath[]>([]);
   const [base64file, setBase64file] = useState<string | null>(null);
@@ -88,9 +89,8 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
       preparationTime: recipe?.preparationTime || 0,
       servings: recipe?.servings || 0,
       sides: recipe.sides.map((side) => ({
-        product: side.product.id.toString(),
-        quantity: side.quantity,
-        key: randomId(),
+        id: side.id.toString(),
+        key: side.id,
       })),
       preference: recipe?.preference || 0,
       difficulty: recipe?.difficulty || 0,
@@ -173,10 +173,10 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
     );
   });
 
-  const getSides = useCallback(() => {
-    const productsOptions = products.map((product: IProduct) => ({
-      value: product.id.toString(),
-      label: product.name,
+  const generateSidesFields = useCallback(() => {
+    const sidesOptions = sides.map((side: IRecipe) => ({
+      value: side.id.toString(),
+      label: side.name,
     }));
     // Add an option at the beginning of the array
     // productsOptions.unshift({ value: null, label: "Elige un producto" });
@@ -186,16 +186,10 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
           withAsterisk
           searchable
           placeholder="Elije el producto"
-          data={productsOptions}
-          {...form.getInputProps(`sides.${index}.product`)}
+          data={sidesOptions}
+          {...form.getInputProps(`sides.${index}.id`)}
           required
           mt="md"
-        />
-        <TextInput
-          placeholder="Quantity"
-          withAsterisk
-          style={{ flex: 1 }}
-          {...form.getInputProps(`sides.${index}.quantity`)}
         />
 
         <ActionIcon
@@ -207,7 +201,7 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
       </Group>
     ));
     return fields;
-  }, [form, products]);
+  }, [form, sides]);
 
   const onSubmit = (values: any) => {
     const newValues = values;
@@ -217,9 +211,9 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
 
     newValues.ingredients = filteredIngredients;
 
-    const filteredSides = values.sides.filter(
-      (side: any) => side.product !== null,
-    );
+    const filteredSides = values.sides
+      .filter((side: any) => side.id !== null)
+      .map((side: any) => +side.id);
 
     newValues.sides = filteredSides;
 
@@ -240,14 +234,14 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
     navigate(-1);
   };
 
-  if (productsFetching) {
-    return <div>{t("Loading products...")}</div>;
+  if (productsLoading || sidesLoading) {
+    return <div>{t("Loading products and side meals...")}</div>;
   }
   return (
     <Group>
       <Box>
         <LoadingOverlay
-          visible={isLoading}
+          visible={isLoading || productsLoading || sidesLoading}
           zIndex={1000}
           overlayProps={{ radius: "sm", blur: 2 }}
         />
@@ -277,7 +271,6 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
             required
             mt="md"
           />
-
           <Select
             label={t("Comida del día preferida")}
             withAsterisk
@@ -288,17 +281,19 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
             mt="md"
           />
 
-          <Switch
-            label={t("Solo para comer")}
-            {...form.getInputProps("isOnlyLunch", { type: "checkbox" })}
-            mt="md"
-          />
+          <Group mt="md">
+            <Switch
+              label={t("Solo para comer")}
+              {...form.getInputProps("isOnlyLunch", { type: "checkbox" })}
+              mt="md"
+            />
 
-          <Switch
-            label={t("Solo para cenar")}
-            {...form.getInputProps("isOnlyDinner", { type: "checkbox" })}
-            mt="md"
-          />
+            <Switch
+              label={t("Solo para cenar")}
+              {...form.getInputProps("isOnlyDinner", { type: "checkbox" })}
+              mt="md"
+            />
+          </Group>
 
           <Switch
             label={t("Es una receta de horno")}
@@ -434,15 +429,14 @@ export default function EditRecipeForm({ recipe }: EditRecipeFormProps) {
           />
 
           <Text fz="lg" mt="md">
-            {t("Acompañamientos")}
+            {t("Sides")}
           </Text>
-          {getSides()}
+          {generateSidesFields()}
           <Group mt="md">
             <Button
               onClick={() =>
                 form.insertListItem("sides", {
-                  product: "0",
-                  quantity: 0,
+                  product: null,
                   key: randomId(),
                 })
               }

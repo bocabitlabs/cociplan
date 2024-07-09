@@ -17,6 +17,17 @@ export function useRecipes(options = {}) {
   });
 }
 
+export const fetchSides = async () => {
+  const { data } = await apiClient.get<any>(`/recipes/?isSidePlate=true`);
+  return data;
+};
+
+export function useSides(options = {}) {
+  return useQuery<any, Error>(["recipes", "sides"], () => fetchSides(), {
+    ...options,
+  });
+}
+
 export const useAddrecipe = () => {
   const { t } = useTranslation();
   return useMutation(

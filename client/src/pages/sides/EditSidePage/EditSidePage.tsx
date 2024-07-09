@@ -1,23 +1,27 @@
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
-import { Anchor, Breadcrumbs, Grid, LoadingOverlay } from "@mantine/core";
+import {
+  Anchor,
+  Box,
+  Breadcrumbs,
+  Grid,
+  LoadingOverlay,
+  Paper,
+} from "@mantine/core";
+import EditSideForm from "./components/EditSideForm/EditSideForm";
 import { Footer } from "components/Footer/Footer";
 import PageTitle from "components/PageTitle/PageTitle";
 import { useRecipe } from "hooks/recipes/use-recipes";
-import RecipeDetails from "pages/recipes/RecipeDetailsPage/RecipeDetails/RecipeDetails";
 
-export default function RecipeDetailsPage() {
+export default function EditSidePage() {
   const { recipeId } = useParams();
   const { data, isLoading } = useRecipe(recipeId ? +recipeId : undefined);
   const { t } = useTranslation();
-
   const items = [
-    { title: "Inicio", href: "../.." },
-    {
-      title: data?.isSidePlate ? t<string>("Sides") : t<string>("Recetas"),
-      href: "..",
-    },
-    { title: data?.name, href: "." },
+    { title: t<string>("Inicio"), href: "../../.." },
+    { title: t<string>("Sides"), href: "../.." },
+    { title: data?.name, href: ".." },
+    { title: t<string>("Editar"), href: "." },
   ].map((item, index) => (
     // eslint-disable-next-line react/no-array-index-key
     <Anchor component={Link} to={item.href} key={index} relative="path">
@@ -26,24 +30,26 @@ export default function RecipeDetailsPage() {
   ));
 
   return (
-    <Grid>
+    <Box pos="relative">
       <LoadingOverlay
         visible={isLoading}
         zIndex={1000}
         overlayProps={{ radius: "sm", blur: 2 }}
       />
       {data && (
-        <>
-          <Grid.Col>
+        <Grid columns={24}>
+          <Grid.Col span={24}>
             <Breadcrumbs>{items}</Breadcrumbs>
-            <PageTitle header={`${data?.name}`} withBackButton />
+            <PageTitle header={t<string>("Editar compañamiento")} />
           </Grid.Col>
-          <RecipeDetails recipe={data} />
-        </>
+          <Grid.Col span={24}>
+            <Paper shadow="xs" p="md">
+              <EditSideForm recipe={data} />
+            </Paper>
+            <Footer />
+          </Grid.Col>
+        </Grid>
       )}
-      <Grid.Col>
-        <Footer />
-      </Grid.Col>
-    </Grid>
+    </Box>
   );
 }

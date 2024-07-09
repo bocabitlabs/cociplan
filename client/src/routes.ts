@@ -1,7 +1,9 @@
 const appBaseRoute = "/";
 const homeRoute = "";
 const recipesRoute = "recipes";
+const sidesRoute = "sides";
 const recipesAddRoute = "add";
+const sidesAddRoute = "add";
 const productsRoute = "products";
 const menusRoute = "menus";
 
@@ -12,6 +14,8 @@ export default {
   homeRoute,
   menusRoute,
   recipesRoute,
+  sidesRoute,
+  sidesAddRoute,
   productsRoute,
   recipesAddRoute,
   getRouteWithBase,

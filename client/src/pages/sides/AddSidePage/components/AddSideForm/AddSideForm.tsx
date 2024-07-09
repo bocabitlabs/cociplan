@@ -27,10 +27,10 @@ import { IconFlame, IconTrash } from "@tabler/icons-react";
 import { useEditor } from "@tiptap/react";
 import ImageDropZone from "components/ImageDropzone/ImageDropZone";
 import { useProducts } from "hooks/products/use-products";
-import { useAddrecipe, useSides } from "hooks/recipes/use-recipes";
-import { recipeTypes } from "pages/recipes/recipe-types";
+import { useAddrecipe } from "hooks/recipes/use-recipes";
+import recipeTypes from "pages/recipes/recipe-types";
 import { IProduct } from "types/products";
-import { DaysOfWeek, IRecipe, MealTemps, MealTypes } from "types/recipes";
+import { DaysOfWeek, MealTemps, MealTypes } from "types/recipes";
 import { getBase64 } from "utils/base_64";
 import { editorExtensions } from "utils/editor";
 
@@ -50,11 +50,10 @@ const daysOfWeek = [
   { value: "ALL", label: "Todos los días" },
 ];
 
-export default function AddRecipeForm() {
+export default function AddSideForm() {
   const { t } = useTranslation();
   const { mutate, isLoading } = useAddrecipe();
   const { data: products, isFetching: productsFetching } = useProducts();
-  const { data: sides, isLoading: sidesLoading } = useSides();
   const navigate = useNavigate();
   const [files, setFiles] = useState<FileWithPath[]>([]);
   const [base64file, setBase64file] = useState<string | null>(null);
@@ -123,11 +122,11 @@ export default function AddRecipeForm() {
     extensions: editorExtensions,
   });
 
-  if (productsFetching || sidesLoading) {
+  if (productsFetching) {
     return <div>{t("Loading...")}</div>;
   }
 
-  const generateIngredientsFields = () => {
+  const getIngredients = () => {
     const productsOptions = products.map((product: IProduct) => ({
       value: product.id.toString(),
       label: product.name,
@@ -164,35 +163,6 @@ export default function AddRecipeForm() {
     return fields;
   };
 
-  const generateSidesFields = () => {
-    const productsOptions = sides.map((side: IRecipe) => ({
-      value: side.id.toString(),
-      label: side.name,
-    }));
-
-    const fields = form.values.sides.map((item: any, index) => (
-      <Group key={item.key} mt="xs">
-        <Select
-          withAsterisk
-          searchable
-          placeholder={t<string>("Elije el acompañamiento")}
-          data={productsOptions}
-          {...form.getInputProps(`sides.${index}.id`)}
-          required
-          mt="md"
-        />
-
-        <ActionIcon
-          color="red"
-          onClick={() => form.removeListItem("sides", index)}
-        >
-          <IconTrash size="1rem" />
-        </ActionIcon>
-      </Group>
-    ));
-    return fields;
-  };
-
   const onSubmit = (values: any) => {
     const newValues = values;
     const filteredIngredients = values.ingredients.filter(
@@ -200,10 +170,7 @@ export default function AddRecipeForm() {
     );
     newValues.ingredients = filteredIngredients;
 
-    const filteredSides = values.sides.filter(
-      (side: any) => side.product !== null,
-    );
-    newValues.sides = filteredSides;
+    newValues.isSidePlate = true;
 
     newValues.notes = notesEditor?.getJSON();
     newValues.instructions = instructionsEditor?.getJSON();
@@ -248,9 +215,9 @@ export default function AddRecipeForm() {
           />
 
           <Select
-            label={t("Comida del día")}
+            label={t("Meal of the day")}
             withAsterisk
-            placeholder={t<string>("Elije la comida del día")}
+            placeholder={t<string>("Choose the meal of the day")}
             data={mealTypes}
             {...form.getInputProps("meal")}
             required
@@ -355,7 +322,7 @@ export default function AddRecipeForm() {
             {t("Ingredientes")}
           </Text>
 
-          {generateIngredientsFields()}
+          {getIngredients()}
 
           <Group mt="md">
             <Button
@@ -411,24 +378,6 @@ export default function AddRecipeForm() {
             {...form.getInputProps("servings")}
             mt="md"
           />
-
-          <Text fz="lg" mt="md">
-            {t("Sides")}
-          </Text>
-          {generateSidesFields()}
-          <Group mt="md">
-            <Button
-              onClick={() =>
-                form.insertListItem("sides", {
-                  product: "0",
-                  quantity: 0,
-                  key: randomId(),
-                })
-              }
-            >
-              {t("Add new side")}
-            </Button>
-          </Group>
 
           <Text fz="lg" mt="md">
             {t("Descripcion")}
@@ -578,7 +527,7 @@ export default function AddRecipeForm() {
           </RichTextEditor>
 
           <Group mt="md">
-            <Button type="submit">{t("Crear receta")}</Button>
+            <Button type="submit">{t("Crear acompañamiento")}</Button>
           </Group>
         </form>
       </Box>

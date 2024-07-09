@@ -10,9 +10,9 @@ import {
 } from "@mantine/core";
 import { Footer } from "components/Footer/Footer";
 import PageTitle from "components/PageTitle/PageTitle";
-import RecipeDetails from "components/RecipeDetails/RecipeDetails";
 import { useRecipe } from "hooks/recipes/use-recipes";
 import { useWeeklyMenu } from "hooks/weekly-menus/use-weekly-menus";
+import RecipeDetails from "pages/recipes/RecipeDetailsPage/RecipeDetails/RecipeDetails";
 import { IDailyMenu } from "types/weekly-menus";
 
 export default function DayMenuDetailsPage() {
@@ -68,31 +68,31 @@ export default function DayMenuDetailsPage() {
   }, [data, dayName]);
 
   return (
-    <Grid columns={24}>
+    <Grid>
       <LoadingOverlay
         visible={isLoading}
         zIndex={1000}
         overlayProps={{ radius: "sm", blur: 2 }}
       />
-      <Grid.Col span={24}>
+      <Grid.Col>
         <Breadcrumbs>{items}</Breadcrumbs>
         <PageTitle
           header={`${data ? data.name : t("cargando...")} - ${dayName}`}
           withBackButton
         />
       </Grid.Col>
-      <Grid.Col span={24}>
+      <Grid.Col>
         <Title order={2}>{t("Comida")}</Title>
         <Title order={3}>{lunchRecipe?.name}</Title>
       </Grid.Col>
 
       {lunchRecipe && <RecipeDetails recipe={lunchRecipe} />}
-      <Grid.Col span={24}>
+      <Grid.Col>
         <Title order={2}>Cena</Title>
         <Title order={3}>{dinnerRecipe?.name}</Title>
       </Grid.Col>
       {dinnerRecipe && <RecipeDetails recipe={dinnerRecipe} />}
-      <Grid.Col span={24}>
+      <Grid.Col>
         <Footer />
       </Grid.Col>
     </Grid>

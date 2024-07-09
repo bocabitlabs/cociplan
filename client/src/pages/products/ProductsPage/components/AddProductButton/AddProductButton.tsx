@@ -12,6 +12,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
+import { IconPlus } from "@tabler/icons-react";
 import { useAddProduct } from "hooks/products/use-products";
 
 const productTypes = [
@@ -86,7 +87,9 @@ export default function AddProductButton() {
           </form>
         </Box>
       </Modal>
-      <Button onClick={open}>{t("Add new product")}</Button>
+      <Button leftSection={<IconPlus size="1rem" />} onClick={open}>
+        {t("Add new product")}
+      </Button>
     </>
   );
 }

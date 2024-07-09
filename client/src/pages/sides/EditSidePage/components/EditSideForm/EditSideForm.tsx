@@ -1,25 +1,25 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
   ActionIcon,
   Box,
   Button,
-  Group,
-  Rating,
-  Text,
-  TextInput,
-  NumberInput,
-  Select,
-  Switch,
-  Image,
   Checkbox,
-  SimpleGrid,
+  Group,
+  Image,
   LoadingOverlay,
   NativeSelect,
+  NumberInput,
+  Rating,
+  Select,
+  SimpleGrid,
+  Switch,
+  Text,
+  TextInput,
 } from "@mantine/core";
-import { FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { FileWithPath } from "@mantine/dropzone";
 import { useForm } from "@mantine/form";
 import { randomId } from "@mantine/hooks";
 import { RichTextEditor } from "@mantine/tiptap";
@@ -27,8 +27,8 @@ import { IconFlame, IconTrash } from "@tabler/icons-react";
 import { useEditor } from "@tiptap/react";
 import ImageDropZone from "components/ImageDropzone/ImageDropZone";
 import { useProducts } from "hooks/products/use-products";
-import { useAddrecipe, useSides } from "hooks/recipes/use-recipes";
-import { recipeTypes } from "pages/recipes/recipe-types";
+import { useUpdateRecipe } from "hooks/recipes/use-recipes";
+import recipeTypes from "pages/recipes/recipe-types";
 import { IProduct } from "types/products";
 import { DaysOfWeek, IRecipe, MealTemps, MealTypes } from "types/recipes";
 import { getBase64 } from "utils/base_64";
@@ -50,11 +50,14 @@ const daysOfWeek = [
   { value: "ALL", label: "Todos los días" },
 ];
 
-export default function AddRecipeForm() {
+interface EditRecipeFormProps {
+  recipe: IRecipe;
+}
+
+export default function EditSideForm({ recipe }: EditRecipeFormProps) {
   const { t } = useTranslation();
-  const { mutate, isLoading } = useAddrecipe();
+  const { mutate, isLoading } = useUpdateRecipe();
   const { data: products, isFetching: productsFetching } = useProducts();
-  const { data: sides, isLoading: sidesLoading } = useSides();
   const navigate = useNavigate();
   const [files, setFiles] = useState<FileWithPath[]>([]);
   const [base64file, setBase64file] = useState<string | null>(null);
@@ -66,68 +69,56 @@ export default function AddRecipeForm() {
       setFiles(acceptedFiles);
     });
   };
-
-  const previews = files.map((file, index) => {
-    const imageUrl = URL.createObjectURL(file);
-    return (
-      <Image
-        // eslint-disable-next-line react/no-array-index-key
-        key={index}
-        src={imageUrl}
-        onLoad={() => URL.revokeObjectURL(imageUrl)}
-        width={200}
-        mt="md"
-        height="auto"
-      />
-    );
-  });
-
   const form = useForm({
     initialValues: {
-      active: true,
-      description: "",
-      name: "",
-      meal: "LUNCH" as MealTypes,
-      mealTemp: "WARM" as MealTemps,
-      ingredients: [{ product: null, quantity: 0, key: null }],
-      instructions: "",
-      notes: "",
-      preferedMeal: "LUNCH" as MealTypes,
-      preparationTime: 0,
-      servings: 2,
+      active: recipe?.active || false,
+      description: recipe?.description || "",
+      name: recipe?.name || "",
+      meal: recipe?.meal || ("LUNCH" as MealTypes),
+      mealTemp: recipe?.mealTemp || ("WARM" as MealTemps),
+      ingredients: recipe.ingredients.map((ingredient) => ({
+        product: ingredient.product.id.toString(),
+        quantity: ingredient.quantity,
+        key: randomId(),
+      })),
+
+      instructions: recipe?.instructions || "",
+      notes: recipe?.notes || "",
+      preferedMeal: recipe?.preferedMeal || ("LUNCH" as MealTypes),
+      preparationTime: recipe?.preparationTime || 0,
+      servings: recipe?.servings || 0,
       sides: [],
-      preference: 0,
-      difficulty: 0,
-      isOnlyLunch: false,
-      isOnlyDinner: false,
-      isOvenRecipe: false,
-      daysOfWeek: "ALL" as DaysOfWeek,
-      seasonSpring: true,
-      seasonSummer: true,
-      seasonAutumn: true,
-      seasonWinter: true,
-      image: null,
-      type: "OTHER",
+      preference: recipe?.preference || 0,
+      difficulty: recipe?.difficulty || 0,
+      isOnlyLunch: recipe?.isOnlyLunch || false,
+      isOnlyDinner: recipe?.isOnlyDinner || false,
+      isOvenRecipe: recipe?.isOvenRecipe || false,
+      daysOfWeek: recipe?.daysOfWeek || ("ALL" as DaysOfWeek),
+      seasonSpring: recipe?.seasonSpring || false,
+      seasonSummer: recipe?.seasonSummer || false,
+      seasonAutumn: recipe?.seasonAutumn || false,
+      seasonWinter: recipe?.seasonWinter || false,
+      image: recipe?.image || null,
+      type: recipe?.type || "OTHER",
     },
   });
 
   const notesEditor = useEditor({
     extensions: editorExtensions,
+    content: recipe ? recipe.notes : "",
   });
 
   const instructionsEditor = useEditor({
     extensions: editorExtensions,
+    content: recipe ? recipe.instructions : "",
   });
 
   const descriptionEditor = useEditor({
     extensions: editorExtensions,
+    content: recipe ? recipe.description : "",
   });
 
-  if (productsFetching || sidesLoading) {
-    return <div>{t("Loading...")}</div>;
-  }
-
-  const generateIngredientsFields = () => {
+  const getIngredients = useCallback(() => {
     const productsOptions = products.map((product: IProduct) => ({
       value: product.id.toString(),
       label: product.name,
@@ -140,14 +131,14 @@ export default function AddRecipeForm() {
         <Select
           withAsterisk
           searchable
-          placeholder={t<string>("Elije el producto")}
+          placeholder="Elije el producto"
           data={productsOptions}
           {...form.getInputProps(`ingredients.${index}.product`)}
           required
           mt="md"
         />
         <TextInput
-          placeholder={t<string>("Quantity")}
+          placeholder="Quantity"
           withAsterisk
           style={{ flex: 1 }}
           {...form.getInputProps(`ingredients.${index}.quantity`)}
@@ -162,59 +153,50 @@ export default function AddRecipeForm() {
       </Group>
     ));
     return fields;
-  };
+  }, [form, products]);
 
-  const generateSidesFields = () => {
-    const productsOptions = sides.map((side: IRecipe) => ({
-      value: side.id.toString(),
-      label: side.name,
-    }));
-
-    const fields = form.values.sides.map((item: any, index) => (
-      <Group key={item.key} mt="xs">
-        <Select
-          withAsterisk
-          searchable
-          placeholder={t<string>("Elije el acompañamiento")}
-          data={productsOptions}
-          {...form.getInputProps(`sides.${index}.id`)}
-          required
-          mt="md"
-        />
-
-        <ActionIcon
-          color="red"
-          onClick={() => form.removeListItem("sides", index)}
-        >
-          <IconTrash size="1rem" />
-        </ActionIcon>
-      </Group>
-    ));
-    return fields;
-  };
+  const previews = files.map((file, index) => {
+    const imageUrl = URL.createObjectURL(file);
+    return (
+      <Image
+        // eslint-disable-next-line react/no-array-index-key
+        key={index}
+        src={imageUrl}
+        onLoad={() => URL.revokeObjectURL(imageUrl)}
+        width={200}
+        mt="md"
+      />
+    );
+  });
 
   const onSubmit = (values: any) => {
     const newValues = values;
     const filteredIngredients = values.ingredients.filter(
       (ingredient: any) => ingredient.product !== null,
     );
-    newValues.ingredients = filteredIngredients;
 
-    const filteredSides = values.sides.filter(
-      (side: any) => side.product !== null,
-    );
-    newValues.sides = filteredSides;
+    newValues.ingredients = filteredIngredients;
 
     newValues.notes = notesEditor?.getJSON();
     newValues.instructions = instructionsEditor?.getJSON();
     newValues.description = descriptionEditor?.getJSON();
-    // eslint-disable-next-line prefer-destructuring
-    newValues.image = base64file || null;
+    if (base64file) {
+      newValues.image = base64file;
+    }
 
-    mutate(newValues);
+    // Only send the image if it has changed. Otherwise, remove it from the object
+    if (recipe.image === newValues.image) {
+      delete newValues.image;
+    }
+
+    console.log(newValues);
+    mutate({ recipeId: recipe.id, newRecipe: newValues });
     navigate(-1);
   };
 
+  if (productsFetching) {
+    return <div>{t("Loading products...")}</div>;
+  }
   return (
     <Group>
       <Box>
@@ -223,36 +205,39 @@ export default function AddRecipeForm() {
           zIndex={1000}
           overlayProps={{ radius: "sm", blur: 2 }}
         />
-        <Text>
-          {t(
-            "Añade una receta a tu lista de recetas utilizando este formulario.",
-          )}
-        </Text>
         <form onSubmit={form.onSubmit(onSubmit)}>
           <TextInput
             withAsterisk
             label={t("Name")}
-            placeholder={t<string>("Lentejas, Arroz a la cubana...")}
+            placeholder="Lentejas, Arroz a la cubana..."
             required
             {...form.getInputProps("name")}
             mt="md"
           />
 
           <Switch
-            label={t("Activada")}
-            description={t(
-              "Si está activada, la receta se utilizará en la generación de menús.",
-            )}
+            label={t("Enabled")}
+            description="Si está activada, la receta se utilizará en la generación de menús."
             {...form.getInputProps("active", { type: "checkbox" })}
             mt="md"
           />
 
           <Select
-            label={t("Comida del día")}
+            label={t("Lunch of the day")}
             withAsterisk
             placeholder={t<string>("Elije la comida del día")}
             data={mealTypes}
             {...form.getInputProps("meal")}
+            required
+            mt="md"
+          />
+
+          <Select
+            label={t("Comida del día preferida")}
+            withAsterisk
+            placeholder={t<string>("Elije cuando prefieres comerlo")}
+            data={mealTypes}
+            {...form.getInputProps("preferedMeal")}
             required
             mt="md"
           />
@@ -295,16 +280,6 @@ export default function AddRecipeForm() {
           />
 
           <Select
-            label={t("Comida del día preferida")}
-            withAsterisk
-            placeholder={t<string>("Elije cuando prefieres comerlo")}
-            data={mealTypes}
-            {...form.getInputProps("preferedMeal")}
-            required
-            mt="md"
-          />
-
-          <Select
             label={t("Caliente/Fría")}
             withAsterisk
             placeholder={t<string>("Elije si es caliente o fria")}
@@ -319,11 +294,11 @@ export default function AddRecipeForm() {
               cols={{ base: 1, sm: 4 }}
               mt={previews.length > 0 ? "xl" : 0}
             >
-              <ImageDropZone
-                accept={IMAGE_MIME_TYPE}
-                mt="md"
-                onDrop={handleDrop}
-              />
+              <ImageDropZone mt="md" onDrop={handleDrop} />
+
+              {files.length === 0 && recipe && recipe.image && (
+                <Image src={recipe.image} width={200} mt="md" />
+              )}
 
               {previews}
             </SimpleGrid>
@@ -355,7 +330,7 @@ export default function AddRecipeForm() {
             {t("Ingredientes")}
           </Text>
 
-          {generateIngredientsFields()}
+          {getIngredients()}
 
           <Group mt="md">
             <Button
@@ -413,28 +388,10 @@ export default function AddRecipeForm() {
           />
 
           <Text fz="lg" mt="md">
-            {t("Sides")}
-          </Text>
-          {generateSidesFields()}
-          <Group mt="md">
-            <Button
-              onClick={() =>
-                form.insertListItem("sides", {
-                  product: "0",
-                  quantity: 0,
-                  key: randomId(),
-                })
-              }
-            >
-              {t("Add new side")}
-            </Button>
-          </Group>
-
-          <Text fz="lg" mt="md">
             {t("Descripcion")}
           </Text>
 
-          <RichTextEditor editor={descriptionEditor} style={{ minHeight: 200 }}>
+          <RichTextEditor editor={descriptionEditor}>
             <RichTextEditor.Toolbar sticky stickyOffset={60}>
               <RichTextEditor.ControlsGroup>
                 <RichTextEditor.Bold />
@@ -482,10 +439,7 @@ export default function AddRecipeForm() {
             {t("Pasos a seguir")}
           </Text>
 
-          <RichTextEditor
-            editor={instructionsEditor}
-            style={{ minHeight: 200 }}
-          >
+          <RichTextEditor editor={instructionsEditor}>
             <RichTextEditor.Toolbar sticky stickyOffset={60}>
               <RichTextEditor.ControlsGroup>
                 <RichTextEditor.Bold />
@@ -533,7 +487,7 @@ export default function AddRecipeForm() {
             {t("Notas de la receta")}
           </Text>
 
-          <RichTextEditor editor={notesEditor} style={{ minHeight: 200 }}>
+          <RichTextEditor editor={notesEditor}>
             <RichTextEditor.Toolbar sticky stickyOffset={60}>
               <RichTextEditor.ControlsGroup>
                 <RichTextEditor.Bold />
@@ -578,7 +532,7 @@ export default function AddRecipeForm() {
           </RichTextEditor>
 
           <Group mt="md">
-            <Button type="submit">{t("Crear receta")}</Button>
+            <Button type="submit">{t("Actualizar receta")}</Button>
           </Group>
         </form>
       </Box>

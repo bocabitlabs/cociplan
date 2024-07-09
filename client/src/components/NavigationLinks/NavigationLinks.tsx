@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { IconBaguette, IconChefHat } from "@tabler/icons-react";
+import { IconBaguette, IconChefHat, IconCooker } from "@tabler/icons-react";
 import NavigationLink from "./NavigationLink";
 import routes from "routes";
 
@@ -21,6 +21,12 @@ const data = [
     color: "red",
     label: "Recipes",
     route: routes.recipesRoute,
+  },
+  {
+    icon: <IconCooker size={16} />,
+    color: "orange",
+    label: "Sides",
+    route: routes.sidesRoute,
   },
 ];
 

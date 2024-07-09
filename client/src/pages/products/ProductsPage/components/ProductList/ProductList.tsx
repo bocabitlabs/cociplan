@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ActionIcon,
+  Box,
   Button,
   Group,
   LoadingOverlay,
@@ -53,36 +54,49 @@ export default function ProductsList() {
         <AddProductButton />
         <InitializeProductsButton />
       </Group>
-      <Table>
+      <Box pos="relative">
         <LoadingOverlay
           visible={isLoading || isLoadingDelete}
           zIndex={1000}
           overlayProps={{ radius: "sm", blur: 2 }}
         />
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th>{t("Name")}</Table.Th>
-            <Table.Th>{t("Type")}</Table.Th>
-            <Table.Th>{t("Actions")}</Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>
-          {data &&
-            data.map((product: IProduct) => (
-              <Table.Tr key={product.id}>
-                <Table.Td>{product.name}</Table.Td>
-                <Table.Td>{t(product.type)}</Table.Td>
-                <Table.Td>
-                  <ActionIcon color="red" title={t("Borrar producto")}>
-                    <IconTrash
-                      onClick={() => handleOpenModal(product.id, product.name)}
-                    />
-                  </ActionIcon>
-                </Table.Td>
+        <Box
+          style={{
+            display: "block",
+            overflowX: "scroll",
+            whiteSpace: "nowrap",
+          }}
+        >
+          <Table>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>{t("Name")}</Table.Th>
+                <Table.Th>{t("Type")}</Table.Th>
+                <Table.Th>{t("Actions")}</Table.Th>
               </Table.Tr>
-            ))}
-        </Table.Tbody>
-      </Table>
+            </Table.Thead>
+            <Table.Tbody>
+              {data &&
+                data.map((product: IProduct) => (
+                  <Table.Tr key={product.id}>
+                    <Table.Td>{product.name}</Table.Td>
+                    <Table.Td>{t(product.type)}</Table.Td>
+                    <Table.Td>
+                      <ActionIcon color="red" title={t("Borrar producto")}>
+                        <IconTrash
+                          onClick={() =>
+                            handleOpenModal(product.id, product.name)
+                          }
+                        />
+                      </ActionIcon>
+                    </Table.Td>
+                  </Table.Tr>
+                ))}
+            </Table.Tbody>
+          </Table>
+        </Box>
+      </Box>
+
       <Modal opened={opened} onClose={close} title="Borrar producto">
         <Stack>
           <Text>Estas seguro de que quieres borrar el producto?</Text>

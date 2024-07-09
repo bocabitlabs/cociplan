@@ -22,6 +22,7 @@ export interface IRecipeFormFields {
   isOnlyDinner: boolean;
   isOnlyLunch: boolean;
   isOvenRecipe: boolean;
+  isSidePlate: boolean;
   canBeDinner: boolean;
   canBeLunch: boolean;
   daysOfWeek: DaysOfWeek;
@@ -54,5 +55,5 @@ export interface IRecipe extends IRecipeFormFields {
   dateCreated: string;
   lastUpdated: string;
   ingredients: IIngredient[];
-  sides: IIngredient[];
+  sides: IRecipe[];
 }

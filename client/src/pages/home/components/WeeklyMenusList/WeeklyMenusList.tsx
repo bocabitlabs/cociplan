@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import {
   ActionIcon,
   Anchor,
+  Box,
   Button,
   Group,
   LoadingOverlay,
@@ -81,53 +82,68 @@ export default function WeeklyMenusList() {
 
   return (
     <Stack>
-      <LoadingOverlay
-        visible={isLoading}
-        zIndex={1000}
-        overlayProps={{ radius: "sm", blur: 2 }}
-      />
       <Group>
         <CreateWeeklyMenuButton />
       </Group>
-      <Table>
-        <Table.Thead>
-          <Table.Tr>
-            <th>{t("Fecha")}</th>
-            <th>{t("Name")}</th>
-            <th>{t("Acciones")}</th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>
-          {data &&
-            data.map((menu: IWeeklyMenu) => (
-              <Table.Tr key={menu.id}>
-                <Table.Td>
-                  {dayjs(menu.dateCreated).format("DD/MM/YYYY HH:mm")}
-                </Table.Td>
-                <Table.Td>
-                  <Anchor component={Link} to={`/menus/${menu.id}`}>
-                    {menu.name}
-                  </Anchor>
-                </Table.Td>
-                <Table.Td>
-                  <Group>
-                    <ActionIcon color="red" title={t("Borrar menu semanal")}>
-                      <IconTrash
-                        onClick={() => handleOpenModal(menu.id, menu.name)}
-                      />
-                    </ActionIcon>
-                    <ActionIcon
-                      onClick={() => handleOpenEditModal(menu.id, menu.name)}
-                      title={t("Cambiar nombre")}
-                    >
-                      <IconEdit />
-                    </ActionIcon>
-                  </Group>
-                </Table.Td>
+      <Box pos="relative">
+        <LoadingOverlay
+          visible={isLoading}
+          zIndex={1000}
+          overlayProps={{ radius: "sm", blur: 2 }}
+        />
+        <Box
+          style={{
+            display: "block",
+            overflowX: "scroll",
+            whiteSpace: "nowrap",
+          }}
+        >
+          <Table>
+            <Table.Thead>
+              <Table.Tr>
+                <th>{t("Fecha")}</th>
+                <th>{t("Name")}</th>
+                <th>{t("Acciones")}</th>
               </Table.Tr>
-            ))}
-        </Table.Tbody>
-      </Table>
+            </Table.Thead>
+            <Table.Tbody>
+              {data &&
+                data.map((menu: IWeeklyMenu) => (
+                  <Table.Tr key={menu.id}>
+                    <Table.Td>
+                      {dayjs(menu.dateCreated).format("DD/MM/YYYY HH:mm")}
+                    </Table.Td>
+                    <Table.Td>
+                      <Anchor component={Link} to={`/menus/${menu.id}`}>
+                        {menu.name}
+                      </Anchor>
+                    </Table.Td>
+                    <Table.Td>
+                      <Group>
+                        <ActionIcon
+                          color="red"
+                          title={t("Borrar menu semanal")}
+                        >
+                          <IconTrash
+                            onClick={() => handleOpenModal(menu.id, menu.name)}
+                          />
+                        </ActionIcon>
+                        <ActionIcon
+                          onClick={() =>
+                            handleOpenEditModal(menu.id, menu.name)
+                          }
+                          title={t("Cambiar nombre")}
+                        >
+                          <IconEdit />
+                        </ActionIcon>
+                      </Group>
+                    </Table.Td>
+                  </Table.Tr>
+                ))}
+            </Table.Tbody>
+          </Table>
+        </Box>
+      </Box>
       <Modal opened={opened} onClose={close} title="Borrar menú semanal">
         <Stack>
           <Text>
