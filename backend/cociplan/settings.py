@@ -222,7 +222,7 @@ LOGGING = {
             "level": "ERROR",
             "propagate": True,
         },
-        "buho_backend": {
+        "cociplan": {
             "handlers": LOGGER_HANDLERS,
             "level": LOG_LEVEL,
             "propagate": True,
