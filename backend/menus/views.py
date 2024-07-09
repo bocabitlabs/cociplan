@@ -54,6 +54,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self) -> QuerySet[Recipe]:
         logger.info(f"Action: {self.action}")
+        queryset = Recipe.objects.all()
         if self.action == "list":
             logger.debug(f"Query params: {self.request.query_params}")
             only_sides = self.request.query_params.get("isSidePlate")
@@ -61,9 +62,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 queryset = (
                     Recipe.objects.all().filter(is_side_plate=True).order_by("name")
                 )
-                return queryset
-
-        return Recipe.objects.all().filter(is_side_plate=False).order_by("name")
+            else:
+                queryset = (
+                    Recipe.objects.all().filter(is_side_plate=False).order_by("name")
+                )
+        return queryset
 
 
 class DailyMenuViewSet(viewsets.ModelViewSet):
