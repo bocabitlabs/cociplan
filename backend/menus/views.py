@@ -63,7 +63,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 )
                 return queryset
 
-        return Recipe.objects.all().order_by("name")
+        return Recipe.objects.all().filter(is_side_plate=False).order_by("name")
 
 
 class DailyMenuViewSet(viewsets.ModelViewSet):

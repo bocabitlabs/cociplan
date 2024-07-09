@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cociplan"
-version = "1.3.0"
+version = "1.4.1"
 description = "Weekly menu planner"
 authors = ["Rene Fernandez <renefernandez@duck.com>"]
 license = "GNU General Public License v3 (GPLv3)"
@@ -40,6 +40,7 @@ pyright = "1.1.296"
 pre-commit = "2.15.0"
 responses = "0.17.0"
 types-requests = "2.28.11.13"
+pytest-django = "^4.8.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -78,6 +79,6 @@ combine_as_imports = true
 src_paths = ["backend"]
 
 [tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "buho_backend.settings"
+DJANGO_SETTINGS_MODULE = "cociplan.settings"
 python_files = ["tests.py", "test_*.py", "*_tests.py"]
 pythonpath = [".", "backend"]
