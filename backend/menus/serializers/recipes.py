@@ -6,19 +6,17 @@ from rest_framework import serializers
 from menus.models.ingredients import Ingredient
 from menus.models.products import Product
 from menus.models.recipes import Recipe
-from menus.models.sides import Side
 from menus.serializers.ingredients import (
     IngredientSerializer,
     IngredientWriteSerializer,
 )
-from menus.serializers.sides import SideSerializer, SideWriteSerializer
 
 logger = logging.getLogger("cociplan")
 
 
 class RecipeSerializer(serializers.ModelSerializer):
     ingredients = IngredientSerializer(many=True)
-    sides = SideSerializer(many=True)
+    sides = serializers.SerializerMethodField()
 
     class Meta:
         model = Recipe
@@ -33,6 +31,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             "is_only_dinner",
             "is_only_lunch",
             "is_oven_recipe",
+            "is_side_plate",
             "can_be_dinner",
             "can_be_lunch",
             "days_of_week",
@@ -54,6 +53,15 @@ class RecipeSerializer(serializers.ModelSerializer):
             "last_updated",
         ]
 
+    # This function will return all childs..is necessary put the context label
+    def get_sides(self, entity):
+        return RecipeSerializer(
+            entity.sides.all(),
+            many=True,
+            # should pass this `entity` instance as context variable for filtering
+            context={"entity_instance": entity},
+        ).data
+
     def get_image(self, obj):
         request = self.context.get("request")
         photo_url = obj.fingerprint.url
@@ -64,7 +72,6 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 class RecipeWriteSerializer(serializers.ModelSerializer):
     ingredients = IngredientWriteSerializer(many=True)
-    sides = SideWriteSerializer(many=True)
     image = Base64ImageField(
         max_length=None, use_url=True, allow_null=True, required=False
     )
@@ -82,6 +89,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             "is_only_dinner",
             "is_only_lunch",
             "is_oven_recipe",
+            "is_side_plate",
             "can_be_dinner",
             "can_be_lunch",
             "days_of_week",
@@ -104,14 +112,12 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        logger.debug(validated_data)
         ingredients = validated_data.pop("ingredients")
         sides = validated_data.pop("sides")
 
         instance = Recipe.objects.create(**validated_data)
 
         for ingredient in ingredients:
-            logger.debug(ingredient)
             product_id = ingredient.pop("product").id
             if product_id != 0:
                 product = Product.objects.get(pk=product_id)
@@ -120,11 +126,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
                 )
 
         for side in sides:
-            logger.debug(side)
-            product_id = side.pop("product").id
-            if product_id != 0:
-                product = Product.objects.get(pk=product_id)
-                Side.objects.create(product=product, recipe=instance, **side)
+            instance.sides.add(side)
 
         return instance
 
@@ -132,11 +134,9 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         ingredients = validated_data.pop("ingredients")
         sides = validated_data.pop("sides")
 
-        deleted = instance.ingredients.all().delete()
-        logger.debug(f"Deleted {deleted} ingredients")
-
-        deleted = instance.sides.all().delete()
-        logger.debug(f"Deleted {deleted} sides")
+        # Remove existing elements from the relationship
+        instance.ingredients.all().delete()
+        instance.sides.all().delete()
 
         for ingredient in ingredients:
             logger.debug(ingredient)
@@ -148,15 +148,8 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
                 )
 
         for side in sides:
-            logger.debug(side)
-            product = side.pop("product")
-            if product:
-                product = Product.objects.get(pk=product.id)
-                Side.objects.update_or_create(
-                    product=product, recipe=instance, defaults=side
-                )
+            instance.sides.add(side)
 
-        #
         instance.save()
         instance = super().update(instance, validated_data)
 

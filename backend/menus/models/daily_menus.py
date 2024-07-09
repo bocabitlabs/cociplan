@@ -1,4 +1,5 @@
 from django.db import models
+
 from menus.models.recipes import Recipe
 
 
@@ -9,10 +10,14 @@ class DailyMenu(models.Model):
     name: models.CharField = models.CharField(max_length=200)
 
     lunch_recipe_id: int
-    lunch_recipe = models.ForeignKey["Recipe", Recipe](Recipe, on_delete=models.CASCADE, related_name="lunches")
+    lunch_recipe = models.ForeignKey["Recipe", Recipe](
+        Recipe, on_delete=models.CASCADE, related_name="lunches"
+    )
 
     dinner_recipe_id: int
-    dinner_recipe = models.ForeignKey["Recipe", Recipe](Recipe, on_delete=models.CASCADE, related_name="dinners")
+    dinner_recipe = models.ForeignKey["Recipe", Recipe](
+        Recipe, on_delete=models.CASCADE, related_name="dinners"
+    )
 
     date_created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
     last_updated: models.DateTimeField = models.DateTimeField(auto_now=True)

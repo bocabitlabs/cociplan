@@ -7,7 +7,6 @@ if TYPE_CHECKING:
     from django.db.models.manager import RelatedManager
 
     from menus.models.ingredients import Ingredient  # noqa
-    from menus.models.sides import Side  # noqa
 
 
 class RecipeType(models.TextChoices):
@@ -83,6 +82,8 @@ class Recipe(models.Model):
 
     is_oven_recipe: models.BooleanField = models.BooleanField(default=False)
 
+    is_side_plate: models.BooleanField = models.BooleanField(default=False)
+
     days_of_week = models.CharField(
         choices=DaysOfWeekType.choices, default=DaysOfWeekType.ALL, max_length=200
     )
@@ -96,6 +97,8 @@ class Recipe(models.Model):
     servings: models.IntegerField = models.IntegerField(
         blank=True, null=True, default=0
     )
+
+    sides = models.ManyToManyField("self", symmetrical=False, blank=True)
 
     season_spring: models.BooleanField = models.BooleanField(default=True)
     season_summer: models.BooleanField = models.BooleanField(default=True)

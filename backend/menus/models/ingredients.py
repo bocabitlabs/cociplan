@@ -1,4 +1,5 @@
 from django.db import models
+
 from menus.models.products import Product
 from menus.models.recipes import Recipe
 
@@ -13,10 +14,14 @@ class Ingredient(models.Model):
     last_updated: models.DateTimeField = models.DateTimeField(auto_now=True)
 
     product_id: int
-    product = models.ForeignKey["Product", Product](Product, on_delete=models.RESTRICT, related_name="ingredients")
+    product = models.ForeignKey["Product", Product](
+        Product, on_delete=models.RESTRICT, related_name="ingredients"
+    )
 
     recipe_id: int
-    recipe = models.ForeignKey["Recipe", Recipe](Recipe, on_delete=models.CASCADE, related_name="ingredients")
+    recipe = models.ForeignKey["Recipe", Recipe](
+        Recipe, on_delete=models.CASCADE, related_name="ingredients"
+    )
 
     class Meta:
         ordering = ["quantity"]
