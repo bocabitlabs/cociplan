@@ -1,65 +1,53 @@
-import { useEffect } from "react";
-import { Outlet, useLocation } from "react-router-dom";
-import {
-  AppShell,
-  Burger,
-  Group,
-  ScrollArea,
-  useMantineColorScheme,
-  useMantineTheme,
-} from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import LanguageSelector from "components/LanguageSelector/LanguageSelector";
-import Logo from "components/Logo/Logo";
-import NavigationLinks from "components/NavigationLinks/NavigationLinks";
-import ToggleThemeButton from "components/ToggleThemeButton/ToggleThemeButton";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Layout from "Layout";
+import HomePage from "pages/home/HomePage/HomePage";
+import DayMenuDetailsPage from "pages/menus/DayMenuDetailsPage/DayMenuDetailsPage";
+import MenuDetailsPage from "pages/menus/MenuDetailsPage/MenuDetailsPage";
+import ProductsPage from "pages/products/ProductsPage/ProductsPage";
+import AddRecipePage from "pages/recipes/AddRecipePage/AddRecipePage";
+import EditRecipePage from "pages/recipes/EditRecipePage/EditRecipePage";
+import RecipeDetailsPage from "pages/recipes/RecipeDetailsPage/RecipeDetailsPage";
+import RecipesPage from "pages/recipes/RecipesPage/RecipesPage";
+import AddSidePage from "pages/sides/AddSidePage/AddSidePage";
+import EditSidePage from "pages/sides/EditSidePage/EditSidePage";
+import SidesPage from "pages/sides/SidesPage/SidesPage";
+import routes from "routes";
 
-function App() {
-  const [opened, { toggle, close }] = useDisclosure();
-  const theme = useMantineTheme();
-  const { colorScheme } = useMantineColorScheme();
+const router = createBrowserRouter([
+  {
+    element: <Layout />,
+    children: [
+      { path: "/", element: <HomePage /> },
+      { path: routes.productsRoute, element: <ProductsPage /> },
+      {
+        path: "/recipes/*",
+        children: [
+          { index: true, element: <RecipesPage /> },
+          { path: ":recipeId", element: <RecipeDetailsPage /> },
+          { path: ":recipeId/edit", element: <EditRecipePage /> },
+          { path: "add", element: <AddRecipePage /> },
+        ],
+      },
+      {
+        path: "/sides/*",
+        children: [
+          { index: true, element: <SidesPage /> },
+          { path: ":recipeId", element: <RecipeDetailsPage /> },
+          { path: ":recipeId/edit", element: <EditSidePage /> },
+          { path: "add", element: <AddSidePage /> },
+        ],
+      },
+      {
+        path: "/menus/*",
+        children: [
+          { path: ":menuId", element: <MenuDetailsPage /> },
+          { path: ":menuId/:dayName", element: <DayMenuDetailsPage /> },
+        ],
+      },
+    ],
+  },
+]);
 
-  const location = useLocation();
-  useEffect(() => {
-    close();
-  }, [close, location]);
-
-  return (
-    <AppShell
-      header={{ height: 60 }}
-      navbar={{
-        width: 300,
-        breakpoint: "sm",
-        collapsed: { mobile: !opened },
-      }}
-      padding="md"
-    >
-      <AppShell.Header>
-        <Group h="100%" px="md" justify="space-between">
-          <Group>
-            <Burger onClick={toggle} hiddenFrom="sm" size="sm" />
-            <Logo />
-          </Group>
-          <Group>
-            <LanguageSelector />
-            <ToggleThemeButton />
-          </Group>
-        </Group>
-      </AppShell.Header>
-      <AppShell.Navbar hidden={!opened} p="md">
-        <AppShell.Section my="md" component={ScrollArea}>
-          <NavigationLinks />
-        </AppShell.Section>
-      </AppShell.Navbar>
-      <AppShell.Main
-        style={{
-          backgroundColor: colorScheme === "dark" ? "" : theme.colors.gray[0],
-        }}
-      >
-        <Outlet />
-      </AppShell.Main>
-    </AppShell>
-  );
+export default function App() {
+  return <RouterProvider router={router} />;
 }
-
-export default App;

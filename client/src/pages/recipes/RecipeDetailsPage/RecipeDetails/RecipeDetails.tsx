@@ -6,6 +6,7 @@ import RecipeExtraInfo from "./components/RecipeExtraInfo/RecipeExtraInfo";
 import RecipeHeader from "./components/RecipeHeader/RecipeHeader";
 import RecipeInstructions from "./components/RecipeInstructions/RecipeInstructions";
 import { IRecipe } from "types/recipes";
+import { getStringWordsInitials, stringToColour } from "utils/string_utils";
 
 interface Props {
   recipe: IRecipe;
@@ -25,9 +26,9 @@ export default function RecipeDetails({ recipe }: Props) {
             <Grid.Col>
               <Group justify="space-between">
                 {recipe.active ? (
-                  <Badge color="teal">{t("Activa")}</Badge>
+                  <Badge color="teal">{t("Active")}</Badge>
                 ) : (
-                  <Badge color="red">{t("Inactiva")}</Badge>
+                  <Badge color="red">{t("Innactive")}</Badge>
                 )}
                 <Link
                   to={
@@ -50,8 +51,11 @@ export default function RecipeDetails({ recipe }: Props) {
                 maw="auto"
                 mx="auto"
                 radius="md"
-                src={recipe.image}
-                alt={t<string>("Imagen de la receta")}
+                src={recipe.image?.image}
+                alt={t<string>("Recipe image")}
+                fallbackSrc={`https://placehold.co/200x200/${stringToColour(
+                  recipe.name,
+                )}/fff?text=${getStringWordsInitials(recipe.name)}`}
               />
             </Grid.Col>
           </Grid>

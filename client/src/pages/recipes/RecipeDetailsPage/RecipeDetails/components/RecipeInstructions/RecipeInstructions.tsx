@@ -1,27 +1,16 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { List, Stack, Title, Text } from "@mantine/core";
+import { List, Stack, Title } from "@mantine/core";
 import { generateHTML } from "@tiptap/core";
 import { IIngredient } from "types/ingredients";
 import { IRecipe } from "types/recipes";
-import { editorExtensions, renderExtensions } from "utils/editor";
+import { editorExtensions } from "utils/editor";
 
 type Props = { recipe: IRecipe };
 
 export default function RecipeInstructions({ recipe }: Props) {
   const { t } = useTranslation();
-  const description = useMemo(() => {
-    if (recipe && recipe.description) {
-      let descr = recipe.description;
-      // Get the type of descr
-      if (typeof descr === "string") {
-        descr = JSON.parse(descr);
-      }
-      return generateHTML(descr, renderExtensions);
-    }
-    return "";
-  }, [recipe]);
 
   const instructions = useMemo(() => {
     if (recipe && recipe.instructions) {
@@ -37,10 +26,7 @@ export default function RecipeInstructions({ recipe }: Props) {
 
   return (
     <Stack>
-      <Text>
-        <div dangerouslySetInnerHTML={{ __html: description }} />
-      </Text>
-      <Title order={5}>{t("Ingredientes")}</Title>
+      <Title order={5}>{t("Ingredients")}</Title>
       <List>
         {recipe.ingredients.map((ingredient: IIngredient) => (
           <List.Item key={ingredient.id}>
@@ -48,7 +34,7 @@ export default function RecipeInstructions({ recipe }: Props) {
           </List.Item>
         ))}
       </List>
-      <Title order={5}>Instrucciones</Title>
+      <Title order={5}>{t("Instructions")}</Title>
       <div dangerouslySetInnerHTML={{ __html: instructions }} />
       {recipe.sides && recipe.sides.length > 0 && (
         <>

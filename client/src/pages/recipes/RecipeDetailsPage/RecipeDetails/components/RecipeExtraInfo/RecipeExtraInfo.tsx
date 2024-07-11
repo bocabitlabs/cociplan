@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Stack, Title, Text } from "@mantine/core";
+import { Stack, Title, Text, Paper, Group, Badge } from "@mantine/core";
 import { IconCooker } from "@tabler/icons-react";
 import { generateHTML } from "@tiptap/core";
 import { IRecipe } from "types/recipes";
@@ -23,83 +23,84 @@ export default function RecipeExtraInfo({ recipe }: IProps) {
     }
     return "";
   }, [recipe]);
-  console.log(recipe);
-  console.log(notes);
-  console.log(t);
 
   const getRecipeDaysOfWeek = (daysOfWeek: string) => {
     switch (daysOfWeek) {
       case "ALL":
-        return t("Todos los días");
+        return t("All days");
       case "WEEKDAYS":
-        return t("Entre semana");
+        return t("Weekdays");
       case "WEEKENDS":
-        return t("Fin de semana");
+        return t("Weekends");
       default:
-        return t("Todos");
+        return t("All days");
     }
   };
   return (
     <Stack>
-      <Title order={5}>{t("Detalles")}</Title>
+      <Title order={5}>{t("Details")}</Title>
       {recipe.isOvenRecipe && (
         <Text>
-          <IconCooker /> {t("Receta de horno")}
+          <IconCooker /> {t("Oven recipe")}
         </Text>
       )}
-      {/* {recipe.meal === "LUNCH" && (
+      {recipe.meal === "LUNCH" && (
         <>
           <Text>
             {recipe.preferedMeal === "LUNCH"
-              ? t("Preferida para comer")
-              : t("Preferida para cenar")}
+              ? t("Prefered for lunch")
+              : t("Prefered for dinner")}
           </Text>
           <Text>
             {recipe.isOnlyLunch
-              ? t("Sólo para comer")
-              : t("Para comer y cenar")}
+              ? t("Only for lunch")
+              : t("For lunch and dinner")}
           </Text>
         </>
       )}
       {recipe.meal === "DINNER" && (
         <Text>
-          {recipe.isOnlyDinner ? t("Sólo para cenar") : t("Para comer y cenar")}
+          {recipe.isOnlyDinner
+            ? t("Only for dinner")
+            : t("For lunch and dinner")}
         </Text>
-      )} */}
+      )}
 
-      <Title order={5}>{t("Días")}</Title>
+      <Title order={5}>{t("Days")}</Title>
       <Text>{getRecipeDaysOfWeek(recipe.daysOfWeek)}</Text>
 
-      {/* <Title order={5}>{t("Estaciones")}</Title>
+      <Title order={5}>{t("Seasons")}</Title>
       <Group>
         <Badge color={recipe.seasonSpring ? "teal" : "red"}>
-          {t("Primavera")}
+          {t("Spring")}
         </Badge>
         <Badge color={recipe.seasonSummer ? "teal" : "red"}>
-          {t("Verano")}
+          {t("Summer")}
         </Badge>
-        <Badge color={recipe.seasonAutumn ? "teal" : "red"}>{t("Otoño")}</Badge>
+        <Badge color={recipe.seasonAutumn ? "teal" : "red"}>
+          {t("Autumn")}
+        </Badge>
         <Badge color={recipe.seasonWinter ? "teal" : "red"}>
-          {t("Invierno")}
+          {t("Winter")}
         </Badge>
       </Group>
 
-      <Title order={5}>{t("Temperatura")}</Title>
+      <Title order={5}>{t("Temperature")}</Title>
       <Text>
         {recipe.mealTemp === "WARM" ? (
-          <Text style={{ color: "#fa5252" }}>{t("Caliente")}</Text>
+          <Text style={{ color: "#fa5252" }}>{t("Warm")}</Text>
         ) : (
-          <Text style={{ color: "#228be6" }}>{t("Fría")}</Text>
+          <Text style={{ color: "#228be6" }}>{t("Cold")}</Text>
         )}
       </Text>
       {notes && (
         <>
-          <Title order={5}>{t("Notas")}</Title>
+          <Title order={5}>{t("Notes")}</Title>
           <Paper color="purple" shadow="xs" p="md">
             <div dangerouslySetInnerHTML={{ __html: notes }} />
           </Paper>
         </>
-      )} */}
+      )}
     </Stack>
   );
 }

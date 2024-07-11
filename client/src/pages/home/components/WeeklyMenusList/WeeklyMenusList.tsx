@@ -74,7 +74,7 @@ export default function WeeklyMenusList() {
 
   const handleUpdate = (id: number | null) => {
     if (id === null) {
-      throw new Error("Cannot update Weekly menu. id is null");
+      throw new Error(t<string>("Cannot update Weekly menu. id is null"));
     }
     updateMutate({ id, name: form.values.name });
     handleCloseEditModal();
@@ -101,9 +101,9 @@ export default function WeeklyMenusList() {
           <Table>
             <Table.Thead>
               <Table.Tr>
-                <th>{t("Fecha")}</th>
+                <th>{t("Date")}</th>
                 <th>{t("Name")}</th>
-                <th>{t("Acciones")}</th>
+                <th>{t("Actions")}</th>
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
@@ -120,10 +120,7 @@ export default function WeeklyMenusList() {
                     </Table.Td>
                     <Table.Td>
                       <Group>
-                        <ActionIcon
-                          color="red"
-                          title={t("Borrar menu semanal")}
-                        >
+                        <ActionIcon color="red" title={t("Delete weekly menu")}>
                           <IconTrash
                             onClick={() => handleOpenModal(menu.id, menu.name)}
                           />
@@ -132,7 +129,7 @@ export default function WeeklyMenusList() {
                           onClick={() =>
                             handleOpenEditModal(menu.id, menu.name)
                           }
-                          title={t("Cambiar nombre")}
+                          title={t("Change name of weekly menu")}
                         >
                           <IconEdit />
                         </ActionIcon>
@@ -144,20 +141,18 @@ export default function WeeklyMenusList() {
           </Table>
         </Box>
       </Box>
-      <Modal opened={opened} onClose={close} title="Borrar menú semanal">
+      <Modal opened={opened} onClose={close} title={t("Delete weekly menu")}>
         <Stack>
-          <Text>
-            {t("Estas seguro de que quieres borrar el menu semanal?")}
-          </Text>
+          <Text>{t("Are you sure you want to delete the weekly menu?")}</Text>
           <Text fw={500} mt="sm">
             {selectedMenu.name}
           </Text>
           <Group>
             <Button onClick={() => handleDelete(selectedMenu.id)}>
-              {t("Sí, borrar menú")}
+              {t("Yes, delete")}
             </Button>
             <Button onClick={handleCloseModal} variant="light">
-              {t("Cancelar")}
+              {t("Cancel")}
             </Button>
           </Group>
         </Stack>
@@ -165,11 +160,11 @@ export default function WeeklyMenusList() {
       <Modal
         opened={openedEdit}
         onClose={closeEdit}
-        title={t("Editar menú semanal")}
+        title={t("Edit weekly menu name")}
       >
         <Stack>
           <Text>
-            {t("Estas seguro de que quieres borrar el menu semanal?")}
+            {t("Are you sure you want to change the name of the weekly menu?")}
           </Text>
           <form>
             <Stack>
@@ -183,10 +178,10 @@ export default function WeeklyMenusList() {
 
               <Group>
                 <Button onClick={() => handleUpdate(selectedMenu.id)}>
-                  {t("Sí, actualizar")}
+                  {t("Yes, change name")}
                 </Button>
                 <Button onClick={handleCloseEditModal} variant="light">
-                  {t("Cancelar")}
+                  {t("Cancel")}
                 </Button>
               </Group>
             </Stack>

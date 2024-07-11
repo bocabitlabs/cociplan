@@ -2,16 +2,21 @@ import logging
 
 from django.db.models.query import QuerySet
 from rest_framework import viewsets
+from rest_framework.parsers import FormParser, MultiPartParser
 
 from menus.models.daily_menus import DailyMenu
 from menus.models.ingredients import Ingredient
 from menus.models.products import Product
-from menus.models.recipes import Recipe
+from menus.models.recipes import Recipe, RecipeImage
 from menus.models.weekly_menus import WeeklyMenu
 from menus.serializers.daily_menus import DailyMenuSerializer, DailyMenuWriteSerializer
 from menus.serializers.ingredients import IngredientSerializer
 from menus.serializers.products import ProductSerializer
-from menus.serializers.recipes import RecipeSerializer, RecipeWriteSerializer
+from menus.serializers.recipes import (
+    RecipeImageSerializer,
+    RecipeSerializer,
+    RecipeWriteSerializer,
+)
 from menus.serializers.weekly_menus import (
     WeeklyMenuPatchSerializer,
     WeeklyMenuSerializer,
@@ -38,6 +43,16 @@ class IngredientViewSet(viewsets.ModelViewSet):
 
     serializer_class = IngredientSerializer
     queryset = Ingredient.objects.all()
+
+
+class RecipeImageViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for viewing and editing Ingredient instances.
+    """
+
+    serializer_class = RecipeImageSerializer
+    queryset = RecipeImage.objects.all()
+    parser_classes = (MultiPartParser, FormParser)
 
 
 class RecipeViewSet(viewsets.ModelViewSet):

@@ -25,8 +25,8 @@ export const useAddProduct = () => {
     {
       onSuccess: () => {
         notifications.show({
-          title: t("Creado"),
-          message: t("El producto ha sido creado"),
+          title: t("Created"),
+          message: t("The product has been created successfully"),
           color: "teal",
           autoClose: 2000,
           icon: <IconCheck size="1rem" />,
@@ -35,8 +35,8 @@ export const useAddProduct = () => {
       },
       onError: () => {
         notifications.show({
-          title: t("No creado"),
-          message: t("No se ha podido crear el producto"),
+          title: t("Not created"),
+          message: t("Unable to create the product"),
           color: "red",
           autoClose: 2000,
           icon: <IconX size="1rem" />,

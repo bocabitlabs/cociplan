@@ -1,11 +1,11 @@
 const appBaseRoute = "/";
 const homeRoute = "";
-const recipesRoute = "recipes";
-const sidesRoute = "sides";
-const recipesAddRoute = "add";
-const sidesAddRoute = "add";
-const productsRoute = "products";
-const menusRoute = "menus";
+const recipesRoute = "recipes/";
+const sidesRoute = "sides/";
+const recipesAddRoute = "add/";
+const sidesAddRoute = "add/";
+const productsRoute = "products/";
+const menusRoute = "menus/";
 
 const getRouteWithBase = (route: string) => `/${appBaseRoute}/${route}`;
 

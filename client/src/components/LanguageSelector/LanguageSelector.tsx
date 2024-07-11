@@ -6,7 +6,6 @@ const languages = ["es", "en"];
 
 export default function LanguageSelector() {
   const changeLanguage = (lng: string) => {
-    console.log("Change language to", lng);
     i18n.changeLanguage(lng);
   };
 

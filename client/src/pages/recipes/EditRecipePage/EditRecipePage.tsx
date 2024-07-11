@@ -8,20 +8,21 @@ import {
   Paper,
   Box,
 } from "@mantine/core";
-import EditRecipeForm from "./components/EditRecipeForm/EditRecipeForm";
+import AddEditRecipeForm from "../components/AddEditRecipeForm/AddEditRecipeForm";
 import { Footer } from "components/Footer/Footer";
 import PageTitle from "components/PageTitle/PageTitle";
 import { useRecipe } from "hooks/recipes/use-recipes";
+import routes from "routes";
 
 export default function EditRecipePage() {
   const { recipeId } = useParams();
   const { data, isLoading } = useRecipe(recipeId ? +recipeId : undefined);
   const { t } = useTranslation();
   const items = [
-    { title: "Inicio", href: "../../.." },
-    { title: "Recetas", href: "../.." },
-    { title: data?.name || "Cargando...", href: ".." },
-    { title: "Editar", href: "." },
+    { title: t("Home"), href: "../../.." },
+    { title: t("Recipes"), href: "../.." },
+    { title: data?.name || t("Loading..."), href: ".." },
+    { title: t("Edit"), href: "." },
   ].map((item, index) => (
     // eslint-disable-next-line react/no-array-index-key
     <Anchor component={Link} to={item.href} key={index} relative="path">
@@ -40,11 +41,14 @@ export default function EditRecipePage() {
           />
           <Grid.Col>
             <Breadcrumbs>{items}</Breadcrumbs>
-            <PageTitle header={t<string>("Editar receta")} />
+            <PageTitle
+              header={t<string>("Edit recipe")}
+              backRoute={`/${routes.recipesRoute}${recipeId}`}
+            />
           </Grid.Col>
           <Grid.Col>
             <Paper shadow="xs" p="md">
-              <EditRecipeForm recipe={data} />
+              <AddEditRecipeForm recipe={data} isUpdate />
             </Paper>
           </Grid.Col>
         </Box>

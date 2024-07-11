@@ -4,7 +4,11 @@ import { notifications } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import { apiClient } from "api/api-client";
 import queryClient from "api/query-client";
-import { IRecipe, IRecipeFormFields } from "types/recipes";
+import {
+  IRecipe,
+  IRecipeFormFields,
+  IRecipeImageFormFields,
+} from "types/recipes";
 
 export const fetchRecipes = async () => {
   const { data } = await apiClient.get<any>(`/recipes/`);
@@ -28,6 +32,16 @@ export function useSides(options = {}) {
   });
 }
 
+export const useAddRecipeImage = () => {
+  return useMutation((newRecipe: IRecipeImageFormFields) =>
+    apiClient.post(`/recipes-images/`, newRecipe, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }),
+  );
+};
+
 export const useAddrecipe = () => {
   const { t } = useTranslation();
   return useMutation(
@@ -35,8 +49,8 @@ export const useAddrecipe = () => {
     {
       onSuccess: () => {
         notifications.show({
-          title: t("Creado"),
-          message: t("La receta ha sido creada"),
+          title: t("Created"),
+          message: t("Recipe has been created successfully"),
           color: "teal",
           autoClose: 2000,
           icon: <IconCheck size="1rem" />,
@@ -45,8 +59,8 @@ export const useAddrecipe = () => {
       },
       onError: () => {
         notifications.show({
-          title: t("No creada"),
-          message: t("No se ha podido crear la receta"),
+          title: t("Not created"),
+          message: t("Unable to create the recipe"),
           color: "red",
           autoClose: 2000,
           icon: <IconX size="1rem" />,
@@ -62,8 +76,8 @@ export const useDeleteRecipe = () => {
   return useMutation((id: number) => apiClient.delete(`/recipes/${id}/`), {
     onSuccess: () => {
       notifications.show({
-        title: t("Borrada"),
-        message: t("La receta ha sido borrada"),
+        title: t("Deleted"),
+        message: t("The recipe has been deleted successfully"),
         color: "teal",
         autoClose: 2000,
         icon: <IconCheck size="1rem" />,
@@ -72,8 +86,8 @@ export const useDeleteRecipe = () => {
     },
     onError: () => {
       notifications.show({
-        title: t("No Borrada"),
-        message: t("La receta no ha sido borrada"),
+        title: t("Not deleted"),
+        message: t("The recipe could not be deleted"),
         color: "red",
         autoClose: 2000,
         icon: <IconX size="1rem" />,
@@ -103,14 +117,16 @@ interface IRecipeUpdateFields {
 }
 
 export const useUpdateRecipe = () => {
+  const { t } = useTranslation();
+
   return useMutation(
     ({ recipeId, newRecipe }: IRecipeUpdateFields) =>
       apiClient.patch(`/recipes/${recipeId}/`, newRecipe),
     {
       onSuccess: () => {
         notifications.show({
-          title: "Actualizada",
-          message: "La receta ha sido actualizada",
+          title: t("Updated"),
+          message: t("The recipe has been updated successfully"),
           color: "teal",
           autoClose: 2000,
           icon: <IconCheck size="1rem" />,
@@ -119,8 +135,8 @@ export const useUpdateRecipe = () => {
       },
       onError: () => {
         notifications.show({
-          title: "No actualizada",
-          message: "No se ha podido actualizar la receta",
+          title: t("Not updated"),
+          message: t("The recipe could not be updated"),
           color: "red",
           autoClose: 2000,
           icon: <IconX size="1rem" />,
@@ -138,8 +154,8 @@ export const useInitializeRecipes = () => {
     {
       onSuccess: () => {
         notifications.show({
-          title: t("Creadas"),
-          message: "Productos creadas correctamente",
+          title: t("Created"),
+          message: t("Sample recipes created successfully"),
           color: "teal",
           autoClose: 2000,
           icon: <IconCheck size="1rem" />,
@@ -148,8 +164,8 @@ export const useInitializeRecipes = () => {
       },
       onError: () => {
         notifications.show({
-          title: t("No creadas"),
-          message: "No se han podido crear las recetas",
+          title: t("Not created"),
+          message: t("Unable to create sample recipes"),
           color: "red",
           autoClose: 2000,
           icon: <IconX size="1rem" />,

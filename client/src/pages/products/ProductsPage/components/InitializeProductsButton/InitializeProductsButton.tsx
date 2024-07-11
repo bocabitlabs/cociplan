@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import { useTranslation } from "react-i18next";
 import { Button } from "@mantine/core";
 import { useInitializeProducts } from "hooks/products/use-products";
@@ -12,7 +11,7 @@ export default function AddProductButton() {
 
   return (
     <Button variant="outline" onClick={onClick}>
-      {t("Inicializar productos")}
+      {t("Initialize products")}
     </Button>
   );
 }

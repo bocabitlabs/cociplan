@@ -1,17 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
-import {
-  Anchor,
-  Box,
-  Breadcrumbs,
-  Grid,
-  LoadingOverlay,
-  Paper,
-} from "@mantine/core";
-import EditSideForm from "./components/EditSideForm/EditSideForm";
+import { Anchor, Box, Breadcrumbs, Grid, LoadingOverlay } from "@mantine/core";
 import { Footer } from "components/Footer/Footer";
 import PageTitle from "components/PageTitle/PageTitle";
 import { useRecipe } from "hooks/recipes/use-recipes";
+import AddEditRecipeForm from "pages/recipes/components/AddEditRecipeForm/AddEditRecipeForm";
+import routes from "routes";
 
 export default function EditSidePage() {
   const { recipeId } = useParams();
@@ -40,12 +34,13 @@ export default function EditSidePage() {
         <Grid columns={24}>
           <Grid.Col span={24}>
             <Breadcrumbs>{items}</Breadcrumbs>
-            <PageTitle header={t<string>("Editar compañamiento")} />
+            <PageTitle
+              header={t<string>("Edit side")}
+              backRoute={`/${routes.sidesRoute}${recipeId}`}
+            />
           </Grid.Col>
           <Grid.Col span={24}>
-            <Paper shadow="xs" p="md">
-              <EditSideForm recipe={data} />
-            </Paper>
+            <AddEditRecipeForm recipe={data} isSide isUpdate />
             <Footer />
           </Grid.Col>
         </Grid>

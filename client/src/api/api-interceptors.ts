@@ -1,11 +1,10 @@
-import { apiClient, getAxiosHeadersWithAuth } from "./api-client";
+import { apiClient } from "./api-client";
 
 const setupInterceptors = () => {
   apiClient.interceptors.request.use(
     (config) => {
       // Do something before request is sent
       const newConfig = config;
-      newConfig.headers = getAxiosHeadersWithAuth();
       return newConfig;
     },
     (error) => {

@@ -1,5 +1,7 @@
 import React from "react";
 import { QueryClientProvider } from "react-query";
+import { MantineProvider } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 import * as Sentry from "@sentry/react";
 import ReactDOM from "react-dom/client";
 import "@mantine/core/styles.css";
@@ -9,8 +11,8 @@ import "@mantine/notifications/styles.css";
 import "./i18n";
 import { ReactQueryDevtools } from "react-query/devtools";
 import queryClient from "api/query-client";
+import App from "App";
 import config from "config";
-import Main from "MainRouter";
 
 Sentry.init({
   dsn: config.SENTRY_DSN,
@@ -29,9 +31,12 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <Main />
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <MantineProvider defaultColorScheme="light">
+      <QueryClientProvider client={queryClient}>
+        <App />
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+      <Notifications position="top-center" />
+    </MantineProvider>
   </React.StrictMode>,
 );

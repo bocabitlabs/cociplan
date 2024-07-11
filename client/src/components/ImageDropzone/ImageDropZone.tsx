@@ -1,11 +1,18 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { useTranslation } from "react-i18next";
-import { rem, useMantineTheme, Text, Group } from "@mantine/core";
+import {
+  rem,
+  useMantineTheme,
+  Text,
+  Group,
+  useMantineColorScheme,
+} from "@mantine/core";
 import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { IconUpload, IconPhoto, IconX } from "@tabler/icons-react";
 
 export default function ImageDropZone(props: Partial<DropzoneProps>) {
   const theme = useMantineTheme();
+  const scheme = useMantineColorScheme();
   const { onDrop, onReject } = props;
   const { t } = useTranslation();
   const handleDrop = (files: File[]) => {
@@ -21,9 +28,11 @@ export default function ImageDropZone(props: Partial<DropzoneProps>) {
       {...props}
     >
       <Group
-        position="center"
-        spacing="xl"
-        style={{ minHeight: rem(220), pointerEvents: "none" }}
+        style={{
+          justifyContent: "center",
+          minHeight: rem(220),
+          pointerEvents: "none",
+        }}
       >
         <Dropzone.Accept>
           <IconUpload
@@ -31,7 +40,7 @@ export default function ImageDropZone(props: Partial<DropzoneProps>) {
             stroke={1.5}
             color={
               theme.colors[theme.primaryColor][
-                theme.colorScheme === "dark" ? 4 : 6
+                scheme.colorScheme === "dark" ? 4 : 6
               ]
             }
           />
@@ -40,7 +49,7 @@ export default function ImageDropZone(props: Partial<DropzoneProps>) {
           <IconX
             size="3.2rem"
             stroke={1.5}
-            color={theme.colors.red[theme.colorScheme === "dark" ? 4 : 6]}
+            color={theme.colors.red[scheme.colorScheme === "dark" ? 4 : 6]}
           />
         </Dropzone.Reject>
         <Dropzone.Idle>
@@ -49,12 +58,10 @@ export default function ImageDropZone(props: Partial<DropzoneProps>) {
 
         <div>
           <Text size="xl" inline>
-            {t("Arrastra hasta aquí o haz click para subir una imagen")}
+            {t("Drag and drop image here or click to select file")}
           </Text>
-          <Text size="sm" color="dimmed" inline mt={7}>
-            {t(
-              "Attach as many files as you like, each file should not exceed 5mb",
-            )}
+          <Text size="sm" inline mt={7}>
+            {t("Attach one file that should not exceed 5mb")}
           </Text>
         </div>
       </Group>

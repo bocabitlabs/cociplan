@@ -27,16 +27,16 @@ import {
   IconEdit,
 } from "@tabler/icons-react";
 import { useDeleteRecipe, useSides } from "hooks/recipes/use-recipes";
-import { getRecipeTypeLabel } from "pages/recipes/recipe-types";
 import routes from "routes";
 import { IRecipe } from "types/recipes";
+import { getStringWordsInitials, stringToColour } from "utils/string_utils";
 
 interface SelectedRecipeProps {
   id: number | null;
   name: string | null;
 }
 
-export default function RecipeList() {
+export default function SideList() {
   const { data, isLoading: isLoadindRecipes } = useSides();
   const { mutate, isLoading: isLoadingDelete } = useDeleteRecipe();
   const navigate = useNavigate();
@@ -63,7 +63,11 @@ export default function RecipeList() {
     mutate(id);
     handleCloseModal();
   };
-
+  console.log(
+    `https://placehold.co/80x80/${stringToColour(
+      "pepe",
+    )}/fff?text=${getStringWordsInitials("pepe")}`,
+  );
   return (
     <Stack>
       <Group justify="space-between">
@@ -80,112 +84,109 @@ export default function RecipeList() {
           zIndex={1000}
           overlayProps={{ radius: "sm", blur: 2 }}
         />
-        {data && (
-          <Box
-            style={{
-              display: "block",
-              overflowX: "scroll",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {data?.length === 0 ? (
-              <Text style={{ justifyContent: "center" }} mt="xl">
-                {t("No recipes found")}
-              </Text>
-            ) : (
-              <Table>
-                <Table.Thead>
-                  <Table.Tr>
-                    {isMobile && <Table.Th>{t("Image")}</Table.Th>}
-                    <Table.Th>{t("Name")}</Table.Th>
-                    <Table.Th>{t("Type")}</Table.Th>
-                    <Table.Th>{t("Meal")}</Table.Th>
-                    {isMobile && <Table.Th>{t("Seasons")}</Table.Th>}
-                    <Table.Th>{t("Actions")}</Table.Th>
-                  </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>
-                  {data?.map((recipe: IRecipe) => (
-                    <Table.Tr key={recipe.id}>
-                      {isMobile && (
-                        <Table.Td>
-                          <Image
-                            src={recipe.image}
-                            alt={recipe.name}
-                            fallbackSrc="https://placehold.co/80x80?text=Placeholder"
-                            h={80}
-                            w="auto"
-                            fit="contain"
-                          />
-                        </Table.Td>
-                      )}
+
+        <Box
+          style={{
+            display: "block",
+            overflowX: "scroll",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {data?.length === 0 ? (
+            <Text style={{ justifyContent: "center" }} mt="xl">
+              {t("There are no side meals")}
+            </Text>
+          ) : (
+            <Table>
+              <Table.Thead>
+                <Table.Tr>
+                  {isMobile && <Table.Th />}
+                  <Table.Th>{t("Name")}</Table.Th>
+                  <Table.Th>{t("Type")}</Table.Th>
+                  <Table.Th>{t("Meal")}</Table.Th>
+                  {isMobile && <Table.Th>{t("Seasons")}</Table.Th>}
+                  <Table.Th>{t("Actions")}</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
+                {data?.map((recipe: IRecipe) => (
+                  <Table.Tr key={recipe.id}>
+                    {isMobile && (
                       <Table.Td>
-                        {recipe.active ? (
-                          <strong>
-                            <Anchor component={Link} to={`${recipe.id}`}>
-                              {recipe.name}
-                            </Anchor>
-                          </strong>
-                        ) : (
+                        <Image
+                          src={recipe.image}
+                          alt={recipe.name}
+                          fallbackSrc={`https://placehold.co/80x80/${stringToColour(
+                            recipe.name,
+                          )}/fff?text=${getStringWordsInitials(recipe.name)}`}
+                          h={80}
+                          w="auto"
+                          fit="contain"
+                        />
+                      </Table.Td>
+                    )}
+                    <Table.Td>
+                      {recipe.active ? (
+                        <strong>
                           <Anchor component={Link} to={`${recipe.id}`}>
                             {recipe.name}
                           </Anchor>
-                        )}
-                      </Table.Td>
-                      <Table.Td>{getRecipeTypeLabel(recipe.type)}</Table.Td>
-                      <Table.Td>
-                        {recipe.meal === "LUNCH" ? (
-                          <IconSunHigh />
-                        ) : (
-                          <IconMoon />
-                        )}
-                      </Table.Td>
-                      {isMobile && (
-                        <Table.Td>
-                          {recipe.seasonSpring && <IconFlower color="teal" />}{" "}
-                          {recipe.seasonSummer && <IconSun color="#f76707" />}
-                          {recipe.seasonAutumn && <IconLeaf color="brown" />}
-                          {recipe.seasonWinter && <IconSnowman color="gray" />}
-                        </Table.Td>
+                        </strong>
+                      ) : (
+                        <Anchor component={Link} to={`${recipe.id}`}>
+                          {recipe.name}
+                        </Anchor>
                       )}
+                    </Table.Td>
+                    <Table.Td>{t(recipe.type)}</Table.Td>
+                    <Table.Td>
+                      {recipe.meal === "LUNCH" ? <IconSunHigh /> : <IconMoon />}
+                    </Table.Td>
+                    {isMobile && (
                       <Table.Td>
-                        <Group>
-                          <ActionIcon color="red" title="Borrar receta">
-                            <IconTrash
-                              onClick={() =>
-                                handleOpenModal(recipe.id, recipe.name)
-                              }
-                            />
-                          </ActionIcon>
-                          <ActionIcon title="Editar receta">
-                            <IconEdit
-                              onClick={() => navigate(`${recipe.id}/edit`)}
-                            />
-                          </ActionIcon>
-                        </Group>
+                        {recipe.seasonSpring && <IconFlower color="teal" />}{" "}
+                        {recipe.seasonSummer && <IconSun color="#f76707" />}
+                        {recipe.seasonAutumn && <IconLeaf color="brown" />}
+                        {recipe.seasonWinter && <IconSnowman color="gray" />}
                       </Table.Td>
-                    </Table.Tr>
-                  ))}
-                </Table.Tbody>
-              </Table>
-            )}
-          </Box>
-        )}
+                    )}
+                    <Table.Td>
+                      <Group>
+                        <ActionIcon color="red" title={t("Delete side")}>
+                          <IconTrash
+                            onClick={() =>
+                              handleOpenModal(recipe.id, recipe.name)
+                            }
+                          />
+                        </ActionIcon>
+                        <ActionIcon title={t("Editar side")}>
+                          <IconEdit
+                            onClick={() => navigate(`${recipe.id}/edit`)}
+                          />
+                        </ActionIcon>
+                      </Group>
+                    </Table.Td>
+                  </Table.Tr>
+                ))}
+              </Table.Tbody>
+            </Table>
+          )}
+        </Box>
       </Box>
 
-      <Modal opened={opened} onClose={close} title="Borrar receta">
+      <Modal opened={opened} onClose={close} title={t("Delete side")}>
         <Stack>
-          <Text>Estas seguro de que quieres borrar la receta?</Text>
+          <Text>{t("Do you want to delete this side meal?")}</Text>
           <Text mt="sm">{selectedRecipe.name}</Text>
           <Group>
             <Button
               loading={isLoadingDelete}
               onClick={() => handleDelete(selectedRecipe.id)}
             >
-              Sí, borrar receta
+              {t("Yes, delete side")}
             </Button>
             <Button onClick={handleCloseModal} variant="light">
-              Cancelar
+              {t("Cancel")}
             </Button>
           </Group>
         </Stack>

@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Group, Rating, Text } from "@mantine/core";
+import { Center, Group, Rating, Text } from "@mantine/core";
 import { IconClock, IconFlame, IconUsers } from "@tabler/icons-react";
 import { IRecipe } from "types/recipes";
 
@@ -9,30 +9,33 @@ interface IProps {
 export default function RecipeHeader({ recipe }: IProps) {
   const { t } = useTranslation();
   const { preference, difficulty, preparationTime, servings } = recipe;
-  console.log(preference, difficulty, preparationTime, servings);
   return (
     <Group>
-      {t("Preferencia: ")}
-      <Rating value={preference} readOnly />
+      <Center>
+        {t("Preference: ")}
+        <Rating value={preference} readOnly />
+      </Center>
       <Text>/</Text>
-      {t("Dificultad: ")}
-      <Rating
-        value={difficulty}
-        readOnly
-        emptySymbol={<IconFlame size="1.2rem" color="gray" />}
-        fullSymbol={<IconFlame size="1.2rem" color="red" />}
-      />
+      <Center>
+        {t("Difficulty: ")}
+        <Rating
+          value={difficulty}
+          readOnly
+          emptySymbol={<IconFlame size="1.2rem" color="gray" />}
+          fullSymbol={<IconFlame size="1.2rem" color="red" />}
+        />
+      </Center>
       <Text>/</Text>
-      <Text>
-        <IconClock /> {t("Tiempo: ")}
+      <Center>
+        <IconClock /> {t("Cooking time: ")}
         {preparationTime}
-      </Text>
+      </Center>
       <Text>/</Text>
-      <Text>
+      <Center>
         <IconUsers />
-        {t("Comensales: ")}
+        {t("Servings: ")}
         {servings}
-      </Text>
+      </Center>
     </Group>
   );
 }

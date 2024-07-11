@@ -37,8 +37,8 @@ export const useUpdateDailyMenu = () => {
     {
       onSuccess: (data, variables) => {
         notifications.show({
-          title: t("Actualizado"),
-          message: t("Se ha actualizado el menu diario"),
+          title: t("Updated"),
+          message: t("Daily menu has been updated successfully"),
           color: "teal",
           autoClose: 2000,
           icon: <IconCheck size="1rem" />,
@@ -48,8 +48,8 @@ export const useUpdateDailyMenu = () => {
       },
       onError: () => {
         notifications.show({
-          title: t("No actualizado"),
-          message: t("No se ha podido crear el menu diario"),
+          title: t("Not updated"),
+          message: t("Unable to update daily menu"),
           color: "red",
           autoClose: 2000,
           icon: <IconX size="1rem" />,

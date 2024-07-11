@@ -13,6 +13,7 @@ import PageTitle from "components/PageTitle/PageTitle";
 import { useRecipe } from "hooks/recipes/use-recipes";
 import { useWeeklyMenu } from "hooks/weekly-menus/use-weekly-menus";
 import RecipeDetails from "pages/recipes/RecipeDetailsPage/RecipeDetails/RecipeDetails";
+import routes from "routes";
 import { IDailyMenu } from "types/weekly-menus";
 
 export default function DayMenuDetailsPage() {
@@ -27,8 +28,8 @@ export default function DayMenuDetailsPage() {
   const { data: dinnerRecipe } = useRecipe(dayMenu?.dinnerRecipe.id);
 
   const items = [
-    { title: t("Inicio"), href: "/" },
-    { title: data ? data.name : t("Cargando..."), href: ".." },
+    { title: t("Home"), href: "/" },
+    { title: data ? data.name : t("Loading..."), href: ".." },
     { title: dayName, href: "." },
   ].map((item, index) => (
     // eslint-disable-next-line react/no-array-index-key
@@ -40,25 +41,25 @@ export default function DayMenuDetailsPage() {
   useEffect(() => {
     if (data) {
       switch (dayName) {
-        case "Lunes":
+        case "Monday":
           setDayMenu(data.mondayMenu);
           break;
-        case "Martes":
+        case "Tuesday":
           setDayMenu(data.tuesdayMenu);
           break;
-        case "Miércoles":
+        case "Wednesday":
           setDayMenu(data.wednesdayMenu);
           break;
-        case "Jueves":
+        case "Thursday":
           setDayMenu(data.thursdayMenu);
           break;
-        case "Viernes":
+        case "Friday":
           setDayMenu(data.fridayMenu);
           break;
-        case "Sábado":
+        case "Saturday":
           setDayMenu(data.saturdayMenu);
           break;
-        case "Domingo":
+        case "Sunday":
           setDayMenu(data.sundayMenu);
           break;
         default:
@@ -77,18 +78,19 @@ export default function DayMenuDetailsPage() {
       <Grid.Col>
         <Breadcrumbs>{items}</Breadcrumbs>
         <PageTitle
-          header={`${data ? data.name : t("cargando...")} - ${dayName}`}
+          header={`${data ? data.name : t("Loading...")} - ${dayName}`}
           withBackButton
+          backRoute={`/${routes.menusRoute}${menuIdNumber}`}
         />
       </Grid.Col>
       <Grid.Col>
-        <Title order={2}>{t("Comida")}</Title>
+        <Title order={2}>{t("Lunch")}</Title>
         <Title order={3}>{lunchRecipe?.name}</Title>
       </Grid.Col>
 
       {lunchRecipe && <RecipeDetails recipe={lunchRecipe} />}
       <Grid.Col>
-        <Title order={2}>Cena</Title>
+        <Title order={2}>{t("Dinner")}</Title>
         <Title order={3}>{dinnerRecipe?.name}</Title>
       </Grid.Col>
       {dinnerRecipe && <RecipeDetails recipe={dinnerRecipe} />}

@@ -58,8 +58,6 @@ class Recipe(models.Model):
     meal_temp = models.CharField(
         choices=MealTempType.choices, default=MealTempType.WARM, max_length=200
     )
-    # text field for the recipe notes and description
-    description: models.JSONField = models.JSONField(blank=True)
     notes: models.JSONField = models.JSONField(blank=True)
     instructions: models.JSONField = models.JSONField(blank=True)
 
@@ -109,10 +107,6 @@ class Recipe(models.Model):
         choices=RecipeType.choices, default=RecipeType.NONE, max_length=200
     )
 
-    image: models.ImageField = models.ImageField(
-        upload_to=user_directory_path, blank=True, null=True
-    )
-
     if TYPE_CHECKING:
         ingredients = RelatedManager["Ingredient"]()
         sides = RelatedManager["Side"]()
@@ -124,3 +118,23 @@ class Recipe(models.Model):
 
     def __str__(self) -> str:
         return f"{self.name}"
+
+
+class RecipeImage(models.Model):
+    image: models.ImageField = models.ImageField(
+        upload_to=user_directory_path, blank=True, null=True
+    )
+    recipe = models.OneToOneField(
+        Recipe,
+        on_delete=models.CASCADE,
+        primary_key=True,
+        related_name="image",
+    )
+
+    class Meta:
+        ordering = ["recipe"]
+        verbose_name = "Recipe Image"
+        verbose_name_plural = "Recipe Images"
+
+    def __str__(self) -> str:
+        return f"{self.recipe}"

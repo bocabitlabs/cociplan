@@ -5,6 +5,7 @@ import { Footer } from "components/Footer/Footer";
 import PageTitle from "components/PageTitle/PageTitle";
 import { useRecipe } from "hooks/recipes/use-recipes";
 import RecipeDetails from "pages/recipes/RecipeDetailsPage/RecipeDetails/RecipeDetails";
+import routes from "routes";
 
 export default function RecipeDetailsPage() {
   const { recipeId } = useParams();
@@ -12,9 +13,9 @@ export default function RecipeDetailsPage() {
   const { t } = useTranslation();
 
   const items = [
-    { title: "Inicio", href: "../.." },
+    { title: t("Home"), href: "../.." },
     {
-      title: data?.isSidePlate ? t<string>("Sides") : t<string>("Recetas"),
+      title: data?.isSidePlate ? t<string>("Sides") : t<string>("Recipes"),
       href: "..",
     },
     { title: data?.name, href: "." },
@@ -36,7 +37,15 @@ export default function RecipeDetailsPage() {
         <>
           <Grid.Col>
             <Breadcrumbs>{items}</Breadcrumbs>
-            <PageTitle header={`${data?.name}`} withBackButton />
+            <PageTitle
+              header={`${data?.name}`}
+              withBackButton
+              backRoute={
+                data?.isSidePlate
+                  ? `/${routes.sidesRoute}`
+                  : `/${routes.recipesRoute}`
+              }
+            />
           </Grid.Col>
           <RecipeDetails recipe={data} />
         </>

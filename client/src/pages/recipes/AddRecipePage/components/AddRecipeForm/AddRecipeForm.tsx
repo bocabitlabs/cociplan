@@ -1,95 +1,46 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import {
-  ActionIcon,
-  Box,
-  Button,
-  Group,
-  Rating,
-  Text,
-  TextInput,
-  NumberInput,
-  Select,
-  Switch,
-  Image,
-  Checkbox,
-  SimpleGrid,
-  LoadingOverlay,
-  NativeSelect,
-} from "@mantine/core";
-import { FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { Box, Button, Group, Text, LoadingOverlay, Paper } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { randomId } from "@mantine/hooks";
-import { RichTextEditor } from "@mantine/tiptap";
-import { IconFlame, IconTrash } from "@tabler/icons-react";
 import { useEditor } from "@tiptap/react";
-import ImageDropZone from "components/ImageDropzone/ImageDropZone";
-import { useProducts } from "hooks/products/use-products";
-import { useAddrecipe, useSides } from "hooks/recipes/use-recipes";
-import { recipeTypes } from "pages/recipes/recipe-types";
-import { IProduct } from "types/products";
-import { DaysOfWeek, IRecipe, MealTemps, MealTypes } from "types/recipes";
-import { getBase64 } from "utils/base_64";
+import EditorField from "components/form-fields/recipes/EditorField/EditorField";
+import ExtraFields from "components/form-fields/recipes/ExtraFields/ExtraFields";
+import IngredientsFields from "components/form-fields/recipes/IngredientsFields/IngredientsFields";
+import IsOvenRecipeField from "components/form-fields/recipes/IsOvenRecipeField/IsOvenRecipeField";
+import MealOfTheDayFields from "components/form-fields/recipes/MealOfTheDayFields/MealOfTheDayFields";
+import RecipeDaysField from "components/form-fields/recipes/RecipeDaysField/RecipeDaysField";
+import RecipeEnabledField from "components/form-fields/recipes/RecipeEnabledField/RecipeEnabledField";
+import RecipeImageField from "components/form-fields/recipes/RecipeImageField/RecipeImageField";
+import RecipeNameField from "components/form-fields/recipes/RecipeNameField/RecipeNameField";
+import RecipeTemperatureField from "components/form-fields/recipes/RecipeTemperatureField/RecipeTemperatureField";
+import RecipeTypeField from "components/form-fields/recipes/RecipeTypeField/RecipeTypeField";
+import SeasonsCheckboxes from "components/form-fields/recipes/SeasonsCheckboxes/SeasonsCheckboxes";
+import SideFields from "components/form-fields/recipes/SideFields/SideFields";
+import { useAddrecipe, useAddRecipeImage } from "hooks/recipes/use-recipes";
+import routes from "routes";
+import {
+  DaysOfWeek,
+  MealTemps,
+  MealTypes,
+  RecipeFormValues,
+} from "types/recipes";
 import { editorExtensions } from "utils/editor";
-
-const mealTypes = [
-  { value: "LUNCH", label: "Comida" },
-  { value: "DINNER", label: "Cena" },
-];
-
-const mealTemps = [
-  { value: "WARM", label: "Caliente" },
-  { value: "COLD", label: "Fría" },
-];
-
-const daysOfWeek = [
-  { value: "WEEK_DAYS", label: "Días entre semana" },
-  { value: "WEEKENDS", label: "Fines de semana" },
-  { value: "ALL", label: "Todos los días" },
-];
 
 export default function AddRecipeForm() {
   const { t } = useTranslation();
-  const { mutate, isLoading, isSuccess } = useAddrecipe();
-  const { data: products, isLoading: productsLoading } = useProducts();
-  const { data: sides, isLoading: sidesLoading } = useSides();
+  const { data, mutate, isLoading, isSuccess } = useAddrecipe();
+  const { mutate: uploadImage } = useAddRecipeImage();
   const navigate = useNavigate();
-  const [files, setFiles] = useState<FileWithPath[]>([]);
-  const [base64file, setBase64file] = useState<string | null>(null);
 
-  const handleDrop = (acceptedFiles: FileWithPath[]) => {
-    console.log(acceptedFiles[0]);
-    getBase64(acceptedFiles[0], (imageUrl: any) => {
-      setBase64file(imageUrl);
-      setFiles(acceptedFiles);
-    });
-  };
-
-  const previews = files.map((file, index) => {
-    const imageUrl = URL.createObjectURL(file);
-    return (
-      <Image
-        // eslint-disable-next-line react/no-array-index-key
-        key={index}
-        src={imageUrl}
-        onLoad={() => URL.revokeObjectURL(imageUrl)}
-        width={200}
-        mt="md"
-        height="auto"
-      />
-    );
-  });
-
-  const form = useForm({
+  const form = useForm<RecipeFormValues>({
     initialValues: {
       active: true,
-      description: "",
       name: "",
       meal: "LUNCH" as MealTypes,
       mealTemp: "WARM" as MealTemps,
-      ingredients: [{ product: null, quantity: 0, key: null }],
+      ingredients: [{ product: null, quantity: "", key: null }],
       instructions: "",
       notes: "",
       preferedMeal: "LUNCH" as MealTypes,
@@ -98,6 +49,7 @@ export default function AddRecipeForm() {
       sides: [],
       preference: 0,
       difficulty: 0,
+      isSidePlate: false,
       isOnlyLunch: false,
       isOnlyDinner: false,
       isOvenRecipe: false,
@@ -119,76 +71,6 @@ export default function AddRecipeForm() {
     extensions: editorExtensions,
   });
 
-  const descriptionEditor = useEditor({
-    extensions: editorExtensions,
-  });
-
-  const generateIngredientsFields = () => {
-    const productsOptions = products.map((product: IProduct) => ({
-      value: product.id.toString(),
-      label: product.name,
-    }));
-    // Add an option at the beginning of the array
-    // productsOptions.unshift({ value: null, label: "Elige un producto" });
-
-    const fields = form.values.ingredients.map((item, index) => (
-      <Group key={item.key} mt="xs">
-        <Select
-          withAsterisk
-          searchable
-          placeholder={t<string>("Elije el producto")}
-          data={productsOptions}
-          {...form.getInputProps(`ingredients.${index}.product`)}
-          required
-          mt="md"
-        />
-        <TextInput
-          placeholder={t<string>("Quantity")}
-          withAsterisk
-          style={{ flex: 1 }}
-          {...form.getInputProps(`ingredients.${index}.quantity`)}
-        />
-
-        <ActionIcon
-          color="red"
-          onClick={() => form.removeListItem("ingredients", index)}
-        >
-          <IconTrash size="1rem" />
-        </ActionIcon>
-      </Group>
-    ));
-    return fields;
-  };
-
-  const generateSidesFields = () => {
-    const productsOptions = sides.map((side: IRecipe) => ({
-      value: side.id.toString(),
-      label: side.name,
-    }));
-
-    const fields = form.values.sides.map((item: any, index) => (
-      <Group key={item.key} mt="xs">
-        <Select
-          withAsterisk
-          searchable
-          placeholder={t<string>("Elije el acompañamiento")}
-          data={productsOptions}
-          {...form.getInputProps(`sides.${index}.id`)}
-          required
-          mt="md"
-        />
-
-        <ActionIcon
-          color="red"
-          onClick={() => form.removeListItem("sides", index)}
-        >
-          <IconTrash size="1rem" />
-        </ActionIcon>
-      </Group>
-    ));
-    return fields;
-  };
-
   const onSubmit = (values: any) => {
     const newValues = values;
     const filteredIngredients = values.ingredients.filter(
@@ -196,30 +78,28 @@ export default function AddRecipeForm() {
     );
     newValues.ingredients = filteredIngredients;
 
-    const filteredSides = values.sides.filter(
-      (side: any) => side.product !== null,
-    );
+    const filteredSides = values.sides
+      .filter((side: any) => side.id !== null)
+      .map((side: any) => side.id);
     newValues.sides = filteredSides;
 
     newValues.notes = notesEditor?.getJSON();
     newValues.instructions = instructionsEditor?.getJSON();
-    newValues.description = descriptionEditor?.getJSON();
-    // eslint-disable-next-line prefer-destructuring
-    newValues.image = base64file || null;
+
+    console.log(newValues);
 
     mutate(newValues);
   };
 
   useEffect(() => {
     if (isSuccess) {
+      if (data?.data.id && form.values.image) {
+        uploadImage({ recipe: data.data.id, image: form.values.image });
+      }
       form.reset();
-      navigate(-1);
+      navigate(`/${routes.recipesRoute}`);
     }
-  }, [isSuccess, form, navigate]);
-
-  if (productsLoading || sidesLoading) {
-    return <div>{t("Loading...")}</div>;
-  }
+  }, [isSuccess, data?.data.id]);
 
   return (
     <Group>
@@ -229,362 +109,44 @@ export default function AddRecipeForm() {
           zIndex={1000}
           overlayProps={{ radius: "sm", blur: 2 }}
         />
-        <Text>
-          {t(
-            "Añade una receta a tu lista de recetas utilizando este formulario.",
-          )}
-        </Text>
+        <Text>{t("Add a new recipe")}</Text>
         <form onSubmit={form.onSubmit(onSubmit)}>
-          <TextInput
-            withAsterisk
-            label={t("Name")}
-            placeholder={t<string>("Lentejas, Arroz a la cubana...")}
-            required
-            {...form.getInputProps("name")}
-            mt="md"
-          />
+          <Paper shadow="xs" p="md">
+            <RecipeNameField form={form} />
+            <RecipeEnabledField form={form} />
+            <IsOvenRecipeField form={form} />
+            <RecipeTypeField form={form} />
+          </Paper>
 
-          <Switch
-            label={t("Activada")}
-            description={t(
-              "Si está activada, la receta se utilizará en la generación de menús.",
-            )}
-            {...form.getInputProps("active", { type: "checkbox" })}
-            mt="md"
-          />
+          <Paper shadow="xs" p="md" mt="md">
+            <MealOfTheDayFields form={form} />
+            <RecipeDaysField form={form} />
+            <SeasonsCheckboxes form={form} />
+          </Paper>
 
-          <Select
-            label={t("Comida del día")}
-            withAsterisk
-            placeholder={t<string>("Elije la comida del día")}
-            data={mealTypes}
-            {...form.getInputProps("meal")}
-            required
-            mt="md"
-          />
+          <Paper shadow="xs" p="md" mt="md">
+            <RecipeImageField form={form} />
+          </Paper>
 
-          <Switch
-            label={t("Solo para comer")}
-            {...form.getInputProps("isOnlyLunch", { type: "checkbox" })}
-            mt="md"
-          />
+          <Paper shadow="xs" p="md" mt="md">
+            <IngredientsFields form={form} />
+          </Paper>
 
-          <Switch
-            label={t("Solo para cenar")}
-            {...form.getInputProps("isOnlyDinner", { type: "checkbox" })}
-            mt="md"
-          />
+          <Paper shadow="xs" p="md" mt="md">
+            <RecipeTemperatureField form={form} />
+            <ExtraFields form={form} />
+          </Paper>
 
-          <Switch
-            label={t("Es una receta de horno")}
-            {...form.getInputProps("isOvenRecipe", { type: "checkbox" })}
-            mt="md"
-          />
-
-          <NativeSelect
-            label={t("Tipo")}
-            withAsterisk
-            description={t<string>("Elije un tipo de receta")}
-            data={recipeTypes}
-            {...form.getInputProps("type")}
-            required
-          />
-
-          <Select
-            label={t("Días de la semana")}
-            withAsterisk
-            placeholder={t<string>("Elije para cuándo es esta receta")}
-            data={daysOfWeek}
-            {...form.getInputProps("daysOfWeek")}
-            required
-            mt="md"
-          />
-
-          <Select
-            label={t("Comida del día preferida")}
-            withAsterisk
-            placeholder={t<string>("Elije cuando prefieres comerlo")}
-            data={mealTypes}
-            {...form.getInputProps("preferedMeal")}
-            required
-            mt="md"
-          />
-
-          <Select
-            label={t("Caliente/Fría")}
-            withAsterisk
-            placeholder={t<string>("Elije si es caliente o fria")}
-            data={mealTemps}
-            {...form.getInputProps("mealTemp")}
-            required
-            mt="md"
-          />
+          <Paper shadow="xs" p="md" mt="md">
+            <SideFields form={form} />
+          </Paper>
+          <Paper shadow="xs" p="md" mt="md">
+            <EditorField editor={instructionsEditor} title={t("Steps")} />
+            <EditorField editor={notesEditor} title={t("Notes")} />
+          </Paper>
 
           <Group mt="md">
-            <SimpleGrid
-              cols={{ base: 1, sm: 4 }}
-              mt={previews.length > 0 ? "xl" : 0}
-            >
-              <ImageDropZone
-                accept={IMAGE_MIME_TYPE}
-                mt="md"
-                onDrop={handleDrop}
-              />
-
-              {previews}
-            </SimpleGrid>
-          </Group>
-
-          <Text fz="lg" mt="md">
-            {t("Estación de la receta")}
-          </Text>
-          <Group mt="xs">
-            <Checkbox
-              label={t("Primavera")}
-              {...form.getInputProps("seasonSpring", { type: "checkbox" })}
-            />
-            <Checkbox
-              label={t("Verano")}
-              {...form.getInputProps("seasonSummer", { type: "checkbox" })}
-            />
-            <Checkbox
-              label={t("Otoño")}
-              {...form.getInputProps("seasonAutumn", { type: "checkbox" })}
-            />
-            <Checkbox
-              label={t("Invierno")}
-              {...form.getInputProps("seasonWinter", { type: "checkbox" })}
-            />
-          </Group>
-
-          <Text fz="lg" mt="md">
-            {t("Ingredientes")}
-          </Text>
-
-          {generateIngredientsFields()}
-
-          <Group mt="md">
-            <Button
-              onClick={() =>
-                form.insertListItem("ingredients", {
-                  product: "0",
-                  quantity: 0,
-                  key: randomId(),
-                })
-              }
-            >
-              {t("Añadir ingrediente")}
-            </Button>
-          </Group>
-          <Text fz="md" mt="md">
-            {t("Preferencia")}
-          </Text>
-          <Rating
-            value={form.values.preference}
-            fractions={2}
-            defaultValue={1.5}
-            onChange={(value: any) => form.setFieldValue("preference", value)}
-            mt="md"
-          />
-
-          <Text fz="md" mt="md">
-            {t("Dificultad")}
-          </Text>
-          <Rating
-            value={form.values.difficulty}
-            fractions={2}
-            defaultValue={1.5}
-            onChange={(value: any) => form.setFieldValue("difficulty", value)}
-            emptySymbol={<IconFlame size="1.2rem" color="gray" />}
-            fullSymbol={<IconFlame size="1.2rem" color="red" />}
-            mt="md"
-          />
-
-          <NumberInput
-            defaultValue={18}
-            placeholder="15, 30, 60..."
-            label={t("Tiempo de elaboración (minutos)")}
-            withAsterisk
-            {...form.getInputProps("preparationTime")}
-            mt="md"
-          />
-
-          <NumberInput
-            defaultValue={18}
-            placeholder={t<string>("Número de comensales")}
-            label={t("Comensales")}
-            withAsterisk
-            {...form.getInputProps("servings")}
-            mt="md"
-          />
-
-          <Text fz="lg" mt="md">
-            {t("Sides")}
-          </Text>
-          {generateSidesFields()}
-          <Group mt="md">
-            <Button
-              onClick={() =>
-                form.insertListItem("sides", {
-                  product: "0",
-                  quantity: 0,
-                  key: randomId(),
-                })
-              }
-            >
-              {t("Add new side")}
-            </Button>
-          </Group>
-
-          <Text fz="lg" mt="md">
-            {t("Descripcion")}
-          </Text>
-
-          <RichTextEditor editor={descriptionEditor} style={{ minHeight: 200 }}>
-            <RichTextEditor.Toolbar sticky stickyOffset={60}>
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.Bold />
-                <RichTextEditor.Italic />
-                <RichTextEditor.Underline />
-                <RichTextEditor.Strikethrough />
-                <RichTextEditor.ClearFormatting />
-                <RichTextEditor.Highlight />
-                <RichTextEditor.Code />
-              </RichTextEditor.ControlsGroup>
-
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.H1 />
-                <RichTextEditor.H2 />
-                <RichTextEditor.H3 />
-                <RichTextEditor.H4 />
-              </RichTextEditor.ControlsGroup>
-
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.Blockquote />
-                <RichTextEditor.Hr />
-                <RichTextEditor.BulletList />
-                <RichTextEditor.OrderedList />
-                <RichTextEditor.Subscript />
-                <RichTextEditor.Superscript />
-              </RichTextEditor.ControlsGroup>
-
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.Link />
-                <RichTextEditor.Unlink />
-              </RichTextEditor.ControlsGroup>
-
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.AlignLeft />
-                <RichTextEditor.AlignCenter />
-                <RichTextEditor.AlignJustify />
-                <RichTextEditor.AlignRight />
-              </RichTextEditor.ControlsGroup>
-            </RichTextEditor.Toolbar>
-
-            <RichTextEditor.Content />
-          </RichTextEditor>
-
-          <Text fz="lg" mt="md">
-            {t("Pasos a seguir")}
-          </Text>
-
-          <RichTextEditor
-            editor={instructionsEditor}
-            style={{ minHeight: 200 }}
-          >
-            <RichTextEditor.Toolbar sticky stickyOffset={60}>
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.Bold />
-                <RichTextEditor.Italic />
-                <RichTextEditor.Underline />
-                <RichTextEditor.Strikethrough />
-                <RichTextEditor.ClearFormatting />
-                <RichTextEditor.Highlight />
-                <RichTextEditor.Code />
-              </RichTextEditor.ControlsGroup>
-
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.H1 />
-                <RichTextEditor.H2 />
-                <RichTextEditor.H3 />
-                <RichTextEditor.H4 />
-              </RichTextEditor.ControlsGroup>
-
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.Blockquote />
-                <RichTextEditor.Hr />
-                <RichTextEditor.BulletList />
-                <RichTextEditor.OrderedList />
-                <RichTextEditor.Subscript />
-                <RichTextEditor.Superscript />
-              </RichTextEditor.ControlsGroup>
-
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.Link />
-                <RichTextEditor.Unlink />
-              </RichTextEditor.ControlsGroup>
-
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.AlignLeft />
-                <RichTextEditor.AlignCenter />
-                <RichTextEditor.AlignJustify />
-                <RichTextEditor.AlignRight />
-              </RichTextEditor.ControlsGroup>
-            </RichTextEditor.Toolbar>
-
-            <RichTextEditor.Content />
-          </RichTextEditor>
-
-          <Text fz="lg" mt="md">
-            {t("Notas de la receta")}
-          </Text>
-
-          <RichTextEditor editor={notesEditor} style={{ minHeight: 200 }}>
-            <RichTextEditor.Toolbar sticky stickyOffset={60}>
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.Bold />
-                <RichTextEditor.Italic />
-                <RichTextEditor.Underline />
-                <RichTextEditor.Strikethrough />
-                <RichTextEditor.ClearFormatting />
-                <RichTextEditor.Highlight />
-                <RichTextEditor.Code />
-              </RichTextEditor.ControlsGroup>
-
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.H1 />
-                <RichTextEditor.H2 />
-                <RichTextEditor.H3 />
-                <RichTextEditor.H4 />
-              </RichTextEditor.ControlsGroup>
-
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.Blockquote />
-                <RichTextEditor.Hr />
-                <RichTextEditor.BulletList />
-                <RichTextEditor.OrderedList />
-                <RichTextEditor.Subscript />
-                <RichTextEditor.Superscript />
-              </RichTextEditor.ControlsGroup>
-
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.Link />
-                <RichTextEditor.Unlink />
-              </RichTextEditor.ControlsGroup>
-
-              <RichTextEditor.ControlsGroup>
-                <RichTextEditor.AlignLeft />
-                <RichTextEditor.AlignCenter />
-                <RichTextEditor.AlignJustify />
-                <RichTextEditor.AlignRight />
-              </RichTextEditor.ControlsGroup>
-            </RichTextEditor.Toolbar>
-
-            <RichTextEditor.Content />
-          </RichTextEditor>
-
-          <Group mt="md">
-            <Button type="submit">{t("Crear receta")}</Button>
+            <Button type="submit">{t("Create recipe")}</Button>
           </Group>
         </form>
       </Box>

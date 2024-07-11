@@ -1,15 +1,20 @@
 import { JSONContent } from "@tiptap/core";
 import { IIngredient } from "./ingredients";
+import { IRecipeTypes } from "./recipes-types";
 
 export type MealTypes = "LUNCH" | "DINNER";
 export type MealTemps = "WARM" | "COLD";
 export type DaysOfWeek = "WEEK_DAYS" | "WEEKENDS" | "ALL";
 
+export interface IRecipeImageFormFields {
+  recipe: number;
+  image: string;
+}
+
 export interface IRecipeFormFields {
   active: boolean;
-  description: JSONContent;
   difficulty: number;
-  image: string;
+  image: IRecipeImageFormFields;
   instructions: JSONContent;
   meal: MealTypes;
   mealTemp: MealTemps;
@@ -30,24 +35,7 @@ export interface IRecipeFormFields {
   seasonSummer: boolean;
   seasonAutumn: boolean;
   seasonWinter: boolean;
-  type:
-    | "MEAT_SASUAGE"
-    | "FISH"
-    | "VEGETABLES"
-    | "LEGUMES"
-    | "EGGS"
-    | "FRUITS"
-    | "MILK_RECIPE"
-    | "GRAIN_NUTS"
-    | "BAKING"
-    | "POULTRY"
-    | "PASTA"
-    | "RICE"
-    | "POTATOES"
-    | "SOUPS"
-    | "OTHER"
-    | "DESSERTS"
-    | "NONE";
+  type: IRecipeTypes;
 }
 
 export interface IRecipe extends IRecipeFormFields {
@@ -56,4 +44,31 @@ export interface IRecipe extends IRecipeFormFields {
   lastUpdated: string;
   ingredients: IIngredient[];
   sides: IRecipe[];
+}
+
+export interface RecipeFormValues {
+  active: boolean;
+  name: string;
+  meal: MealTypes;
+  mealTemp: MealTemps;
+  ingredients: { product: any; quantity: string; key: any }[];
+  instructions: string | JSONContent;
+  notes: string | JSONContent;
+  preferedMeal: MealTypes;
+  preparationTime: number;
+  servings: number;
+  sides: { id: any; key: any }[];
+  preference: number;
+  difficulty: number;
+  isSidePlate: boolean;
+  isOnlyLunch: boolean;
+  isOnlyDinner: boolean;
+  isOvenRecipe: boolean;
+  daysOfWeek: DaysOfWeek;
+  seasonSpring: boolean;
+  seasonSummer: boolean;
+  seasonAutumn: boolean;
+  seasonWinter: boolean;
+  image: any;
+  type: string;
 }

@@ -5,20 +5,22 @@ import { IconArrowLeft } from "@tabler/icons-react";
 
 interface PageTitleProps {
   header: string;
+  withBackButton?: boolean;
+  backRoute?: string;
   subHeader?: string | null;
   icon?: React.ReactNode | null;
-  withBackButton?: boolean;
 }
 
 function PageTitle({
   withBackButton = false,
+  backRoute = "",
   header,
   subHeader = null,
   icon = null,
 }: Readonly<PageTitleProps>) {
   const navigate = useNavigate();
   const navigateBack = () => {
-    navigate(-1);
+    navigate(backRoute);
   };
 
   return (

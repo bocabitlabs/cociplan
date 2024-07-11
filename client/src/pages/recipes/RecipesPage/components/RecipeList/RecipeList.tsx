@@ -28,9 +28,9 @@ import {
 } from "@tabler/icons-react";
 import InitializeRecipesButton from "../InitializeRecipesButton/InitializeRecipesButton";
 import { useDeleteRecipe, useRecipes } from "hooks/recipes/use-recipes";
-import { getRecipeTypeLabel } from "pages/recipes/recipe-types";
 import routes from "routes";
 import { IRecipe } from "types/recipes";
+import { getStringWordsInitials, stringToColour } from "utils/string_utils";
 
 interface SelectedRecipeProps {
   id: number | null;
@@ -82,87 +82,87 @@ export default function RecipeList() {
           zIndex={1000}
           overlayProps={{ radius: "sm", blur: 2 }}
         />
-        {data && (
-          <Box
-            style={{
-              display: "block",
-              overflowX: "scroll",
-              whiteSpace: "nowrap",
-            }}
-          >
-            <Table>
-              <Table.Thead>
-                <Table.Tr>
-                  {isMobile && <Table.Th>{t("Image")}</Table.Th>}
-                  <Table.Th>{t("Name")}</Table.Th>
-                  <Table.Th>{t("Type")}</Table.Th>
-                  <Table.Th>{t("Meal")}</Table.Th>
-                  {isMobile && <Table.Th>{t("Seasons")}</Table.Th>}
-                  <Table.Th>{t("Actions")}</Table.Th>
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>
-                {data?.map((recipe: IRecipe) => (
-                  <Table.Tr key={recipe.id}>
-                    {isMobile && (
-                      <Table.Td>
-                        <Image
-                          src={recipe.image}
-                          alt={recipe.name}
-                          fallbackSrc="https://placehold.co/80x80?text=Placeholder"
-                          h={80}
-                          w="auto"
-                          fit="contain"
-                        />
-                      </Table.Td>
-                    )}
+        <Box
+          style={{
+            display: "block",
+            overflowX: "scroll",
+            whiteSpace: "nowrap",
+          }}
+        >
+          <Table>
+            <Table.Thead>
+              <Table.Tr>
+                {isMobile && <Table.Th />}
+                <Table.Th>{t("Name")}</Table.Th>
+                <Table.Th>{t("Type")}</Table.Th>
+                <Table.Th>{t("Meal")}</Table.Th>
+                {isMobile && <Table.Th>{t("Seasons")}</Table.Th>}
+                <Table.Th>{t("Actions")}</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
+              {data?.map((recipe: IRecipe) => (
+                <Table.Tr key={recipe.id}>
+                  {isMobile && (
                     <Table.Td>
-                      {recipe.active ? (
-                        <strong>
-                          <Anchor component={Link} to={`${recipe.id}`}>
-                            {recipe.name}
-                          </Anchor>
-                        </strong>
-                      ) : (
+                      <Image
+                        src={recipe.image?.image}
+                        alt={recipe.name}
+                        fallbackSrc={`https://placehold.co/80x80/${stringToColour(
+                          recipe.name,
+                        )}/fff?text=${getStringWordsInitials(recipe.name)}`}
+                        h={80}
+                        w="auto"
+                        fit="contain"
+                      />
+                    </Table.Td>
+                  )}
+                  <Table.Td>
+                    {recipe.active ? (
+                      <strong>
                         <Anchor component={Link} to={`${recipe.id}`}>
                           {recipe.name}
                         </Anchor>
-                      )}
-                    </Table.Td>
-                    <Table.Td>{getRecipeTypeLabel(recipe.type)}</Table.Td>
-                    <Table.Td>
-                      {recipe.meal === "LUNCH" ? <IconSunHigh /> : <IconMoon />}
-                    </Table.Td>
-                    {isMobile && (
-                      <Table.Td>
-                        {recipe.seasonSpring && <IconFlower color="teal" />}{" "}
-                        {recipe.seasonSummer && <IconSun color="#f76707" />}
-                        {recipe.seasonAutumn && <IconLeaf color="brown" />}
-                        {recipe.seasonWinter && <IconSnowman color="gray" />}
-                      </Table.Td>
+                      </strong>
+                    ) : (
+                      <Anchor component={Link} to={`${recipe.id}`}>
+                        {recipe.name}
+                      </Anchor>
                     )}
+                  </Table.Td>
+                  <Table.Td>{t(recipe.type)}</Table.Td>
+                  <Table.Td>
+                    {recipe.meal === "LUNCH" ? <IconSunHigh /> : <IconMoon />}
+                  </Table.Td>
+                  {isMobile && (
                     <Table.Td>
-                      <Group>
-                        <ActionIcon color="red" title="Borrar receta">
-                          <IconTrash
-                            onClick={() =>
-                              handleOpenModal(recipe.id, recipe.name)
-                            }
-                          />
-                        </ActionIcon>
-                        <ActionIcon title="Editar receta">
-                          <IconEdit
-                            onClick={() => navigate(`${recipe.id}/edit`)}
-                          />
-                        </ActionIcon>
-                      </Group>
+                      {recipe.seasonSpring && <IconFlower color="teal" />}{" "}
+                      {recipe.seasonSummer && <IconSun color="#f76707" />}
+                      {recipe.seasonAutumn && <IconLeaf color="brown" />}
+                      {recipe.seasonWinter && <IconSnowman color="gray" />}
                     </Table.Td>
-                  </Table.Tr>
-                ))}
-              </Table.Tbody>
-            </Table>
-          </Box>
-        )}
+                  )}
+                  <Table.Td>
+                    <Group>
+                      <ActionIcon color="red" title={t("Delete recipe")}>
+                        <IconTrash
+                          onClick={() =>
+                            handleOpenModal(recipe.id, recipe.name)
+                          }
+                        />
+                      </ActionIcon>
+                      <ActionIcon title={t("Edit recipe")}>
+                        <IconEdit
+                          onClick={() => navigate(`${recipe.id}/edit`)}
+                        />
+                      </ActionIcon>
+                    </Group>
+                  </Table.Td>
+                </Table.Tr>
+              ))}
+            </Table.Tbody>
+          </Table>
+        </Box>
       </Box>
 
       <Modal opened={opened} onClose={close} title="Borrar receta">

@@ -16,24 +16,24 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconPlus } from "@tabler/icons-react";
 import { useAddProduct } from "hooks/products/use-products";
 
-const productTypes = [
-  { value: "OTHER", label: "Otro" },
-  { value: "EGG_MILK_PRODUCTS", label: "Productos lacteos y huevos" },
-  { value: "FATS_OILS", label: "Grasas y aceites" },
-  { value: "FRUITS", label: "Frutas" },
-  { value: "GRAIN_NUTS_BAKING", label: "Cereales, frutos secos y panaderia" },
-  { value: "HERBS_SPICES", label: "Hierbas y especias" },
-  { value: "MEAT_SASUAGE", label: "Carne y embutidos" },
-  { value: "FISH", label: "Pescado" },
-  { value: "PASTA_RICE", label: "Pasta y arroz" },
-  { value: "VEGETABLES", label: "Verduras" },
-  { value: "LEGUMES", label: "Legumbres" },
-];
-
 export default function AddProductButton() {
   const { t } = useTranslation();
   const [opened, { open, close }] = useDisclosure(false);
   const { mutate, isLoading, isSuccess } = useAddProduct();
+
+  const productTypes = [
+    { value: "OTHER", label: t("Other") },
+    { value: "EGG_MILK_PRODUCTS", label: t("Egg and milk products") },
+    { value: "FATS_OILS", label: t("Fats and oils") },
+    { value: "FRUITS", label: t("Fruits") },
+    { value: "GRAIN_NUTS_BAKING", label: t("Grain, nuts and baking") },
+    { value: "HERBS_SPICES", label: t("Herbs and spices") },
+    { value: "MEAT_SASUAGE", label: t("Meat and sausages") },
+    { value: "FISH", label: t("Fish") },
+    { value: "PASTA_RICE", label: t("Pasta and rice") },
+    { value: "VEGETABLES", label: t("Vegetables") },
+    { value: "LEGUMES", label: t("Legumes") },
+  ];
 
   const form = useForm({
     initialValues: {
@@ -74,7 +74,7 @@ export default function AddProductButton() {
             <TextInput
               withAsterisk
               label={t("Name")}
-              placeholder={t<string>("Arroz, leche, pasta...")}
+              placeholder={t<string>("Rice, milk, pasta...")}
               required
               {...form.getInputProps("name")}
             />
@@ -82,14 +82,14 @@ export default function AddProductButton() {
             <NativeSelect
               label={t("Tipo")}
               withAsterisk
-              description={t<string>("Elije un tipo de producto")}
+              description={t<string>("Choose a type for the product")}
               data={productTypes}
               {...form.getInputProps("type")}
               required
             />
 
             <Group mt="md">
-              <Button type="submit">{t("Crear")}</Button>
+              <Button type="submit">{t("Create")}</Button>
             </Group>
           </form>
         </Box>

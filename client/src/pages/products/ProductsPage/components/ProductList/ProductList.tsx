@@ -76,30 +76,29 @@ export default function ProductsList() {
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
-              {data &&
-                data.map((product: IProduct) => (
-                  <Table.Tr key={product.id}>
-                    <Table.Td>{product.name}</Table.Td>
-                    <Table.Td>{t(product.type)}</Table.Td>
-                    <Table.Td>
-                      <ActionIcon color="red" title={t("Borrar producto")}>
-                        <IconTrash
-                          onClick={() =>
-                            handleOpenModal(product.id, product.name)
-                          }
-                        />
-                      </ActionIcon>
-                    </Table.Td>
-                  </Table.Tr>
-                ))}
+              {data?.map((product: IProduct) => (
+                <Table.Tr key={product.id}>
+                  <Table.Td>{product.name}</Table.Td>
+                  <Table.Td>{t(product.type)}</Table.Td>
+                  <Table.Td>
+                    <ActionIcon color="red" title={t("Delete product")}>
+                      <IconTrash
+                        onClick={() =>
+                          handleOpenModal(product.id, product.name)
+                        }
+                      />
+                    </ActionIcon>
+                  </Table.Td>
+                </Table.Tr>
+              ))}
             </Table.Tbody>
           </Table>
         </Box>
       </Box>
 
-      <Modal opened={opened} onClose={close} title="Borrar producto">
+      <Modal opened={opened} onClose={close} title={t("Delete product")}>
         <Stack>
-          <Text>Estas seguro de que quieres borrar el producto?</Text>
+          <Text>{t("Do you want to delete the product?")}</Text>
           <Text fw={500} mt="sm">
             {t(selectedProduct.name)}
           </Text>

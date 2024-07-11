@@ -79,7 +79,6 @@ def create_initial_recipes_from_list(recipes_list: list[dict]) -> list[Recipe]:
             continue
         result = Recipe.objects.create(
             name=recipe["name"],
-            description=recipe["description"],
             difficulty=recipe["difficulty"],
             instructions=recipe["instructions"],
             preference=recipe["preference"],
@@ -98,17 +97,24 @@ def create_initial_recipes_from_list(recipes_list: list[dict]) -> list[Recipe]:
 
         for ingredient in ingredients:
             if ingredient["recipe_id"] == recipe["id"]:
-                logger.debug(f"Creating ingredient {ingredient['product_id']} for recipe {recipe['name']}")
+                logger.debug(
+                    f"Creating ingredient {ingredient['product_id']}"
+                    f"for recipe {recipe['name']}"
+                )
                 result.ingredients.create(
                     product_id=ingredient["product_id"],
                     quantity=ingredient["quantity"],
                 )
-        logger.info(f"Created ingredients for recipe {recipe['name']}. Importing sides...")
+        logger.info(
+            f"Created ingredients for recipe {recipe['name']}. Importing sides..."
+        )
         sides = load_sides_from_json()
 
         for side in sides:
             if side["recipe_id"] == recipe["id"]:
-                logger.debug(f"Creating side {side['product_id']} for recipe {recipe['name']}")
+                logger.debug(
+                    f"Creating side {side['product_id']} for recipe {recipe['name']}"
+                )
                 result.sides.create(
                     product_id=side["product_id"],
                     quantity=side["quantity"],

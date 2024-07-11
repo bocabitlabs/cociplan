@@ -42,8 +42,8 @@ export const useAddWeeklyMenu = () => {
   return useMutation(() => apiClient.post(`/weekly-menus/`, {}), {
     onSuccess: () => {
       notifications.show({
-        title: t("Creado"),
-        message: t("Se ha creado el menu semanal"),
+        title: t("Created"),
+        message: t("Weekly menu has been created successfully"),
         color: "teal",
         autoClose: 2000,
         icon: <IconCheck size="1rem" />,
@@ -52,8 +52,8 @@ export const useAddWeeklyMenu = () => {
     },
     onError: () => {
       notifications.show({
-        title: t("No creada"),
-        message: t("No se ha podido crear el menu semanal"),
+        title: t("Not created"),
+        message: t("Unable to create the weekly menu"),
         color: "red",
         autoClose: 2000,
         icon: <IconX size="1rem" />,
@@ -68,8 +68,8 @@ export const useDeleteWeeklyMenu = () => {
   return useMutation((id: number) => apiClient.delete(`/weekly-menus/${id}/`), {
     onSuccess: () => {
       notifications.show({
-        title: t("Borrado"),
-        message: t("El menu semanal ha sido borrada"),
+        title: t("Deleted"),
+        message: t("Weekly menu has been deleted successfully"),
         color: "teal",
         autoClose: 2000,
         icon: <IconCheck size="1rem" />,
@@ -78,8 +78,8 @@ export const useDeleteWeeklyMenu = () => {
     },
     onError: () => {
       notifications.show({
-        title: t("No Borrado"),
-        message: t("El menu semanal no ha sido borrado"),
+        title: t("Not deleted"),
+        message: t("Unable to delete the weekly menu"),
         color: "red",
         autoClose: 2000,
         icon: <IconX size="1rem" />,

@@ -7,7 +7,7 @@ export function Footer() {
   const [opened, setOpened] = useState(false);
   const { t } = useTranslation();
   return (
-    <Text align="center" size="sm" style={{ marginTop: 20 }}>
+    <Text size="sm" style={{ justifyContent: "center", marginTop: 20 }}>
       {t("Version")} {PACKAGE_VERSION} - Bocabitlabs - 2022 -{" "}
       {new Date().getFullYear()} -{" "}
       <Anchor onClick={() => setOpened(true)}>{t("Credits")}</Anchor>
@@ -28,17 +28,6 @@ export function Footer() {
               rel="noopener noreferrer"
             >
               - Flaticon
-            </Anchor>
-          </List.Item>
-          <List.Item>
-            {" "}
-            <Anchor
-              href="https://undraw.co/search"
-              title="transcription icons"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t("Illustrations by")} undraw
             </Anchor>
           </List.Item>
         </List>

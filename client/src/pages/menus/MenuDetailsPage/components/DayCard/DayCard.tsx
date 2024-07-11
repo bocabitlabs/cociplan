@@ -68,7 +68,7 @@ export function DayCard({ dailyMenu, dayName, weeklyMenuId }: DayCardProps) {
         dinnerRecipe: dailyMenu?.dinnerRecipe.id,
       });
     }
-  }, [dailyMenu]);
+  }, [dailyMenu, form]);
 
   return (
     <>
@@ -85,11 +85,11 @@ export function DayCard({ dailyMenu, dayName, weeklyMenuId }: DayCardProps) {
 
         <Stack gap="xs" align="center">
           <Text c="dimmed" fz="sm">
-            Comida
+            {t("Lunch")}
           </Text>
           <Text>{dailyMenu?.lunchRecipe && dailyMenu?.lunchRecipe.name}</Text>
           <Text c="dimmed" fz="sm">
-            Cena
+            {t("Dinner")}
           </Text>
           <Text>{dailyMenu?.dinnerRecipe && dailyMenu?.dinnerRecipe.name}</Text>
         </Stack>
@@ -102,13 +102,13 @@ export function DayCard({ dailyMenu, dayName, weeklyMenuId }: DayCardProps) {
           to={`${dayName}`}
           component={Link}
         >
-          {t("Go to day menu")}
+          {t("Go to day's menu")}
         </Button>
       </Card>
       <Modal
         opened={opened}
         onClose={close}
-        title={`${t(`Editar menu del `)}${dayName}`}
+        title={`${t(`Edit menu `)}${dayName}`}
         centered
         size="md"
       >
@@ -116,7 +116,7 @@ export function DayCard({ dailyMenu, dayName, weeklyMenuId }: DayCardProps) {
           <NativeSelect
             label={t("Lunch")}
             withAsterisk
-            placeholder={t<string>("Choose a recipe for lunch")}
+            description={t<string>("Choose a recipe for lunch")}
             data={getRecipesOptions()}
             {...form.getInputProps("lunchRecipe")}
             required
@@ -125,7 +125,7 @@ export function DayCard({ dailyMenu, dayName, weeklyMenuId }: DayCardProps) {
           <NativeSelect
             label={t("Dinner")}
             withAsterisk
-            placeholder={t<string>("Elije una receta para la cena")}
+            description={t<string>("Choose a recipe for dinner")}
             data={getRecipesOptions()}
             {...form.getInputProps("dinnerRecipe")}
             required
