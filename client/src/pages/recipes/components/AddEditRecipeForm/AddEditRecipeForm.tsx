@@ -1,9 +1,8 @@
-import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, Group, LoadingOverlay, Paper } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { randomId } from "@mantine/hooks";
+import { randomId, useShallowEffect } from "@mantine/hooks";
 import { useEditor } from "@tiptap/react";
 import EditorField from "components/form-fields/recipes/EditorField/EditorField";
 import ExtraFields from "components/form-fields/recipes/ExtraFields/ExtraFields";
@@ -27,9 +26,9 @@ import {
   DaysOfWeek,
   IRecipe,
   MealTemps,
-  MealTypes,
   RecipeFormValues,
 } from "types/recipes";
+import { MealTypes } from "types/recipes-types";
 import { editorExtensions } from "utils/editor";
 
 interface AddEditRecipeFormProps {
@@ -61,7 +60,7 @@ export default function AddEditRecipeForm({
 
   const form = useForm<RecipeFormValues>({
     initialValues: {
-      active: isUpdate && recipe ? recipe?.active : false,
+      active: isUpdate && recipe ? recipe?.active : true,
       name: isUpdate && recipe ? recipe?.name : "",
       meal: isUpdate && recipe ? recipe?.meal : ("LUNCH" as MealTypes),
       mealTemp: isUpdate && recipe ? recipe?.mealTemp : ("WARM" as MealTemps),
@@ -90,15 +89,13 @@ export default function AddEditRecipeForm({
       preference: isUpdate && recipe ? recipe?.preference : 0,
       difficulty: isUpdate && recipe ? recipe?.difficulty : 0,
       isSidePlate: isSide,
-      isOnlyLunch: isUpdate && recipe ? recipe?.isOnlyLunch : false,
-      isOnlyDinner: isUpdate && recipe ? recipe?.isOnlyDinner : false,
       isOvenRecipe: isUpdate && recipe ? recipe?.isOvenRecipe : false,
       daysOfWeek:
         isUpdate && recipe ? recipe?.daysOfWeek : ("ALL" as DaysOfWeek),
-      seasonSpring: isUpdate && recipe ? recipe?.seasonSpring : false,
-      seasonSummer: isUpdate && recipe ? recipe?.seasonSummer : false,
-      seasonAutumn: isUpdate && recipe ? recipe?.seasonAutumn : false,
-      seasonWinter: isUpdate && recipe ? recipe?.seasonWinter : false,
+      seasonSpring: isUpdate && recipe ? recipe?.seasonSpring : true,
+      seasonSummer: isUpdate && recipe ? recipe?.seasonSummer : true,
+      seasonAutumn: isUpdate && recipe ? recipe?.seasonAutumn : true,
+      seasonWinter: isUpdate && recipe ? recipe?.seasonWinter : true,
       image: isUpdate ? recipe?.image : null,
       type: isUpdate && recipe ? recipe?.type : "OTHER",
     },
@@ -161,7 +158,7 @@ export default function AddEditRecipeForm({
     createrecipe(newValues);
   };
 
-  useEffect(() => {
+  useShallowEffect(() => {
     if (isSuccessUpdate) {
       if (updateData?.data.id && form.values.image) {
         uploadImage({ recipe: updateData.data.id, image: form.values.image });
@@ -169,9 +166,9 @@ export default function AddEditRecipeForm({
       form.reset();
       navigate("..");
     }
-  }, [isSuccessUpdate, updateData?.data.id]);
+  }, [isSuccessUpdate, updateData?.data.id, form, navigate, uploadImage]);
 
-  useEffect(() => {
+  useShallowEffect(() => {
     if (isSuccessCreate) {
       if (createData?.data.id && form.values.image) {
         uploadImage({ recipe: createData.data.id, image: form.values.image });
@@ -179,7 +176,7 @@ export default function AddEditRecipeForm({
       form.reset();
       navigate("..");
     }
-  }, [isSuccessCreate, createData?.data.id]);
+  }, [isSuccessCreate, createData?.data.id, form, navigate, uploadImage]);
 
   return (
     <Group>

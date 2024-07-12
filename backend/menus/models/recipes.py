@@ -36,6 +36,7 @@ def user_directory_path(instance, filename) -> str:
 class MealType(models.TextChoices):
     LUNCH = "LUNCH"
     DINNER = "DINNER"
+    BOTH = "BOTH"
 
 
 class MealTempType(models.TextChoices):
@@ -71,11 +72,6 @@ class Recipe(models.Model):
         choices=MealType.choices, default=MealType.LUNCH, max_length=200
     )
 
-    is_only_dinner: models.BooleanField = models.BooleanField(default=False)
-    is_only_lunch: models.BooleanField = models.BooleanField(default=False)
-
-    can_be_dinner: models.BooleanField = models.BooleanField(default=True)
-    can_be_lunch: models.BooleanField = models.BooleanField(default=True)
     active: models.BooleanField = models.BooleanField(default=True)
 
     is_oven_recipe: models.BooleanField = models.BooleanField(default=False)

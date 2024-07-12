@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import { randomId } from "@mantine/hooks";
 import { IconTrash } from "@tabler/icons-react";
-import { useProducts } from "hooks/products/use-products";
+import { useProductsNoLimit } from "hooks/products/use-products";
 import { IProduct } from "types/products";
 
 type Props = {
@@ -18,7 +18,7 @@ type Props = {
 
 export default function IngredientsFields({ form }: Props) {
   const { t } = useTranslation();
-  const { data: products, isLoading } = useProducts();
+  const { data: products, isLoading } = useProductsNoLimit();
 
   const fields = form
     .getValues()

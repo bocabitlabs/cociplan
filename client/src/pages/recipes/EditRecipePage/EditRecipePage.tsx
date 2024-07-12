@@ -1,13 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
-import {
-  Anchor,
-  Breadcrumbs,
-  Grid,
-  LoadingOverlay,
-  Paper,
-  Box,
-} from "@mantine/core";
+import { Anchor, Breadcrumbs, Grid, LoadingOverlay, Box } from "@mantine/core";
 import AddEditRecipeForm from "../components/AddEditRecipeForm/AddEditRecipeForm";
 import { Footer } from "components/Footer/Footer";
 import PageTitle from "components/PageTitle/PageTitle";
@@ -47,9 +40,7 @@ export default function EditRecipePage() {
             />
           </Grid.Col>
           <Grid.Col>
-            <Paper shadow="xs" p="md">
-              <AddEditRecipeForm recipe={data} isUpdate />
-            </Paper>
+            <AddEditRecipeForm recipe={data} isUpdate />
           </Grid.Col>
         </Box>
       )}

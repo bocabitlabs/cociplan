@@ -1,5 +1,4 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import {
@@ -13,26 +12,34 @@ import {
   Text,
   Image,
   Title,
+  Center,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import { IconEdit } from "@tabler/icons-react";
 import { useUpdateDailyMenu } from "hooks/daily-menus/use-daily-menus";
-import { useRecipes } from "hooks/recipes/use-recipes";
+import { useRecipesNoLimit } from "hooks/recipes/use-recipes";
 import { IRecipe } from "types/recipes";
 import { IDailyMenu } from "types/weekly-menus";
+import { getStringWordsInitials, stringToColour } from "utils/string_utils";
 
 interface DayCardProps {
-  dayName: string | undefined;
-  dailyMenu: IDailyMenu | undefined;
-  weeklyMenuId: number | undefined;
+  dayName: string;
+  dayNameEnglish: string;
+  dailyMenu: IDailyMenu;
+  weeklyMenuId: number;
 }
 
-export function DayCard({ dailyMenu, dayName, weeklyMenuId }: DayCardProps) {
+export function DayCard({
+  dailyMenu,
+  dayName,
+  dayNameEnglish,
+  weeklyMenuId,
+}: DayCardProps) {
   const [opened, { open, close }] = useDisclosure(false);
 
   const { t } = useTranslation();
-  const { data: recipes } = useRecipes();
+  const { data: recipes } = useRecipesNoLimit();
   const { mutate } = useUpdateDailyMenu();
 
   const form = useForm({
@@ -61,49 +68,62 @@ export function DayCard({ dailyMenu, dayName, weeklyMenuId }: DayCardProps) {
     return recipesOptions;
   };
 
-  useEffect(() => {
-    if (dailyMenu) {
-      form.setValues({
-        lunchRecipe: dailyMenu?.lunchRecipe.id,
-        dinnerRecipe: dailyMenu?.dinnerRecipe.id,
-      });
-    }
-  }, [dailyMenu, form]);
-
   return (
     <>
-      <Card shadow="sm">
+      <Card withBorder shadow="sm" radius="md">
         <Card.Section>
-          <Image src={dailyMenu?.lunchRecipe.image} height={160} alt="Recipe" />
+          <Image
+            src={dailyMenu?.lunchRecipe.image}
+            height={160}
+            alt="Recipe"
+            fallbackSrc={`https://placehold.co/200x200/${stringToColour(
+              dailyMenu?.lunchRecipe.name,
+            )}/fff?text=${getStringWordsInitials(dailyMenu?.lunchRecipe.name)}`}
+          />
         </Card.Section>
-        <Group justify="space-around" mt="md" mb="xs">
-          <Title order={3}>{dayName}</Title>
-          <ActionIcon onClick={open}>
+        <Card.Section>
+          <Center>
+            <Group justify="space-between" mt="md" mb="xs" align="center">
+              <Title order={2}>{dayName}</Title>
+            </Group>
+          </Center>
+        </Card.Section>
+        <Card.Section withBorder inheritPadding py="xs">
+          <Stack gap="xs" align="center">
+            <Text c="dimmed" fz="sm">
+              {t("Lunch")}
+            </Text>
+            <Text>{dailyMenu?.lunchRecipe && dailyMenu?.lunchRecipe.name}</Text>
+            <Text c="dimmed" fz="sm">
+              {t("Dinner")}
+            </Text>
+            <Text>
+              {dailyMenu?.dinnerRecipe && dailyMenu?.dinnerRecipe.name}
+            </Text>
+          </Stack>
+          <Group>
+            <Button
+              color="blue"
+              fullWidth
+              mt="md"
+              radius="md"
+              to={`${dayNameEnglish}`}
+              component={Link}
+            >
+              {t("Go to day's menu")}
+            </Button>
+          </Group>
+        </Card.Section>
+        <Card.Section withBorder inheritPadding py="xs">
+          <ActionIcon
+            onClick={open}
+            variant="subtle"
+            aria-label={t("Edit")}
+            color="gray"
+          >
             <IconEdit />
           </ActionIcon>
-        </Group>
-
-        <Stack gap="xs" align="center">
-          <Text c="dimmed" fz="sm">
-            {t("Lunch")}
-          </Text>
-          <Text>{dailyMenu?.lunchRecipe && dailyMenu?.lunchRecipe.name}</Text>
-          <Text c="dimmed" fz="sm">
-            {t("Dinner")}
-          </Text>
-          <Text>{dailyMenu?.dinnerRecipe && dailyMenu?.dinnerRecipe.name}</Text>
-        </Stack>
-        <Button
-          variant="light"
-          color="blue"
-          fullWidth
-          mt="md"
-          radius="md"
-          to={`${dayName}`}
-          component={Link}
-        >
-          {t("Go to day's menu")}
-        </Button>
+        </Card.Section>
       </Card>
       <Modal
         opened={opened}

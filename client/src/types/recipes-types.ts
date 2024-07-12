@@ -18,4 +18,10 @@ export enum IRecipeTypes {
   NONE = "NONE",
 }
 
+export enum MealTypes {
+  LUNCH = "LUNCH",
+  DINNER = "DINNER",
+  BOTH = "BOTH",
+}
+
 export default { IRecipeTypes };

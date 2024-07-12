@@ -1,8 +1,7 @@
 import { JSONContent } from "@tiptap/core";
 import { IIngredient } from "./ingredients";
-import { IRecipeTypes } from "./recipes-types";
+import { IRecipeTypes, MealTypes } from "./recipes-types";
 
-export type MealTypes = "LUNCH" | "DINNER";
 export type MealTemps = "WARM" | "COLD";
 export type DaysOfWeek = "WEEK_DAYS" | "WEEKENDS" | "ALL";
 
@@ -17,19 +16,15 @@ export interface IRecipeFormFields {
   image: IRecipeImageFormFields;
   instructions: JSONContent;
   meal: MealTypes;
+  preferedMeal: MealTypes;
   mealTemp: MealTemps;
   name: string;
   notes: JSONContent;
   preference: number;
-  preferedMeal: MealTypes;
   preparationTime: number;
   servings: number;
-  isOnlyDinner: boolean;
-  isOnlyLunch: boolean;
   isOvenRecipe: boolean;
   isSidePlate: boolean;
-  canBeDinner: boolean;
-  canBeLunch: boolean;
   daysOfWeek: DaysOfWeek;
   seasonSpring: boolean;
   seasonSummer: boolean;
@@ -61,8 +56,6 @@ export interface RecipeFormValues {
   preference: number;
   difficulty: number;
   isSidePlate: boolean;
-  isOnlyLunch: boolean;
-  isOnlyDinner: boolean;
   isOvenRecipe: boolean;
   daysOfWeek: DaysOfWeek;
   seasonSpring: boolean;

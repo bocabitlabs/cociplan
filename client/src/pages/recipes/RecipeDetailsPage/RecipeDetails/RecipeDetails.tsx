@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
-import { Badge, Grid, Group, Paper, Image } from "@mantine/core";
+import { useNavigate } from "react-router-dom";
+import { Badge, Grid, Group, Paper, Image, ActionIcon } from "@mantine/core";
 import { IconEdit } from "@tabler/icons-react";
 import RecipeExtraInfo from "./components/RecipeExtraInfo/RecipeExtraInfo";
 import RecipeHeader from "./components/RecipeHeader/RecipeHeader";
@@ -14,6 +14,14 @@ interface Props {
 
 export default function RecipeDetails({ recipe }: Props) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const openEditRecipe = () => {
+    navigate(
+      recipe.isSidePlate
+        ? `/sides/${recipe.id}/edit`
+        : `/recipes/${recipe.id}/edit`,
+    );
+  };
 
   return (
     <>
@@ -30,15 +38,9 @@ export default function RecipeDetails({ recipe }: Props) {
                 ) : (
                   <Badge color="red">{t("Innactive")}</Badge>
                 )}
-                <Link
-                  to={
-                    recipe.isSidePlate
-                      ? `/sides/${recipe.id}/edit`
-                      : `/recipes/${recipe.id}/edit`
-                  }
-                >
+                <ActionIcon onClick={openEditRecipe} variant="subtle">
                   <IconEdit />
-                </Link>
+                </ActionIcon>
               </Group>
             </Grid.Col>
           </Grid>

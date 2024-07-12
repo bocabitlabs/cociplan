@@ -25,9 +25,13 @@ function PageTitle({
 
   return (
     <Group grow>
-      <Title order={1} mt="md" textWrap="wrap">
+      <Title order={1} mt="md" textWrap="pretty">
         {withBackButton && (
-          <ActionIcon style={{ display: "inline" }} onClick={navigateBack}>
+          <ActionIcon
+            style={{ display: "inline" }}
+            variant="subtle"
+            onClick={navigateBack}
+          >
             <IconArrowLeft />
           </ActionIcon>
         )}{" "}

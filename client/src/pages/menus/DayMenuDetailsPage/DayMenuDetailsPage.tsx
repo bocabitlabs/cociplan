@@ -30,7 +30,7 @@ export default function DayMenuDetailsPage() {
   const items = [
     { title: t("Home"), href: "/" },
     { title: data ? data.name : t("Loading..."), href: ".." },
-    { title: dayName, href: "." },
+    { title: dayName ? t<string>(dayName) : dayName, href: "." },
   ].map((item, index) => (
     // eslint-disable-next-line react/no-array-index-key
     <Anchor component={Link} to={item.href} key={index} relative="path">
@@ -68,6 +68,8 @@ export default function DayMenuDetailsPage() {
     }
   }, [data, dayName]);
 
+  if (!dayName) return null;
+
   return (
     <Grid>
       <LoadingOverlay
@@ -75,28 +77,32 @@ export default function DayMenuDetailsPage() {
         zIndex={1000}
         overlayProps={{ radius: "sm", blur: 2 }}
       />
-      <Grid.Col>
-        <Breadcrumbs>{items}</Breadcrumbs>
-        <PageTitle
-          header={`${data ? data.name : t("Loading...")} - ${dayName}`}
-          withBackButton
-          backRoute={`/${routes.menusRoute}${menuIdNumber}`}
-        />
-      </Grid.Col>
-      <Grid.Col>
-        <Title order={2}>{t("Lunch")}</Title>
-        <Title order={3}>{lunchRecipe?.name}</Title>
-      </Grid.Col>
+      {data && (
+        <>
+          <Grid.Col>
+            <Breadcrumbs>{items}</Breadcrumbs>
+            <PageTitle
+              header={`${data.name} - ${t<string>(dayName)}`}
+              withBackButton
+              backRoute={`/${routes.menusRoute}${menuIdNumber}`}
+            />
+          </Grid.Col>
+          <Grid.Col>
+            <Title order={2}>{t("Lunch")}</Title>
+            <Title order={3}>{lunchRecipe?.name}</Title>
+          </Grid.Col>
 
-      {lunchRecipe && <RecipeDetails recipe={lunchRecipe} />}
-      <Grid.Col>
-        <Title order={2}>{t("Dinner")}</Title>
-        <Title order={3}>{dinnerRecipe?.name}</Title>
-      </Grid.Col>
-      {dinnerRecipe && <RecipeDetails recipe={dinnerRecipe} />}
-      <Grid.Col>
-        <Footer />
-      </Grid.Col>
+          {lunchRecipe && <RecipeDetails recipe={lunchRecipe} />}
+          <Grid.Col>
+            <Title order={2}>{t("Dinner")}</Title>
+            <Title order={3}>{dinnerRecipe?.name}</Title>
+          </Grid.Col>
+          {dinnerRecipe && <RecipeDetails recipe={dinnerRecipe} />}
+          <Grid.Col>
+            <Footer />
+          </Grid.Col>
+        </>
+      )}
     </Grid>
   );
 }

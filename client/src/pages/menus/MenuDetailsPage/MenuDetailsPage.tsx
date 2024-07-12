@@ -32,82 +32,88 @@ export default function MenuDetailsPage() {
 
   if (error) return <div>{t("Error")}</div>;
 
-  if (data) {
-    return (
-      <Grid>
-        <Grid.Col>
-          <Breadcrumbs>{items}</Breadcrumbs>
-          <PageTitle
-            header={data ? data.name : t("Loading...")}
-            withBackButton
-            backRoute={`/${routes.homeRoute}`}
-          />
-        </Grid.Col>
-        <Grid.Col>
-          <Stack>
-            <Box pos="relative">
-              <LoadingOverlay
-                visible={isLoading}
-                zIndex={1000}
-                overlayProps={{ radius: "sm", blur: 2 }}
-              />
+  return (
+    <Box pos="relative">
+      <LoadingOverlay
+        visible={isLoading}
+        zIndex={1000}
+        overlayProps={{ radius: "sm", blur: 2 }}
+      />
+      {data && (
+        <Grid>
+          <Grid.Col>
+            <Breadcrumbs>{items}</Breadcrumbs>
+            <PageTitle
+              header={data.name}
+              withBackButton
+              backRoute={`/${routes.homeRoute}`}
+            />
+          </Grid.Col>
+          <Grid.Col>
+            <Stack>
               <Grid>
                 <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
                   <DayCard
                     dayName={t<string>("Monday")}
-                    dailyMenu={data?.mondayMenu}
+                    dayNameEnglish="Monday"
+                    dailyMenu={data.mondayMenu}
                     weeklyMenuId={data?.id}
                   />
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
                   <DayCard
                     dayName={t<string>("Tuesday")}
-                    dailyMenu={data?.tuesdayMenu}
+                    dayNameEnglish="Tuesday"
+                    dailyMenu={data.tuesdayMenu}
                     weeklyMenuId={data?.id}
                   />
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
                   <DayCard
                     dayName={t<string>("Wednesday")}
-                    dailyMenu={data?.wednesdayMenu}
-                    weeklyMenuId={data?.id}
+                    dayNameEnglish="Wednesday"
+                    dailyMenu={data.wednesdayMenu}
+                    weeklyMenuId={data.id}
                   />
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
                   <DayCard
                     dayName={t<string>("Thursday")}
-                    dailyMenu={data?.thursdayMenu}
-                    weeklyMenuId={data?.id}
+                    dayNameEnglish="Thursday"
+                    dailyMenu={data.thursdayMenu}
+                    weeklyMenuId={data.id}
                   />
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
                   <DayCard
                     dayName={t<string>("Friday")}
-                    dailyMenu={data?.fridayMenu}
-                    weeklyMenuId={data?.id}
+                    dayNameEnglish="Friday"
+                    dailyMenu={data.fridayMenu}
+                    weeklyMenuId={data.id}
                   />
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
                   <DayCard
                     dayName={t<string>("Saturday")}
-                    dailyMenu={data?.saturdayMenu}
-                    weeklyMenuId={data?.id}
+                    dayNameEnglish="Saturday"
+                    dailyMenu={data.saturdayMenu}
+                    weeklyMenuId={data.id}
                   />
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
                   <DayCard
                     dayName={t<string>("Sunday")}
-                    dailyMenu={data?.sundayMenu}
-                    weeklyMenuId={data?.id}
+                    dayNameEnglish="Sunday"
+                    dailyMenu={data.sundayMenu}
+                    weeklyMenuId={data.id}
                   />
                 </Grid.Col>
               </Grid>
-            </Box>
-          </Stack>
-          <Footer />
-        </Grid.Col>
-      </Grid>
-    );
-  }
-  return null;
+            </Stack>
+            <Footer />
+          </Grid.Col>
+        </Grid>
+      )}
+    </Box>
+  );
 }

@@ -4,6 +4,7 @@ import { Stack, Title, Text, Paper, Group, Badge } from "@mantine/core";
 import { IconCooker } from "@tabler/icons-react";
 import { generateHTML } from "@tiptap/core";
 import { IRecipe } from "types/recipes";
+import { MealTypes } from "types/recipes-types";
 import { editorExtensions } from "utils/editor";
 
 interface IProps {
@@ -38,31 +39,23 @@ export default function RecipeExtraInfo({ recipe }: IProps) {
   };
   return (
     <Stack>
-      <Title order={5}>{t("Details")}</Title>
+      <Title order={4}>{t("Details")}</Title>
       {recipe.isOvenRecipe && (
         <Text>
           <IconCooker /> {t("Oven recipe")}
         </Text>
       )}
-      {recipe.meal === "LUNCH" && (
-        <>
-          <Text>
-            {recipe.preferedMeal === "LUNCH"
-              ? t("Prefered for lunch")
-              : t("Prefered for dinner")}
-          </Text>
-          <Text>
-            {recipe.isOnlyLunch
-              ? t("Only for lunch")
-              : t("For lunch and dinner")}
-          </Text>
-        </>
-      )}
-      {recipe.meal === "DINNER" && (
+      <Title order={5}>{t("Preferences")}</Title>
+      <Text>
+        {recipe.meal === MealTypes.LUNCH && t("Only for lunch")}
+        {recipe.meal === MealTypes.DINNER && t("Only for dinner")}
+        {recipe.meal === MealTypes.BOTH && t("For lunch and dinner")}
+      </Text>
+      {recipe.meal === MealTypes.BOTH && (
         <Text>
-          {recipe.isOnlyDinner
-            ? t("Only for dinner")
-            : t("For lunch and dinner")}
+          {recipe.preferedMeal === MealTypes.LUNCH
+            ? t("Prefered for lunch")
+            : t("Prefered for dinner")}
         </Text>
       )}
 

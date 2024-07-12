@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Group, SimpleGrid, Image } from "@mantine/core";
 import { FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { useShallowEffect } from "@mantine/hooks";
 import ImageDropZone from "components/ImageDropzone/ImageDropZone";
 
 type Props = { form: any };
@@ -8,7 +9,7 @@ type Props = { form: any };
 export default function RecipeImageField({ form }: Props) {
   const [files, setFiles] = useState<FileWithPath[]>([]);
 
-  useEffect(() => {
+  useShallowEffect(() => {
     if (files.length > 0) {
       form.setFieldValue("image", files[0]);
     }

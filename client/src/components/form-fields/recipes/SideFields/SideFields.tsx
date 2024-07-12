@@ -2,17 +2,17 @@ import { useTranslation } from "react-i18next";
 import { ActionIcon, Button, Group, Select, Text } from "@mantine/core";
 import { randomId } from "@mantine/hooks";
 import { IconTrash } from "@tabler/icons-react";
-import { useSides } from "hooks/recipes/use-recipes";
+import { useSidesNoLimit } from "hooks/recipes/use-recipes";
 import { IRecipe } from "types/recipes";
 
 type Props = { form: any };
 
 export default function SideFields({ form }: Props) {
   const { t } = useTranslation();
-  const { data: sides, isLoading } = useSides();
+  const { data: sides, isLoading } = useSidesNoLimit();
 
   const generateSidesFields = () => {
-    const options = sides.map((side: IRecipe) => ({
+    const options = sides?.map((side: IRecipe) => ({
       value: side.id.toString(),
       label: side.name,
     }));
@@ -27,7 +27,6 @@ export default function SideFields({ form }: Props) {
           // eslint-disable-next-line react/jsx-props-no-spreading
           {...form.getInputProps(`sides.${index}.id`)}
           required
-          mt="md"
         />
 
         <ActionIcon

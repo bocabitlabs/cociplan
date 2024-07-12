@@ -26,7 +26,7 @@ export default function RecipeInstructions({ recipe }: Props) {
 
   return (
     <Stack>
-      <Title order={5}>{t("Ingredients")}</Title>
+      <Title order={2}>{t("Ingredients")}</Title>
       <List>
         {recipe.ingredients.map((ingredient: IIngredient) => (
           <List.Item key={ingredient.id}>
@@ -34,11 +34,11 @@ export default function RecipeInstructions({ recipe }: Props) {
           </List.Item>
         ))}
       </List>
-      <Title order={5}>{t("Instructions")}</Title>
+      <Title order={2}>{t("Instructions")}</Title>
       <div dangerouslySetInnerHTML={{ __html: instructions }} />
       {recipe.sides && recipe.sides.length > 0 && (
         <>
-          <Title order={5}>{t("Sides")}</Title>
+          <Title order={2}>{t("Sides")}</Title>
           <List>
             {recipe.sides.map((side: IRecipe) => (
               <List.Item key={side.id}>

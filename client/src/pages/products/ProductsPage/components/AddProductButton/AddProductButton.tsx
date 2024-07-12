@@ -1,5 +1,4 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Box,
@@ -12,28 +11,20 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useShallowEffect } from "@mantine/hooks";
 import { IconPlus } from "@tabler/icons-react";
 import { useAddProduct } from "hooks/products/use-products";
+import { IProductTypes } from "types/products-types";
 
 export default function AddProductButton() {
   const { t } = useTranslation();
   const [opened, { open, close }] = useDisclosure(false);
   const { mutate, isLoading, isSuccess } = useAddProduct();
 
-  const productTypes = [
-    { value: "OTHER", label: t("Other") },
-    { value: "EGG_MILK_PRODUCTS", label: t("Egg and milk products") },
-    { value: "FATS_OILS", label: t("Fats and oils") },
-    { value: "FRUITS", label: t("Fruits") },
-    { value: "GRAIN_NUTS_BAKING", label: t("Grain, nuts and baking") },
-    { value: "HERBS_SPICES", label: t("Herbs and spices") },
-    { value: "MEAT_SASUAGE", label: t("Meat and sausages") },
-    { value: "FISH", label: t("Fish") },
-    { value: "PASTA_RICE", label: t("Pasta and rice") },
-    { value: "VEGETABLES", label: t("Vegetables") },
-    { value: "LEGUMES", label: t("Legumes") },
-  ];
+  const productTypes = Object.keys(IProductTypes).map((productType) => ({
+    value: productType,
+    label: t<string>(productType),
+  }));
 
   const form = useForm({
     initialValues: {
@@ -47,12 +38,12 @@ export default function AddProductButton() {
     mutate(values);
   };
 
-  useEffect(() => {
+  useShallowEffect(() => {
     if (isSuccess) {
       form.reset();
       close();
     }
-  }, [isSuccess, form, close]);
+  }, [isSuccess, close, form]);
 
   return (
     <>
@@ -77,15 +68,16 @@ export default function AddProductButton() {
               placeholder={t<string>("Rice, milk, pasta...")}
               required
               {...form.getInputProps("name")}
+              mt="sm"
             />
 
             <NativeSelect
               label={t("Tipo")}
               withAsterisk
-              description={t<string>("Choose a type for the product")}
               data={productTypes}
               {...form.getInputProps("type")}
               required
+              mt="sm"
             />
 
             <Group mt="md">
