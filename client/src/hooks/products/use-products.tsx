@@ -6,15 +6,38 @@ import { apiClient } from "api/api-client";
 import queryClient from "api/query-client";
 import { IProduct, IProductFormFields } from "types/products";
 
-export const fetchProducts = async () => {
-  const { data } = await apiClient.get<any>(`/products/`);
+export const fetchProducts = async (page: number = 1, search?: string) => {
+  let query = `?page=${page}`;
+  if (search && search?.length > 0) {
+    query = `?page=${page}&search=${search}`;
+  }
+  const { data } = await apiClient.get<any>(`/products/${query}`);
   return data;
 };
 
-export function useProducts(options = {}) {
-  return useQuery<any, Error>(["products"], () => fetchProducts(), {
-    ...options,
-  });
+export function useProducts(page: number, search?: string, options = {}) {
+  return useQuery<any, Error>(
+    ["products", page, search],
+    () => fetchProducts(page, search),
+    {
+      ...options,
+    },
+  );
+}
+
+export const fetchProductsNoLimit = async () => {
+  const { data } = await apiClient.get<any>(`/products-no-limit/`);
+  return data;
+};
+
+export function useProductsNoLimit(options = {}) {
+  return useQuery<any, Error>(
+    ["products-no-limit"],
+    () => fetchProductsNoLimit(),
+    {
+      ...options,
+    },
+  );
 }
 
 export const useAddProduct = () => {

@@ -7,21 +7,27 @@ import {
   Group,
   LoadingOverlay,
   Modal,
+  Pagination,
   Stack,
   Table,
   Text,
+  Input,
+  CloseButton,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import { IconTrash } from "@tabler/icons-react";
 import AddProductButton from "../AddProductButton/AddProductButton";
-import InitializeProductsButton from "../InitializeProductsButton/InitializeProductsButton";
+import config from "config";
 import { useDeleteProduct, useProducts } from "hooks/products/use-products";
 import { IProduct } from "types/products";
 
 export default function ProductsList() {
-  const { data, isLoading } = useProducts();
+  const [page, setPage] = useState(1);
   const { mutate, isLoading: isLoadingDelete } = useDeleteProduct();
   const { t } = useTranslation();
+  const [searchValue, setSearchValue] = useState(t<string>(""));
+  const [debouncedSearch] = useDebouncedValue(searchValue, 200);
+  const { data, isLoading } = useProducts(page, debouncedSearch);
 
   const [opened, { open, close }] = useDisclosure(false);
   const [selectedProduct, setSelectedProduct] = useState<{
@@ -52,7 +58,19 @@ export default function ProductsList() {
     <Stack>
       <Group justify="space-between">
         <AddProductButton />
-        <InitializeProductsButton />
+        <Input
+          placeholder={t("Search product")}
+          value={searchValue}
+          onChange={(event) => setSearchValue(event.currentTarget.value)}
+          rightSectionPointerEvents="all"
+          rightSection={
+            <CloseButton
+              aria-label={t("Clear input")}
+              onClick={() => setSearchValue("")}
+              style={{ display: searchValue ? undefined : "none" }}
+            />
+          }
+        />
       </Group>
       <Box pos="relative">
         <LoadingOverlay
@@ -63,7 +81,7 @@ export default function ProductsList() {
         <Box
           style={{
             display: "block",
-            overflowX: "scroll",
+            overflowX: "auto",
             whiteSpace: "nowrap",
           }}
         >
@@ -76,7 +94,7 @@ export default function ProductsList() {
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
-              {data?.map((product: IProduct) => (
+              {data?.results.map((product: IProduct) => (
                 <Table.Tr key={product.id}>
                   <Table.Td>{product.name}</Table.Td>
                   <Table.Td>{t(product.type)}</Table.Td>
@@ -93,6 +111,16 @@ export default function ProductsList() {
               ))}
             </Table.Tbody>
           </Table>
+          <Pagination
+            value={page}
+            onChange={setPage}
+            total={
+              data?.count && data.count > 0
+                ? Math.floor(data.count / config.PAGE_SIZE)
+                : 0
+            }
+            mt="md"
+          />
         </Box>
       </Box>
 

@@ -13,8 +13,15 @@ import {
   Anchor,
   LoadingOverlay,
   Box,
+  Pagination,
+  Input,
+  CloseButton,
 } from "@mantine/core";
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import {
+  useDebouncedValue,
+  useDisclosure,
+  useMediaQuery,
+} from "@mantine/hooks";
 import {
   IconFlower,
   IconLeaf,
@@ -26,6 +33,7 @@ import {
   IconSun,
   IconEdit,
 } from "@tabler/icons-react";
+import config from "config";
 import { useDeleteRecipe, useSides } from "hooks/recipes/use-recipes";
 import routes from "routes";
 import { IRecipe } from "types/recipes";
@@ -37,10 +45,14 @@ interface SelectedRecipeProps {
 }
 
 export default function SideList() {
-  const { data, isLoading: isLoadindRecipes } = useSides();
+  const [page, setPage] = useState(1);
+  const { t } = useTranslation();
+
+  const [searchValue, setSearchValue] = useState(t<string>(""));
+  const [debouncedSearch] = useDebouncedValue(searchValue, 200);
+  const { data, isLoading: isLoadindRecipes } = useSides(page, debouncedSearch);
   const { mutate, isLoading: isLoadingDelete } = useDeleteRecipe();
   const navigate = useNavigate();
-  const { t } = useTranslation();
   const [opened, { open, close }] = useDisclosure(false);
   const [selectedRecipe, setSelectedRecipe] = useState<SelectedRecipeProps>({
     id: null,
@@ -63,11 +75,7 @@ export default function SideList() {
     mutate(id);
     handleCloseModal();
   };
-  console.log(
-    `https://placehold.co/80x80/${stringToColour(
-      "pepe",
-    )}/fff?text=${getStringWordsInitials("pepe")}`,
-  );
+
   return (
     <Stack>
       <Group justify="space-between">
@@ -77,6 +85,19 @@ export default function SideList() {
         >
           {t("Add new side")}
         </Button>
+        <Input
+          placeholder={t("Search sides")}
+          value={searchValue}
+          onChange={(event) => setSearchValue(event.currentTarget.value)}
+          rightSectionPointerEvents="all"
+          rightSection={
+            <CloseButton
+              aria-label={t("Clear input")}
+              onClick={() => setSearchValue("")}
+              style={{ display: searchValue ? undefined : "none" }}
+            />
+          }
+        />
       </Group>
       <Box pos="relative">
         <LoadingOverlay
@@ -85,18 +106,18 @@ export default function SideList() {
           overlayProps={{ radius: "sm", blur: 2 }}
         />
 
-        <Box
-          style={{
-            display: "block",
-            overflowX: "scroll",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {data?.length === 0 ? (
-            <Text style={{ justifyContent: "center" }} mt="xl">
-              {t("There are no side meals")}
-            </Text>
-          ) : (
+        {data?.results.length === 0 ? (
+          <Text style={{ justifyContent: "center" }} mt="xl">
+            {t("There are no side meals")}
+          </Text>
+        ) : (
+          <Box
+            style={{
+              display: "block",
+              overflowX: "auto",
+              whiteSpace: "nowrap",
+            }}
+          >
             <Table>
               <Table.Thead>
                 <Table.Tr>
@@ -109,7 +130,7 @@ export default function SideList() {
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
-                {data?.map((recipe: IRecipe) => (
+                {data?.results.map((recipe: IRecipe) => (
                   <Table.Tr key={recipe.id}>
                     {isMobile && (
                       <Table.Td>
@@ -170,8 +191,18 @@ export default function SideList() {
                 ))}
               </Table.Tbody>
             </Table>
-          )}
-        </Box>
+            <Pagination
+              value={page}
+              onChange={setPage}
+              total={
+                data?.count && data.count > 0
+                  ? Math.floor(data.count / config.PAGE_SIZE)
+                  : 0
+              }
+              mt="md"
+            />
+          </Box>
+        )}
       </Box>
 
       <Modal opened={opened} onClose={close} title={t("Delete side")}>

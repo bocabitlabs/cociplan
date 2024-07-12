@@ -10,26 +10,74 @@ import {
   IRecipeImageFormFields,
 } from "types/recipes";
 
-export const fetchRecipes = async () => {
-  const { data } = await apiClient.get<any>(`/recipes/`);
+export const fetchRecipes = async (page: number = 1, search?: string) => {
+  let query = `?page=${page}`;
+  if (search && search?.length > 0) {
+    query = `?page=${page}&search=${search}`;
+  }
+  const { data } = await apiClient.get<any>(`/recipes/${query}`);
   return data;
 };
 
-export function useRecipes(options = {}) {
-  return useQuery<any, Error>(["recipes"], () => fetchRecipes(), {
-    ...options,
-  });
+export function useRecipes(page: number, search?: string, options = {}) {
+  return useQuery<any, Error>(
+    ["recipes", page, search],
+    () => fetchRecipes(page, search),
+    {
+      ...options,
+    },
+  );
 }
 
-export const fetchSides = async () => {
-  const { data } = await apiClient.get<any>(`/recipes/?isSidePlate=true`);
+export const fetchRecipesNoLimit = async () => {
+  const { data } = await apiClient.get<any>(`/recipes-no-limit/`);
   return data;
 };
 
-export function useSides(options = {}) {
-  return useQuery<any, Error>(["recipes", "sides"], () => fetchSides(), {
-    ...options,
-  });
+export function useRecipesNoLimit(options = {}) {
+  return useQuery<any, Error>(
+    ["recipes-no-limit"],
+    () => fetchRecipesNoLimit(),
+    {
+      ...options,
+    },
+  );
+}
+
+export const fetchSides = async (page: number = 1, search?: string) => {
+  let query = `page=${page}`;
+  if (search && search?.length > 0) {
+    query = `page=${page}&search=${search}`;
+  }
+  const { data } = await apiClient.get<any>(
+    `/recipes/?isSidePlate=true&${query}`,
+  );
+  return data;
+};
+
+export function useSides(page: number, search?: string, options = {}) {
+  return useQuery<any, Error>(
+    ["recipes", "sides", page, search],
+    () => fetchSides(page, search),
+    {
+      ...options,
+    },
+  );
+}
+
+export const fetchSidesNoLimit = async () => {
+  const { data } = await apiClient.get<any>(`/sides-no-limit/`);
+  return data;
+};
+
+export function useSidesNoLimit(options = {}) {
+  return useQuery<any, Error>(
+    ["recipes", "sides-no-limit"],
+    () => fetchSidesNoLimit(),
+    {
+      ...options,
+    },
+  );
 }
 
 export const useAddRecipeImage = () => {
@@ -106,6 +154,7 @@ export function useRecipe(recipeId: number | undefined, options = {}) {
     ["recipes", recipeId],
     () => fetchRecipe(recipeId),
     {
+      enabled: !!recipeId,
       ...options,
     },
   );

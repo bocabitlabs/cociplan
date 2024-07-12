@@ -27,6 +27,13 @@ class RecipeImageWriteSerializer(serializers.ModelSerializer):
         fields = ["recipe", "image"]
 
 
+class RecipeSelectSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Recipe
+        fields = ["id", "name"]
+
+
 class RecipeSerializer(serializers.ModelSerializer):
     ingredients = IngredientSerializer(many=True)
     sides = serializers.SerializerMethodField()
@@ -41,12 +48,8 @@ class RecipeSerializer(serializers.ModelSerializer):
             "image",
             "ingredients",
             "instructions",
-            "is_only_dinner",
-            "is_only_lunch",
             "is_oven_recipe",
             "is_side_plate",
-            "can_be_dinner",
-            "can_be_lunch",
             "days_of_week",
             "meal",
             "name",
@@ -87,12 +90,8 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             "difficulty",
             "ingredients",
             "instructions",
-            "is_only_dinner",
-            "is_only_lunch",
             "is_oven_recipe",
             "is_side_plate",
-            "can_be_dinner",
-            "can_be_lunch",
             "days_of_week",
             "meal",
             "name",

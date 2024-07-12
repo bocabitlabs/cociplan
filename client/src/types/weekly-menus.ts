@@ -8,7 +8,6 @@ export interface IDailyMenu {
   lunchRecipe: IRecipe;
   dinnerRecipe: IRecipe;
 }
-
 export interface IWeeklyMenu {
   id: number;
   dateCreated: string;
@@ -20,4 +19,10 @@ export interface IWeeklyMenu {
   fridayMenu: IDailyMenu;
   saturdayMenu: IDailyMenu;
   sundayMenu: IDailyMenu;
+}
+export interface IWeeklyMenuResult {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: IWeeklyMenu[];
 }

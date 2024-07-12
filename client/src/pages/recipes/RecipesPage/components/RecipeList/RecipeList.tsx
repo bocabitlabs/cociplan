@@ -13,8 +13,15 @@ import {
   Anchor,
   LoadingOverlay,
   Box,
+  Pagination,
+  Input,
+  CloseButton,
 } from "@mantine/core";
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import {
+  useDebouncedValue,
+  useDisclosure,
+  useMediaQuery,
+} from "@mantine/hooks";
 import {
   IconFlower,
   IconLeaf,
@@ -26,7 +33,7 @@ import {
   IconSun,
   IconEdit,
 } from "@tabler/icons-react";
-import InitializeRecipesButton from "../InitializeRecipesButton/InitializeRecipesButton";
+import config from "config";
 import { useDeleteRecipe, useRecipes } from "hooks/recipes/use-recipes";
 import routes from "routes";
 import { IRecipe } from "types/recipes";
@@ -38,10 +45,17 @@ interface SelectedRecipeProps {
 }
 
 export default function RecipeList() {
-  const { data, isLoading: isLoadindRecipes } = useRecipes();
+  const { t } = useTranslation();
+
+  const [page, setPage] = useState(1);
+  const [searchValue, setSearchValue] = useState(t<string>(""));
+  const [debouncedSearch] = useDebouncedValue(searchValue, 200);
+  const { data, isLoading: isLoadindRecipes } = useRecipes(
+    page,
+    debouncedSearch,
+  );
   const { mutate, isLoading: isLoadingDelete } = useDeleteRecipe();
   const navigate = useNavigate();
-  const { t } = useTranslation();
   const [opened, { open, close }] = useDisclosure(false);
   const [selectedRecipe, setSelectedRecipe] = useState<SelectedRecipeProps>({
     id: null,
@@ -74,7 +88,19 @@ export default function RecipeList() {
         >
           {t("Add new recipe")}
         </Button>
-        <InitializeRecipesButton />
+        <Input
+          placeholder={t("Search recipes")}
+          value={searchValue}
+          onChange={(event) => setSearchValue(event.currentTarget.value)}
+          rightSectionPointerEvents="all"
+          rightSection={
+            <CloseButton
+              aria-label={t("Clear input")}
+              onClick={() => setSearchValue("")}
+              style={{ display: searchValue ? undefined : "none" }}
+            />
+          }
+        />
       </Group>
       <Box pos="relative">
         <LoadingOverlay
@@ -85,7 +111,7 @@ export default function RecipeList() {
         <Box
           style={{
             display: "block",
-            overflowX: "scroll",
+            overflowX: "auto",
             whiteSpace: "nowrap",
           }}
         >
@@ -101,7 +127,7 @@ export default function RecipeList() {
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
-              {data?.map((recipe: IRecipe) => (
+              {data?.results.map((recipe: IRecipe) => (
                 <Table.Tr key={recipe.id}>
                   {isMobile && (
                     <Table.Td>
@@ -162,6 +188,16 @@ export default function RecipeList() {
               ))}
             </Table.Tbody>
           </Table>
+          <Pagination
+            value={page}
+            onChange={setPage}
+            total={
+              data?.count && data.count > 0
+                ? Math.floor(data.count / config.PAGE_SIZE)
+                : 0
+            }
+            mt="md"
+          />
         </Box>
       </Box>
 

@@ -4,17 +4,19 @@ import { notifications } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import { apiClient } from "api/api-client";
 import queryClient from "api/query-client";
-import { IWeeklyMenu } from "types/weekly-menus";
+import { IWeeklyMenu, IWeeklyMenuResult } from "types/weekly-menus";
 
-export const fetchWeeklyMenus = async () => {
-  const { data } = await apiClient.get<IWeeklyMenu[]>(`/weekly-menus/`);
+export const fetchWeeklyMenus = async (page: number = 1) => {
+  const { data } = await apiClient.get<IWeeklyMenuResult>(
+    `/weekly-menus/?page=${page}`,
+  );
   return data;
 };
 
-export function useWeeklyMenus(options = {}) {
-  return useQuery<IWeeklyMenu[], Error>(
-    ["weekly-menus"],
-    () => fetchWeeklyMenus(),
+export function useWeeklyMenus(page: number, options = {}) {
+  return useQuery<IWeeklyMenuResult, Error>(
+    ["weekly-menus", page],
+    () => fetchWeeklyMenus(page),
     {
       ...options,
     },
