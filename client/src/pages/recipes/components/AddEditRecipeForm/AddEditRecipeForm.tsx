@@ -62,7 +62,7 @@ export default function AddEditRecipeForm({
     initialValues: {
       active: isUpdate && recipe ? recipe?.active : true,
       name: isUpdate && recipe ? recipe?.name : "",
-      meal: isUpdate && recipe ? recipe?.meal : ("LUNCH" as MealTypes),
+      meal: isUpdate && recipe ? recipe?.meal : MealTypes.BOTH,
       mealTemp: isUpdate && recipe ? recipe?.mealTemp : ("WARM" as MealTemps),
       ingredients:
         isUpdate && recipe
@@ -75,8 +75,7 @@ export default function AddEditRecipeForm({
 
       instructions: isUpdate && recipe ? recipe?.instructions : "",
       notes: isUpdate && recipe ? recipe?.notes : "",
-      preferedMeal:
-        isUpdate && recipe ? recipe?.preferedMeal : ("LUNCH" as MealTypes),
+      preferedMeal: isUpdate && recipe ? recipe?.preferedMeal : MealTypes.BOTH,
       preparationTime: isUpdate && recipe ? recipe?.preparationTime : 0,
       servings: isUpdate && recipe ? recipe?.servings : 0,
       sides:
@@ -191,14 +190,14 @@ export default function AddEditRecipeForm({
         >
           <Paper shadow="xs" p="md">
             <RecipeNameField form={form} />
-            <RecipeEnabledField form={form} />
+            {!isSide && <RecipeEnabledField form={form} />}
             <IsOvenRecipeField form={form} />
             <RecipeTypeField form={form} />
           </Paper>
 
           <Paper shadow="xs" p="md" mt="md">
-            <MealOfTheDayFields form={form} />
-            <RecipeDaysField form={form} />
+            {!isSide && <MealOfTheDayFields form={form} />}
+            {!isSide && <RecipeDaysField form={form} />}
             <SeasonsCheckboxes form={form} />
           </Paper>
 
