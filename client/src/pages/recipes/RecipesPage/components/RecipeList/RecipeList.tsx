@@ -16,6 +16,7 @@ import {
   Pagination,
   Input,
   CloseButton,
+  useMantineTheme,
 } from "@mantine/core";
 import {
   useDebouncedValue,
@@ -32,6 +33,7 @@ import {
   IconTrash,
   IconSun,
   IconEdit,
+  IconPointFilled,
 } from "@tabler/icons-react";
 import config from "config";
 import { useDeleteRecipe, useRecipes } from "hooks/recipes/use-recipes";
@@ -46,6 +48,7 @@ interface SelectedRecipeProps {
 
 export default function RecipeList() {
   const { t } = useTranslation();
+  const theme = useMantineTheme();
 
   const [page, setPage] = useState(1);
   const [searchValue, setSearchValue] = useState(t<string>(""));
@@ -118,6 +121,7 @@ export default function RecipeList() {
           <Table>
             <Table.Thead>
               <Table.Tr>
+                <Table.Th />
                 {isMobile && <Table.Th />}
                 <Table.Th>{t("Name")}</Table.Th>
                 <Table.Th>{t("Type")}</Table.Th>
@@ -129,6 +133,20 @@ export default function RecipeList() {
             <Table.Tbody>
               {data?.results.map((recipe: IRecipe) => (
                 <Table.Tr key={recipe.id}>
+                  <Table.Td>
+                    <IconPointFilled
+                      style={{
+                        color: recipe.active
+                          ? theme.colors.teal[5]
+                          : theme.colors.red[5],
+                      }}
+                      aria-label={
+                        recipe.active
+                          ? t<string>("Active")
+                          : t<string>("Inactive")
+                      }
+                    />
+                  </Table.Td>
                   {isMobile && (
                     <Table.Td>
                       <Image
