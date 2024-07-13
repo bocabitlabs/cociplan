@@ -211,7 +211,7 @@ export default function RecipeList() {
             onChange={setPage}
             total={
               data?.count && data.count > 0
-                ? Math.floor(data.count / config.PAGE_SIZE)
+                ? Math.floor(data.count / config.PAGE_SIZE) + 1
                 : 0
             }
             mt="md"
