@@ -12,7 +12,9 @@ logger = logging.getLogger("cociplan")
 
 def get_next_monday_month() -> str:
     # Get the next monday date
-    next_monday = datetime.date.today() + datetime.timedelta(days=-datetime.date.today().weekday(), weeks=1)
+    next_monday = datetime.date.today() + datetime.timedelta(
+        days=-datetime.date.today().weekday(), weeks=1
+    )
     # Get the next monday month
     month = next_monday.strftime("%B")
     return month
@@ -20,9 +22,13 @@ def get_next_monday_month() -> str:
 
 def get_next_monday_week_number() -> int:
     # Get the next monday date
-    next_monday = datetime.date.today() + datetime.timedelta(days=-datetime.date.today().weekday(), weeks=1)
+    next_monday = datetime.date.today() + datetime.timedelta(
+        days=-datetime.date.today().weekday(), weeks=1
+    )
     # Get the next monday week number of the month
-    week_number_of_month = next_monday.isocalendar()[1] - next_monday.replace(day=1).isocalendar()[1] + 1
+    week_number_of_month = (
+        next_monday.isocalendar()[1] - next_monday.replace(day=1).isocalendar()[1] + 1
+    )
     return week_number_of_month
 
 
@@ -49,7 +55,8 @@ def get_recipes_from_menu(menu: WeeklyMenu) -> tuple[list[Recipe], list[Recipe]]
         menu.saturday_menu,
         menu.sunday_menu,
     ]
-    # Get all the lunch and dinner recipes of the daily menus from the last weekly menu using a loop
+    # Get all the lunch and dinner recipes of the daily menus from the last
+    # weekly menu using a loop
     lunch_recipes: list[Recipe] = []
     dinner_recipes: list[Recipe] = []
     for daily_menu in daily_menus:
@@ -80,7 +87,9 @@ def create_new_weekly_menu(serializer):
 
     last_menu, last_menu_id = get_last_menu_and_id()
 
-    new_menu_name = generate_menu_name(next_monday_week_number, next_monday_month, last_menu_id)
+    new_menu_name = generate_menu_name(
+        next_monday_week_number, next_monday_month, last_menu_id
+    )
 
     if last_menu:
         logger.info("Generating menu based on the previous week one")
@@ -109,7 +118,6 @@ def generate_lunch_recipes_list(excluded_recipes):
     # Get all the recipes with meal attribute LUNCH from the database
     # except those that are on the last_weekly_menu_lunch_recipes
     # and sort them randomly
-    lunch_recipes = Recipe.objects.filter(meal="LUNCH").order_by("?")
     if current_season == "spring":
         lunch_recipes = (
             Recipe.objects.filter(meal="LUNCH", season_spring=True, active=True)
@@ -141,7 +149,8 @@ def generate_lunch_recipes_list(excluded_recipes):
 def get_lunch_recipes(excluded_lunch_recipes):
     lunch_recipes = generate_lunch_recipes_list(excluded_lunch_recipes)
     number_of_lunch_recipes = lunch_recipes.count()
-    # If the number of recipes is less than 7, generate a random array of recipes to fill with
+    # If the number of recipes is less than 7, generate a random array
+    # of recipes to fill with
     # all the recipes in lunch_recipes. These recipes can be repeated.
     if number_of_lunch_recipes < 7:
         logger.debug("Less than 7 lunch recipes")
@@ -152,7 +161,8 @@ def get_lunch_recipes(excluded_lunch_recipes):
     logger.debug(f"lunch_recipes_ids: {lunch_recipes_ids}")
 
     lunch_recipes = Recipe.objects.filter(id__in=lunch_recipes_ids)
-    # Filter these recipes between those that are only for weekdays and those that are only for weekends
+    # Filter these recipes between those that are only for
+    # weekdays and those that are only for weekends
     weekends = lunch_recipes.filter(days_of_week="WEEKENDS")
     weekdays = lunch_recipes.filter(days_of_week="WEEK_DAYS")
     if len(weekends) == 2 and len(weekdays) == 5:
@@ -173,7 +183,11 @@ def get_dinner_recipes(excluded_dinner_recipes):
     # Get all the recipes with meal attribute DINNER from the database
     # except those that are on the last_weekly_menu_dinner_recipes
     # and sort them randomly
-    dinner_recipes = Recipe.objects.filter(meal="DINNER").exclude(id__in=excluded_dinner_recipes_ids).order_by("?")
+    dinner_recipes = (
+        Recipe.objects.filter(meal="DINNER")
+        .exclude(id__in=excluded_dinner_recipes_ids)
+        .order_by("?")
+    )
     number_of_dinner_recipes = dinner_recipes.count()
     if number_of_dinner_recipes < 7:
         logger.debug("Less than 7 dinner recipes")
@@ -183,7 +197,8 @@ def get_dinner_recipes(excluded_dinner_recipes):
     dinner_recipes_ids = random.sample(dinner_recipes_ids, k=7)
     logger.debug(f"dinner_recipes_ids: {dinner_recipes_ids}")
 
-    # Get the recipes from the database using the ids from the lunch_recipes_ids and dinner_recipes_ids lists
+    # Get the recipes from the database using the ids from the
+    # lunch_recipes_ids and dinner_recipes_ids lists
     dinner_recipes = Recipe.objects.filter(id__in=dinner_recipes_ids)
 
     return dinner_recipes
@@ -200,44 +215,73 @@ def generate_menu_based_previous_week(last_menu, new_menu_name):
 
     # Assign the first recipe of the lunch_recipes queryset to the monday_menu object
     monday_menu = DailyMenu.objects.create(
-        name=f"{new_menu_name} - Lunes", lunch_recipe=lunch_recipes[0], dinner_recipe=dinner_recipes[0]
+        name=f"{new_menu_name} - Lunes",
+        lunch_recipe=lunch_recipes[0],
+        dinner_recipe=dinner_recipes[0],
     )
     tuesday_menu = DailyMenu.objects.create(
-        name=f"{new_menu_name} - Martes", lunch_recipe=lunch_recipes[1], dinner_recipe=dinner_recipes[1]
+        name=f"{new_menu_name} - Martes",
+        lunch_recipe=lunch_recipes[1],
+        dinner_recipe=dinner_recipes[1],
     )
     wednesday_menu = DailyMenu.objects.create(
-        name=f"{new_menu_name} - Miércoles", lunch_recipe=lunch_recipes[2], dinner_recipe=dinner_recipes[2]
+        name=f"{new_menu_name} - Miércoles",
+        lunch_recipe=lunch_recipes[2],
+        dinner_recipe=dinner_recipes[2],
     )
     thursday_menu = DailyMenu.objects.create(
-        name=f"{new_menu_name} - Jueves", lunch_recipe=lunch_recipes[3], dinner_recipe=dinner_recipes[3]
+        name=f"{new_menu_name} - Jueves",
+        lunch_recipe=lunch_recipes[3],
+        dinner_recipe=dinner_recipes[3],
     )
     friday_menu = DailyMenu.objects.create(
-        name=f"{new_menu_name} - Viernes", lunch_recipe=lunch_recipes[4], dinner_recipe=dinner_recipes[4]
+        name=f"{new_menu_name} - Viernes",
+        lunch_recipe=lunch_recipes[4],
+        dinner_recipe=dinner_recipes[4],
     )
     saturday_menu = DailyMenu.objects.create(
-        name=f"{new_menu_name} - Sábado", lunch_recipe=lunch_recipes[5], dinner_recipe=dinner_recipes[5]
+        name=f"{new_menu_name} - Sábado",
+        lunch_recipe=lunch_recipes[5],
+        dinner_recipe=dinner_recipes[5],
     )
     sunday_menu = DailyMenu.objects.create(
-        name=f"{new_menu_name} - Domingo", lunch_recipe=lunch_recipes[6], dinner_recipe=dinner_recipes[6]
+        name=f"{new_menu_name} - Domingo",
+        lunch_recipe=lunch_recipes[6],
+        dinner_recipe=dinner_recipes[6],
     )
-    return monday_menu, tuesday_menu, wednesday_menu, thursday_menu, friday_menu, saturday_menu, sunday_menu
+    return (
+        monday_menu,
+        tuesday_menu,
+        wednesday_menu,
+        thursday_menu,
+        friday_menu,
+        saturday_menu,
+        sunday_menu,
+    )
 
 
 def generate_menu_based_random(new_menu_name):
     current_season = get_current_season_of_the_year()
 
+    lunch_recipes = Recipe.objects.filter(
+        meal="LUNCH", active=True, is_side_plate=False
+    ).order_by("?")
+    dinner_recipes = Recipe.objects.filter(
+        meal="DINNER", active=True, is_side_plate=False
+    ).order_by("?")
+
     if current_season == "spring":
-        lunch_recipes = Recipe.objects.filter(meal="LUNCH", season_spring=True, active=True).order_by("?")
-        dinner_recipes = Recipe.objects.filter(meal="DINNER", season_spring=True, active=True).order_by("?")
+        lunch_recipes = lunch_recipes.filter(season_spring=True)
+        dinner_recipes = dinner_recipes.filter(season_spring=True)
     elif current_season == "summer":
-        lunch_recipes = Recipe.objects.filter(meal="LUNCH", season_summer=True, active=True).order_by("?")
-        dinner_recipes = Recipe.objects.filter(meal="DINNER", season_summer=True, active=True).order_by("?")
+        lunch_recipes = lunch_recipes.filter(season_summer=True)
+        dinner_recipes = dinner_recipes.filter(season_summer=True)
     elif current_season == "autumn":
-        lunch_recipes = Recipe.objects.filter(meal="LUNCH", season_autumn=True, active=True).order_by("?")
-        dinner_recipes = Recipe.objects.filter(meal="DINNER", season_autumn=True, active=True).order_by("?")
+        lunch_recipes = lunch_recipes.filter(season_autumn=True)
+        dinner_recipes = dinner_recipes.filter(season_autumn=True)
     else:
-        lunch_recipes = Recipe.objects.filter(meal="LUNCH").filter(season_winter=True, active=True).order_by("?")
-        dinner_recipes = Recipe.objects.filter(meal="DINNER").filter(season_winter=True, active=True).order_by("?")
+        lunch_recipes = lunch_recipes.filter(season_winter=True)
+        dinner_recipes = dinner_recipes.filter(season_winter=True)
 
     # Get the number of lunch recipes
     number_of_lunch_recipes = lunch_recipes.count()
@@ -248,32 +292,55 @@ def generate_menu_based_random(new_menu_name):
 
     number_of_dinner_recipes = dinner_recipes.count()
     # If the number of recipes is less than 7,
-    # generate a random array of recipes to fill with all the recipes in the dinner_recipes queryset.
+    # generate a random array of recipes to fill with all the recipes
+    # in the dinner_recipes queryset.
     # These recipes can be repeated.
     if number_of_dinner_recipes < 7:
         dinner_recipes = random.sample(list(dinner_recipes), k=7)
 
     # Assign the first recipe of the lunch_recipes queryset to the monday_menu object
     monday_menu = DailyMenu.objects.create(
-        name=f"{new_menu_name} - Lunes", lunch_recipe=lunch_recipes[0], dinner_recipe=dinner_recipes[0]
+        name=f"{new_menu_name} - Lunes",
+        lunch_recipe=lunch_recipes[0],
+        dinner_recipe=dinner_recipes[0],
     )
     monday_menu.lunch_recipe = lunch_recipes[0]
     tuesday_menu = DailyMenu.objects.create(
-        name=f"{new_menu_name} - Martes", lunch_recipe=lunch_recipes[1], dinner_recipe=dinner_recipes[1]
+        name=f"{new_menu_name} - Martes",
+        lunch_recipe=lunch_recipes[1],
+        dinner_recipe=dinner_recipes[1],
     )
     wednesday_menu = DailyMenu.objects.create(
-        name=f"{new_menu_name} - Miércoles", lunch_recipe=lunch_recipes[2], dinner_recipe=dinner_recipes[2]
+        name=f"{new_menu_name} - Miércoles",
+        lunch_recipe=lunch_recipes[2],
+        dinner_recipe=dinner_recipes[2],
     )
     thursday_menu = DailyMenu.objects.create(
-        name=f"{new_menu_name} - Jueves", lunch_recipe=lunch_recipes[3], dinner_recipe=dinner_recipes[3]
+        name=f"{new_menu_name} - Jueves",
+        lunch_recipe=lunch_recipes[3],
+        dinner_recipe=dinner_recipes[3],
     )
     friday_menu = DailyMenu.objects.create(
-        name=f"{new_menu_name} - Viernes", lunch_recipe=lunch_recipes[4], dinner_recipe=dinner_recipes[4]
+        name=f"{new_menu_name} - Viernes",
+        lunch_recipe=lunch_recipes[4],
+        dinner_recipe=dinner_recipes[4],
     )
     saturday_menu = DailyMenu.objects.create(
-        name=f"{new_menu_name} - Sábado", lunch_recipe=lunch_recipes[5], dinner_recipe=dinner_recipes[5]
+        name=f"{new_menu_name} - Sábado",
+        lunch_recipe=lunch_recipes[5],
+        dinner_recipe=dinner_recipes[5],
     )
     sunday_menu = DailyMenu.objects.create(
-        name=f"{new_menu_name} - Domingo", lunch_recipe=lunch_recipes[6], dinner_recipe=dinner_recipes[6]
+        name=f"{new_menu_name} - Domingo",
+        lunch_recipe=lunch_recipes[6],
+        dinner_recipe=dinner_recipes[6],
     )
-    return monday_menu, tuesday_menu, wednesday_menu, thursday_menu, friday_menu, saturday_menu, sunday_menu
+    return (
+        monday_menu,
+        tuesday_menu,
+        wednesday_menu,
+        thursday_menu,
+        friday_menu,
+        saturday_menu,
+        sunday_menu,
+    )
