@@ -11,12 +11,12 @@ class DailyMenu(models.Model):
 
     lunch_recipe_id: int
     lunch_recipe = models.ForeignKey["Recipe", Recipe](
-        Recipe, on_delete=models.CASCADE, related_name="lunches"
+        Recipe, on_delete=models.SET_NULL, related_name="lunches", null=True
     )
 
     dinner_recipe_id: int
     dinner_recipe = models.ForeignKey["Recipe", Recipe](
-        Recipe, on_delete=models.CASCADE, related_name="dinners"
+        Recipe, on_delete=models.SET_NULL, related_name="dinners", null=True
     )
 
     date_created: models.DateTimeField = models.DateTimeField(auto_now_add=True)
