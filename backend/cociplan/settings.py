@@ -251,3 +251,5 @@ if config("ENABLE_SENTRY", default=False, cast=bool):
 CORS_ALLOWED_ORIGINS = config(
     "CORS_ALLOWED_ORIGINS", cast=lambda v: [s.strip() for s in v.split(",")]
 )
+
+OPENAI_API_KEY = config("OPENAI_API_KEY", default="")
