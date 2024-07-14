@@ -23,14 +23,15 @@ input_prompt = """You are a nutritionist and you want to create an
     The weekly menu will meet several conditions:
      - It will contain 7 daily menus, one for each day of the week.
      - It will get recipes for lunch and dinner.
-     - If meal is LUNCH, it will be served at lunchtime.
-     - If meal is DINNER, it will be served at dinnertime.
-     - If meal is BOTH, it can be served at lunchtime or dinnertime.
+     For each recipe:
+     - If meal is LUNCH, it will be served only at lunchtime.
+     - If meal is DINNER, it will be served only at dinnertime.
+     - If meal is BOTH, it can be served both at lunchtime or dinnertime.
      - If days_of_week is WEEK_DAYS, it will be served from Monday to Friday.
      - If days_of_week is WEEKENDS, it will be served on Saturday and Sunday.
      - If days_of_week is ALL, it will be served every day.
      - The recipes will have a difficulty from 1 to 5.
-     - The recipes will have a type: {recipe_types}.
+     - The recipe will have a type: {recipe_types}.
 
      The input will be a json object with the following structure:
      [{recipe: "recipe_id",
@@ -83,26 +84,28 @@ def generate_menu_gpt(last_menu, new_menu_name):
     input_prompt_expanded = input_prompt.replace("{recipe_types}", recipe_types_string)
 
     lunch_recipes_json = []
-    for lunch_recipe in lunch_recipes:
+    for recipe in lunch_recipes:
         lunch_recipes_json.append(
             {
-                "recipe": str(lunch_recipe.id),
-                "meal": lunch_recipe.meal,
-                "difficulty": str(lunch_recipe.difficulty),
-                "type": lunch_recipe.type,
-                "name": lunch_recipe.name,
+                "recipe": str(recipe.id),
+                "meal": recipe.meal,
+                "difficulty": str(recipe.difficulty),
+                "type": recipe.type,
+                "days_of_week": recipe.days_of_week,
+                "name": recipe.name,
             }
         )
 
     dinner_recipes_json = []
-    for dinner_recipe in dinner_recipes:
+    for recipe in dinner_recipes:
         dinner_recipes_json.append(
             {
-                "recipe": str(dinner_recipe.id),
-                "meal": dinner_recipe.meal,
-                "difficulty": str(dinner_recipe.difficulty),
-                "type": dinner_recipe.type,
-                "name": dinner_recipe.name,
+                "recipe": str(recipe.id),
+                "meal": recipe.meal,
+                "difficulty": str(recipe.difficulty),
+                "type": recipe.type,
+                "days_of_week": recipe.days_of_week,
+                "name": recipe.name,
             }
         )
     # Convert to string the json objects
