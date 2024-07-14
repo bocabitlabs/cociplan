@@ -23,6 +23,7 @@ from menus.serializers.weekly_menus import (
     WeeklyMenuSerializer,
     WeeklyMenuWriteSerializer,
 )
+from menus.utils.weekly_menu_generator import create_new_weekly_menu
 from menus.utils.weekly_menu_generator_gpt import create_new_weekly_menu_gpt
 
 logger = logging.getLogger("cociplan")
@@ -64,13 +65,13 @@ class RecipeImageViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser)
 
 
-class RecipesViewSetNoLimit(viewsets.ModelViewSet):
+class RecipesViewSetNoLimit(viewsets.ReadOnlyModelViewSet):
     serializer_class = RecipeSelectSerializer
     queryset = Recipe.objects.all().filter(is_side_plate=False).order_by("name")
     pagination_class = None
 
 
-class SideViewSetNoLimit(viewsets.ModelViewSet):
+class SideViewSetNoLimit(viewsets.ReadOnlyModelViewSet):
     serializer_class = RecipeSelectSerializer
     queryset = Recipe.objects.all().filter(is_side_plate=True).order_by("name")
     pagination_class = None
@@ -136,5 +137,9 @@ class WeeklyMenuViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         logger.info(f"Creating WeeklyMenu: {serializer.validated_data}")
+        use_classic = self.request.query_params.get("classic")
 
-        create_new_weekly_menu_gpt(serializer)
+        if use_classic == "true":
+            create_new_weekly_menu(serializer)
+        else:
+            create_new_weekly_menu_gpt(serializer)

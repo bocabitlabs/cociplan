@@ -64,6 +64,31 @@ export const useAddWeeklyMenu = () => {
   });
 };
 
+export const useAddWeeklyMenuClassic = () => {
+  const { t } = useTranslation();
+  return useMutation(() => apiClient.post(`/weekly-menus/?classic=true`, {}), {
+    onSuccess: () => {
+      notifications.show({
+        title: t("Created"),
+        message: t("Weekly menu has been created successfully"),
+        color: "teal",
+        autoClose: 2000,
+        icon: <IconCheck size="1rem" />,
+      });
+      queryClient.invalidateQueries(["weekly-menus"]);
+    },
+    onError: () => {
+      notifications.show({
+        title: t("Not created"),
+        message: t("Unable to create the weekly menu"),
+        color: "red",
+        autoClose: 2000,
+        icon: <IconX size="1rem" />,
+      });
+    },
+  });
+};
+
 export const useDeleteWeeklyMenu = () => {
   const { t } = useTranslation();
 

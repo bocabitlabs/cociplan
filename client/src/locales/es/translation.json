@@ -12,6 +12,7 @@
   "All the days": "Todos los días",
   "All days": "Todos los días",
   "Are you sure you want to change the name of the weekly menu?": "¿Estás seguro de que quieres cambiar el nombre del menú semanal?",
+  "Are you sure you want to delete the weekly menu?": "¿Estás seguro de que quieres borrar el menú semanal?",
   "Attach one file that should not exceed 5mb": "Adjunta un archivo que no debe superar los 5mb",
   "Autumn": "Otoño",
   "BAKING": "Panadería",
@@ -24,6 +25,7 @@
   "Create": "Crear",
   "Created": "Creada",
   "Create weekly menu": "Crear menu semanal",
+  "Create weekly menu (classic)": "Crear menú semanal (clásico)",
   "Choose a product": "Elije un producto",
   "Choose a recipe for lunch": "Elije una receta para la comida",
   "Choose the lunch of the day": "Elige la comida del día",
@@ -158,5 +160,6 @@
   "Winter": "Invierno",
   "Work days": "Días laborables",
   "Yes": "Sí",
-  "Yes, change name": "Sí, cambiar nombre"
+  "Yes, change name": "Sí, cambiar nombre",
+  "Yes, delete": "Sí, borrar"
 }
