@@ -4,7 +4,7 @@ import random
 from typing import Union
 
 from menus.models.daily_menus import DailyMenu
-from menus.models.recipes import Recipe
+from menus.models.recipes import MealType, Recipe
 from menus.models.weekly_menus import WeeklyMenu
 
 logger = logging.getLogger("cociplan")
@@ -120,26 +120,41 @@ def generate_lunch_recipes_list(excluded_recipes):
     # and sort them randomly
     if current_season == "spring":
         lunch_recipes = (
-            Recipe.objects.filter(meal="LUNCH", season_spring=True, active=True)
+            Recipe.objects.filter(
+                meal__in=[MealType.LUNCH, MealType.BOTH],
+                season_spring=True,
+                active=True,
+                is_side_plate=False,
+            )
             .exclude(id__in=excluded_lunch_recipes_ids)
             .order_by("?")
         )
     elif current_season == "summer":
         lunch_recipes = (
-            Recipe.objects.filter(meal="LUNCH", season_summer=True, active=True)
+            Recipe.objects.filter(
+                meal__in=[MealType.LUNCH, MealType.BOTH],
+                season_summer=True,
+                active=True,
+                is_side_plate=False,
+            )
             .exclude(id__in=excluded_lunch_recipes_ids)
             .order_by("?")
         )
     elif current_season == "autumn":
         lunch_recipes = (
-            Recipe.objects.filter(meal="LUNCH", season_autumn=True, active=True)
+            Recipe.objects.filter(
+                meal__in=[MealType.LUNCH, MealType.BOTH],
+                season_autumn=True,
+                active=True,
+                is_side_plate=False,
+            )
             .exclude(id__in=excluded_lunch_recipes_ids)
             .order_by("?")
         )
     else:
         lunch_recipes = (
-            Recipe.objects.filter(meal="LUNCH")
-            .filter(season_winter=True, active=True)
+            Recipe.objects.filter(meal__in=[MealType.LUNCH, MealType.BOTH])
+            .filter(season_winter=True, active=True, is_side_plate=False)
             .exclude(id__in=excluded_lunch_recipes_ids)
             .order_by("?")
         )
@@ -160,7 +175,7 @@ def get_lunch_recipes(excluded_lunch_recipes):
     lunch_recipes_ids = random.sample(lunch_recipes_ids, k=7)
     logger.debug(f"lunch_recipes_ids: {lunch_recipes_ids}")
 
-    lunch_recipes = Recipe.objects.filter(id__in=lunch_recipes_ids)
+    lunch_recipes = Recipe.objects.filter(id__in=lunch_recipes_ids, is_side_plate=False)
     # Filter these recipes between those that are only for
     # weekdays and those that are only for weekends
     weekends = lunch_recipes.filter(days_of_week="WEEKENDS")
@@ -184,7 +199,7 @@ def get_dinner_recipes(excluded_dinner_recipes):
     # except those that are on the last_weekly_menu_dinner_recipes
     # and sort them randomly
     dinner_recipes = (
-        Recipe.objects.filter(meal="DINNER")
+        Recipe.objects.filter(meal="DINNER", is_side_plate=False, active=True)
         .exclude(id__in=excluded_dinner_recipes_ids)
         .order_by("?")
     )
@@ -249,6 +264,7 @@ def generate_menu_based_previous_week(last_menu, new_menu_name):
         lunch_recipe=lunch_recipes[6],
         dinner_recipe=dinner_recipes[6],
     )
+
     return (
         monday_menu,
         tuesday_menu,
@@ -262,12 +278,11 @@ def generate_menu_based_previous_week(last_menu, new_menu_name):
 
 def generate_menu_based_random(new_menu_name):
     current_season = get_current_season_of_the_year()
-
     lunch_recipes = Recipe.objects.filter(
-        meal="LUNCH", active=True, is_side_plate=False
+        meal__in=[MealType.LUNCH, MealType.BOTH], active=True, is_side_plate=False
     ).order_by("?")
     dinner_recipes = Recipe.objects.filter(
-        meal="DINNER", active=True, is_side_plate=False
+        meal__in=[MealType.DINNER, MealType.BOTH], active=True, is_side_plate=False
     ).order_by("?")
 
     if current_season == "spring":
@@ -335,6 +350,7 @@ def generate_menu_based_random(new_menu_name):
         lunch_recipe=lunch_recipes[6],
         dinner_recipe=dinner_recipes[6],
     )
+
     return (
         monday_menu,
         tuesday_menu,

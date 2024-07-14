@@ -23,7 +23,7 @@ from menus.serializers.weekly_menus import (
     WeeklyMenuSerializer,
     WeeklyMenuWriteSerializer,
 )
-from menus.utils.weekly_menu_generator import create_new_weekly_menu
+from menus.utils.weekly_menu_generator_gpt import create_new_weekly_menu_gpt
 
 logger = logging.getLogger("cociplan")
 
@@ -137,4 +137,4 @@ class WeeklyMenuViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         logger.info(f"Creating WeeklyMenu: {serializer.validated_data}")
 
-        create_new_weekly_menu(serializer)
+        create_new_weekly_menu_gpt(serializer)
