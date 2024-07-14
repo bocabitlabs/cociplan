@@ -17,58 +17,78 @@ from menus.utils.weekly_menu_generator import (
 
 logger = logging.getLogger("cociplan")
 
-input_prompt = """You are a nutritionist and you want to create an
-     equilibrated weekly menu.
-    The weekly menu is composed of 14 recipes, 2 per day.
-    The weekly menu will meet several conditions:
-     - It will contain 7 daily menus, one for each day of the week.
-     - It will get recipes for lunch and dinner.
-     For each recipe:
-     - If meal is LUNCH, it will be served only at lunchtime.
-     - If meal is DINNER, it will be served only at dinnertime.
-     - If meal is BOTH, it can be served both at lunchtime or dinnertime.
-     - If days_of_week is WEEK_DAYS, it will be served from Monday to Friday.
-     - If days_of_week is WEEKENDS, it will be served on Saturday and Sunday.
-     - If days_of_week is ALL, it will be served every day.
-     - The recipes will have a difficulty from 1 to 5.
-     - The recipe will have a type: {recipe_types}.
+input_prompt = """You are a nutritionist and you want to create an equilibrated weekly menu.
+The weekly menu will consist of 14 recipes, 2 per day, and will meet the following conditions:
 
-     The input will be a json object with the following structure:
-     [{recipe: "recipe_id",
-     meal: "LUNCH"| "DINNER"|"BOTH",
-     difficulty: 1-5,
-     days_of_week: "WEEK_DAYS"|"WEEKENDS"|"ALL",
-     type: {recipe_types},
-     name: "recipe_name"},
-     ...]
+1. **Menu Structure**:
+    
+    - The menu will include 7 daily menus, one for each day of the week.
+    - Each day will have recipes for lunch and dinner.
+    
+2. **Recipe Assignment**:
+    
+    - **Meal Times**:
+        - If `meal` is `LUNCH`, it will be served only at lunchtime.
+        - If `meal` is `DINNER`, it will be served only at dinnertime.
+        - If `meal` is `BOTH`, it can be served at both lunchtime and dinnertime.
+    - **Days of the Week**:
+        - If `days_of_week` is `WEEK_DAYS`, it will be served from Monday to Friday.
+        - If `days_of_week` is `WEEKENDS`, it will be served on Saturday and Sunday.
+        - If `days_of_week` is `ALL`, it will be served all days of the week.
+    - **Other Criteria**:
+        - Recipes will have a difficulty rating from 1 to 5.
+        - Recipes will have a type: {recipe_types}.
 
-     Output:
-     - Very important: The output will be a json object with the same
-     structure as the input,
-     but with 2 recipes per day.
-     The format of the output will be:
-        {"monday":
-            "lunch":
-            {"recipe": "recipe_id",
-            "meal": "LUNCH",
-            "difficulty": 1-5,
-            "type": "recipe_type",
-            "name": "recipe_name"
+3. **Input Format**:
+    
+    - The input will be a JSON array of recipe objects with the following structure:
+    [
+    {
+        "recipe": "recipe_id",
+        "meal": "LUNCH" | "DINNER" | "BOTH",
+        "difficulty": 1-5,
+        "days_of_week": "WEEK_DAYS" | "WEEKENDS" | "ALL",
+        "type": {recipe_types},
+        "name": "recipe_name"
+    },
+        ...
+    ]
+
+4. **Output Format**:
+
+- The output will be a JSON object with the same structure as the input,
+but organized into daily menus with 2 recipes per day:
+    {
+        "monday": {
+            "lunch": {
+                "recipe": "recipe_id",
+                "meal": "LUNCH",
+                "difficulty": 1-5,
+                "type": "recipe_type",
+                "name": "recipe_name"
             },
             "dinner": {
                 "recipe": "recipe_id",
                 "meal": "DINNER",
                 "difficulty": 1-5,
-                "type": "recipe_type"
+                "type": "recipe_type",
                 "name": "recipe_name"
-            },
-        }, ...}
-     - Be concise. Do not explain how you do it. Just generate the menu
-     with the specified format.
-     - Use only recipes in the lists of recipes provided.
-     - The first days of the week, the recipes will be the ones with more dificulty.
-     - The weekly menu must be equilibrated and must contain at
-     least one of each type: MEAT_SASUAGE, VEGETABLES, FISH, and LEGUMES.
+            }
+        },
+        ...
+    }
+
+5. **Constraints**:
+
+- Be concise. Do not explain how you do it. Just generate the menu with the specified format.
+- Do not provide the response in markdown. Provide it as a JSON object.
+- Do not repeat recipes of the following types: `RICE`, `MEAT_SAUSAGE`, `POTATOES`, `PASTA`.
+- Use only recipes provided in the input list.
+- The first days of the week should feature recipes with higher difficulty.
+- The menu must be balanced and contain at least one recipe of each type: `MEAT_SAUSAGE`, `VEGETABLES`, `FISH`, and `LEGUMES`.
+- Recipes must be different for each day. However, lunch recipes on Thursday, Friday, and Saturday can be leftovers from earlier in the week, allowing for repetition only once.
+- Lunch and dinner recipes must be different each day.
+
 """
 
 
